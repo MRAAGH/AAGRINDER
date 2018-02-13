@@ -265,13 +265,14 @@ loadServerProperties((props) => {
   LEVEL_NAME = props.level_name;
   WORLD_SEED = props.seed;
   map = new Map(WORLD_SEED);
+  
 
-  map.login('maze', null);
-  console.log('gonna tp')
-  map.teleport('maze', 3, 128);
-  console.log('gonna tp')
-  map.teleport('maze', 254, 2);
-  map.players.splice(0, 1);
+  // map.login('maze', null);
+  // console.log('gonna tp')
+  // map.teleport('maze', 3, 128);
+  // console.log('gonna tp')
+  // map.teleport('maze', 254, 2);
+  // map.players.splice(0, 1);
 
 
 
