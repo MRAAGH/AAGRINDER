@@ -71,6 +71,10 @@ class Player {
     this.name = name;
     this.socket = socket;
     this.subscriptions = [];
+    this.chunkUpdates = [];
+    this.changeObj = {};
+    this.hacker = false;
+    this.hackedAt = -1;
   }
 
 

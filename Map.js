@@ -337,13 +337,13 @@ let WorldGenerator = require('./WorldGenerator').WorldGenerator;
 class Map {
   constructor(WORLD_SEED) {
     this.WORLD_SEED = WORLD_SEED;
-    this.chunks = [];
+    this.chunks = {};
     this.players = [];
   }
 
   getChunk(chunkx, chunky){
     if(!this.chunks[chunky]){
-      this.chunks[chunky] = [];
+      this.chunks[chunky] = {};
     }
     if(!this.chunks[chunky][chunkx]){
       // Chunk does not exist. Generate it.
@@ -359,6 +359,24 @@ class Map {
     return this.chunks[chunky][chunkx];
   }
 
+  getBlock(x, y){
+    let chunkx = Math.floor(x / 256);
+    let chunky = Math.floor(y / 256);
+    let subchunkx = (x%256+256)%256;
+    let subchunky = (y%256+256)%256;
+    let chunk = this.getChunk(chunkx, chunky);
+    let block = chunk[subchunky][subchunkx];
+    return block;
+  }
+
+  setBlock(x, y, block){
+    let chunkx = Math.floor(x / 256);
+    let chunky = Math.floor(y / 256);
+    let subchunkx = (x%256+256)%256;
+    let subchunky = (y%256+256)%256;
+    let chunk = this.getChunk(chunkx, chunky);
+    chunk[subchunky][subchunkx] = block;
+  }
 
   playerByName(playerName){
     for(let i = 0; i < this.players.length; i++){

@@ -19,6 +19,7 @@ class Subscribe{
   subscribe(player, chunkx, chunky){
     console.log('sub '+player.name+' '+chunkx+' '+chunky)
     player.subscriptions.push({x:chunkx, y:chunky});
+    player.chunkUpdates.push({x:chunkx, y:chunky});
     let chunk = this.map.getChunk(chunkx, chunky); // and generate if necessary
     chunk.subscribers.push(player);
   }

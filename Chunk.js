@@ -717,5 +717,6 @@ class Chunk {
   constructor(terrain){
     this.terrain = terrain; //a 2d char array
     this.subscribers = [];
+    // this.change2D = {};
   }
 }

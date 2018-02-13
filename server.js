@@ -1,22 +1,26 @@
-let SERVER_VERSION = "0.0.1"
+const SERVER_VERSION = "0.0.1"
 
-let express = require('express');
-let app = express();
-let http = require('http').Server(app);
-let io = require('socket.io')(http);
-let md5 = require("md5");
-let cron = require('node-cron');
-let fs = require('fs');
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const md5 = require("md5");
+const cron = require('node-cron');
+const fs = require('fs');
 
 
-let Player = require("./Player").Player;
-let Chunk = require("./Chunk").Chunk;
-let Map = require("./Map").Map;
+const Player = require("./Player").Player;
+const Chunk = require("./Chunk").Chunk;
+const Map = require("./Map").Map;
+const Syncher = require("./Syncher").Syncher;
+const Subscribe = require("./Subscribe").Subscribe;
+const PlayerActions = require("./PlayerActions").PlayerActions;
+const ServerActions = require("./ServerActions").ServerActions;
 
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
-let port = process.env.PORT || 80;
+const port = process.env.PORT || 80;
 
 app.get('/', function (req, res) { res.sendFile(__dirname + '/public/client.html'); });
 app.get('/public/js/PlayerClient', function (req, res) { res.sendFile(__dirname + '/public/js/PlayerClient.js'); });
@@ -32,6 +36,9 @@ app.get('/aa', function (req, res) {
 let LEVEL_NAME;
 let WORLD_SEED;
 let map;
+let syncher;
+let playerActions;
+let serverActions;
 
 process.stdin.on('data', function (text) {
   if (text.trim() === 'save') {
@@ -265,14 +272,16 @@ loadServerProperties((props) => {
   LEVEL_NAME = props.level_name;
   WORLD_SEED = props.seed;
   map = new Map(WORLD_SEED);
-  
+  let syncher = new Syncher(map);
+  let subscribe = new Subscribe(map);
+  playerActions = new PlayerActions(map.getBlock, syncher, Subscribe.resubscribe);
 
-  // map.login('maze', null);
-  // console.log('gonna tp')
-  // map.teleport('maze', 3, 128);
-  // console.log('gonna tp')
-  // map.teleport('maze', 254, 2);
-  // map.players.splice(0, 1);
+  playerActions.login('maze', null);
+  console.log('gonna tp')
+  playerActions.teleport('maze', 3, 128);
+  console.log('gonna tp')
+  playerActions.teleport('maze', 254, 2);
+  // playerActions.players.splice(0, 1);
 
 
 
