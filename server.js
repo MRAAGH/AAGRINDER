@@ -81,6 +81,10 @@ function saveToFile(callback) {
 }
 
 function loadfromFile(callback) {
+  // DEBUG I skipped everything with the loading
+  callback();
+  return;
+
   //Check if file exists
   if (fs.existsSync("saves/" + LEVEL_NAME + ".txt")) {
     fs.readFile("saves/" + LEVEL_NAME + ".txt", function (err, loadedString) {
