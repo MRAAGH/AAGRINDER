@@ -10,7 +10,7 @@ const fs = require('fs');
 
 
 const Player = require("./Player").Player;
-const Chunk = require("./Chunk").Chunk;
+// const Chunk = require("./Chunk").Chunk;
 const Map = require("./Map").Map;
 const Syncher = require("./Syncher").Syncher;
 const Subscribe = require("./Subscribe").Subscribe;
@@ -162,7 +162,7 @@ io.on('connection', function (socket) {
   onClientConnect(socket);
   socket.on("login", onLogin);
   socket.on("disconnect", onClientDisconnect);
-  socket.on("m", onMovePlayer);
+  // socket.on("m", onMovePlayer);
   // socket.on("d", onDig);
   // socket.on("p", onPlace);
   // socket.on("i", onInteract);
@@ -191,15 +191,15 @@ function onClientDisconnect() {
   map.logout(this);
 };
 
-function onMovePlayer(data) {
-  console.log("movement sensors gone off");
-  let moving_player_index = map.onlinePlayerByClientId(this.id);
-  //console.log("Index is " + moving_player_index);
-  if (moving_player_index > -1 && data.dir > -1) {
-    let my_chunk = map.getMyChunk(map.players[moving_player_index]);
-    my_chunk.playerMove(this.id, data.dir);
-  }
-};
+// function onMovePlayer(data) {
+//   console.log("movement sensors gone off");
+//   let moving_player_index = map.onlinePlayerByClientId(this.id);
+//   //console.log("Index is " + moving_player_index);
+//   if (moving_player_index > -1 && data.dir > -1) {
+//     let my_chunk = map.getMyChunk(map.players[moving_player_index]);
+//     my_chunk.playerMove(this.id, data.dir);
+//   }
+// };
 
 // function onDig(data) {
 //   //console.log("dig sensors gone off");
@@ -275,25 +275,25 @@ loadServerProperties((props) => {
   let syncher = new Syncher(map);
   let subscribe = new Subscribe(map);
   playerActions = new PlayerActions(map.getBlock, syncher, Subscribe.resubscribe);
-
+  //
   playerActions.login('maze', null);
-  console.log('gonna tp')
-  playerActions.teleport('maze', 3, 128);
-  console.log('gonna tp')
-  playerActions.teleport('maze', 254, 2);
+  // console.log('gonna tp')
+  // playerActions.teleport('maze', 3, 128);
+  // console.log('gonna tp')
+  // playerActions.teleport('maze', 254, 2);
   // playerActions.players.splice(0, 1);
 
 
 
   console.log("Preparing level \"" + LEVEL_NAME + "\"")
   loadfromFile(() => {
-    // map.prepareSpawnArea(() => {
+    map.prepareSpawnArea(() => {
       http.listen(port, function () {
         let hrend_server_load = process.hrtime(hrstart_server_load);
         console.log("Done (" + hrend_server_load[0] + "," + Math.floor(hrend_server_load[1] / 1000000) + "s)!");
         console.log('AAGRINDER server listening on *:' + port);
       });
-    // });
+    });
   });
 });
 

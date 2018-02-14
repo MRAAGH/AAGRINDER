@@ -9,7 +9,7 @@ and ignores that client's actions until the rollback has been confirmed.
 
 Before the Action class methods are called for player actions,
 call Syncher's method to see if this is a player we are listening to.
-Might be a hacker.
+Might be a hacker. In which case, ignore the action.
 */
 
 class Syncher{
@@ -59,18 +59,36 @@ class Syncher{
   sendUpdatesToClients(){
     for(let i = 0; i < this.map.players.length; i++){
       let player = this.map.players[i];
-
-      let message = {
-        b: player.changeObj, // block updates
-      }
-
-      let chunkUpdates = [];
-      for(let i = 0; i < player.chunkUpdates.length; i++){
-        let chunkx = player.chunkUpdates[i].x;
-        let chunky = player.chunkUpdates[i].y;
-        letsdgggfggf
-      }
+      sendUpdatesToClient(player);
     }
+  }
+
+  sendUpdatesToClient(player){
+    let message = {
+      b: player.changeObj, // block updates
+    }
+
+    let chunkUpdates = [];
+    for(let i = 0; i < player.chunkUpdates.length; i++){
+      let chunkx = player.chunkUpdates[i].x;
+      let chunky = player.chunkUpdates[i].y;
+      let str = map.getChunk(chunkx, chunky);
+      chunkUpdates.push({
+        x: chunkx,
+        y: chunky,
+        t: str
+      });
+    }
+
+    if(chunkUpdates.length > 0){
+      message.c = chunkUpdates;
+    }
+
+    if(player.hacker){
+      message.h = {i: player.hackedAt, b: player.branch};
+    }
+
+    player.socket.emit("t", message);
   }
 }
 

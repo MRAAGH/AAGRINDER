@@ -75,7 +75,10 @@ class Player {
     this.changeObj = {};
     this.hacker = false;
     this.hackedAt = -1;
+    this.branch = 0;
   }
 
 
 }
+
+exports.Player = Player;
