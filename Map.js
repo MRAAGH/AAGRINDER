@@ -347,6 +347,7 @@ class Map {
     this.WORLD_SEED = WORLD_SEED;
     this.chunks = {};
     this.players = [];
+    this.knownPlayers = [];
   }
 
   getChunk(chunkx, chunky){
