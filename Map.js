@@ -332,10 +332,14 @@
 /*
 Map is the class holding everything about the world that needs to get saved to disk
 and loaded from disk.
+
 It also acts as an abstraction over chunks,
 so that other classes do not need to worry about whether chunks exist or don't exist.
 Calling the getChunk method always works.
 If the chunk does not exist it is automatically generated on the fly.
+
+It also acts as an abstraction over players,
+so that new players are handled gracefully (so long as they are registered)
 */
 
 const Player = require("./Player").Player;
@@ -408,7 +412,7 @@ class Map {
     callback();
   }
 
-  playerByName(playerName){
+  onlinePlayerByName(playerName){
     for(let i = 0; i < this.players.length; i++){
       if(this.players[i].name == playerName){
         return this.players[i];
@@ -416,6 +420,19 @@ class Map {
     }
     console.log('Player name not found: ' + playerName);
     return null;
+  }
+
+  // all players, including those who are offline
+  // and also those who have never visited this map
+  getPlayerByName(playerName){
+    for(let i = 0; i < this.knownPlayers.length; i++){
+      if(this.knownPlayers[i].name == playerName){
+        return this.knownPlayers[i];
+      }
+    }
+
+    // check the database
+
   }
 
   playerBySocketId(socketId){

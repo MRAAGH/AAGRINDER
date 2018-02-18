@@ -76,6 +76,7 @@ class Player {
     this.hacker = false;
     this.hackedAt = -1;
     this.branch = 0;
+    this.online = false;
   }
 
 

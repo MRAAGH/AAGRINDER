@@ -37,30 +37,38 @@ router.post('/register', (req, res) => {
       res.json({ message: 'Username taken', success: false });
     }
     else {
-      let user = new User(); //potrebno narediti registracijo - preverba, ce taksen uporabnik ze obstaja
+      let user = new User();
       user.name = req.body.name;
       user.password = req.body.password;
       user.color = 'blue';
 
       bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
-        if (err) return next(err);
+        if (err) {
+          console.log('Failed to gen salt!')
+          res.json({ message: 'Server error', success: false });
+          return;
+        }
         bcrypt.hash(req.body.password, salt, (err, hash) => {
-          if (err) return next(err);
+
+          if (err) {
+            console.log('Failed to hash password!')
+            res.json({ message: 'Server error', success: false });
+            return;
+          }
           user.password = hash;
-          next();
+
+          user.save((err) => {
+            if (err) {
+              console.log('Failed to save user!')
+              res.json({ message: 'Server error', success: false });
+              return;
+            }
+            else {
+              res.json({ message: 'User created', success: true });
+            }
+          }
         });
       });
-
-
-
-      user.save((err) => {
-        if (err){
-          res.send(err);
-        }
-        else {
-          res.json({ message: 'User created', success: true });
-        }
-      }
     }
   }
 }

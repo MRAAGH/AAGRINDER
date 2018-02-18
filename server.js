@@ -7,11 +7,19 @@ const io = require('socket.io')(http);
 const md5 = require("md5");
 const cron = require('node-cron');
 const fs = require('fs');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+var users = require('./routes/User');
+app.use('/api/users', users);
+
 
 
 const Player = require("./Player").Player;
 // const Chunk = require("./Chunk").Chunk;
 const Map = require("./Map").Map;
+const PlayerData = require("./PlayerData").PlayerData;
+const Spawn = require("./Spawn").Spawn;
 const Syncher = require("./Syncher").Syncher;
 const Subscribe = require("./Subscribe").Subscribe;
 const PlayerActions = require("./PlayerActions").PlayerActions;
@@ -272,6 +280,7 @@ loadServerProperties((props) => {
   LEVEL_NAME = props.level_name;
   WORLD_SEED = props.seed;
   map = new Map(WORLD_SEED);
+  playerData = new PlayerData();
   let syncher = new Syncher(map);
   let subscribe = new Subscribe(map);
   playerActions = new PlayerActions(map.getBlock, syncher, Subscribe.resubscribe);
