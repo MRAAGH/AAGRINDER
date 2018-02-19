@@ -19,14 +19,14 @@ router.post('/register', (req, res) => {
 
 
   if(
-    !/^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$/.test(req.body.name);
+    !/^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$/.test(req.body.name)
   ){
     res.json({ message: 'Username invalid ^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$', success: false });
     return;
   }
 
   if(
-    !/^([A-Za-z0-9 ]{3,})?$/.test(req.body.password);
+    !/^([A-Za-z0-9 ]{3,})?$/.test(req.body.password)
   ){
     res.json({ message: 'Password invalid', success: false });
     return;
@@ -66,9 +66,11 @@ router.post('/register', (req, res) => {
             else {
               res.json({ message: 'User created', success: true });
             }
-          }
+          });
         });
       });
     }
-  }
-}
+  });
+});
+
+module.exports = router;
