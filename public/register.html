@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>AAREGISTER</title>
+  <meta charset="utf-8">
+  <script src="js/jquery3.2.1.js"></script>
+  <script>
+  $(function() {
+    $('#registration-form').submit(function() {
+      // console.log($(this).serialize());
+      // return false;
+
+      let name = $('#name').val()
+      let password = $('#password').val()
+      let password2 = $('#password2').val()
+      console.log(password)
+      console.log(password2)
+      if(password !== password2){
+        $('#response').text('Passwords do not match!')
+        return false;
+      }
+      $('#response').text('Requesting registration ...')
+
+      let data = 'name=' + encodeURIComponent(name) + '&password=' + encodeURIComponent(password);
+
+      $.ajax({
+        type: "POST",
+        url: "/api/users/register",
+        data: data,
+        processData: false,
+        success: function(msg) {
+          console.log(msg);
+          $('#response').text(msg.message);
+        }
+      });
+      return false;
+    });
+  });
+  </script>
+</head>
+
+<body style='background: black; color: white'>
+  <form id='registration-form'>
+    <table>
+      <tr>
+        <td>name:</td><td><input id="name" name="name"></td>
+      </tr>
+      <tr>
+        <td>password:</td><td><input type='password' id="password" name="password"></td>
+      </tr>
+      <tr>
+        <td>password again:</td><td><input type='password' id="password2" name="password2"></td>
+      </tr>
+      <!-- <tr>
+        <td>favorite color:</td><td><input id="color" name="color"></td>
+      </tr> -->
+      <tr>
+        <td></td>
+        <td><button type="submit">
+          register
+        </button></td>
+      </tr>
+    </table>
+  </form>
+  <p id="response"></p>
+  <p>This is not a secure site. Do not use a password you use elsewhere.</p>
+</body>

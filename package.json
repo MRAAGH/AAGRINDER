@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.1",
     "express": "^4.15.3",
     "md5": "^2.2.1",
     "mersenne-twister": "^1.1.0",

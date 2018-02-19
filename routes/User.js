@@ -1,5 +1,6 @@
 
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 
 const User = require('../schemes/UserScheme.js');
@@ -26,9 +27,9 @@ router.post('/register', (req, res) => {
   }
 
   if(
-    !/^([A-Za-z0-9 ]{3,})?$/.test(req.body.password)
+    !/^[A-Za-z0-9 ]{3,}$/.test(req.body.password)
   ){
-    res.json({ message: 'Password invalid', success: false });
+    res.json({ message: 'Password invalid ^[A-Za-z0-9 ]{3,}$', success: false });
     return;
   }
 
@@ -39,7 +40,7 @@ router.post('/register', (req, res) => {
     else {
       let user = new User();
       user.name = req.body.name;
-      user.password = req.body.password;
+      user.password = '';
       user.color = 'blue';
 
       bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
@@ -64,7 +65,7 @@ router.post('/register', (req, res) => {
               return;
             }
             else {
-              res.json({ message: 'User created', success: true });
+              res.json({ message: 'User created' + (user.name === 'sorunome' ? '. Hi there, soru O.O' : ''), success: true });
             }
           });
         });

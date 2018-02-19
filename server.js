@@ -8,10 +8,13 @@ const md5 = require("md5");
 const cron = require('node-cron');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+// const mongoose = require('bluebird').promisifyAll(require('mongoose'));
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost:27017/aagrinder');
 
+app.use(bodyParser.json({limit: "50mb"}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
 var users = require('./routes/User');
 app.use('/api/users', users);
