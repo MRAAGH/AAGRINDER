@@ -10,6 +10,9 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+mongoose.connect('mongodb://localhost:27017/aagrinder');
+
+
 var users = require('./routes/User');
 app.use('/api/users', users);
 
@@ -30,10 +33,11 @@ process.stdin.setEncoding('utf8');
 
 const port = process.env.PORT || 80;
 
-app.get('/', function (req, res) { res.sendFile(__dirname + '/public/client.html'); });
-app.get('/public/js/PlayerClient', function (req, res) { res.sendFile(__dirname + '/public/js/PlayerClient.js'); });
-app.get('/public/js/client', function (req, res) { res.sendFile(__dirname + '/public/js/client.js'); });
-app.get('/public/js/jquery', function (req, res) { res.sendFile(__dirname + '/public/js/jquery3.2.1.js'); });
+//app.get('/', function (req, res) { res.sendFile(__dirname + '/public/client.html'); });
+app.use(express.static(__dirname + '/public'));
+// app.get('/public/js/PlayerClient', function (req, res) { res.sendFile(__dirname + '/public/js/PlayerClient.js'); });
+// app.get('/public/js/client', function (req, res) { res.sendFile(__dirname + '/public/js/client.js'); });
+// app.get('/public/js/jquery', function (req, res) { res.sendFile(__dirname + '/public/js/jquery3.2.1.js'); });
 
 app.get('/aa', function (req, res) {
   let u = "/aa has been accessed."
@@ -199,80 +203,6 @@ function onClientDisconnect() {
   map.logout(this);
 };
 
-// function onMovePlayer(data) {
-//   console.log("movement sensors gone off");
-//   let moving_player_index = map.onlinePlayerByClientId(this.id);
-//   //console.log("Index is " + moving_player_index);
-//   if (moving_player_index > -1 && data.dir > -1) {
-//     let my_chunk = map.getMyChunk(map.players[moving_player_index]);
-//     my_chunk.playerMove(this.id, data.dir);
-//   }
-// };
-
-// function onDig(data) {
-//   //console.log("dig sensors gone off");
-//   let digging_player_index = map.onlinePlayerByClientId(this.id);
-//   if (digging_player_index > -1 && data.x != undefined && data.y != undefined) {
-//     let my_chunk = map.getMyChunk(map.players[digging_player_index]);
-//     my_chunk.playerDig(this.id, data.x, data.y);
-//   }
-// };
-//
-// function onPlace(data) {
-//   //console.log("place sensors gone off");
-//   let digging_player_index = map.onlinePlayerByClientId(this.id);
-//   if (digging_player_index > -1 && data.x != undefined && data.y != undefined) {
-//     let my_chunk = map.getMyChunk(map.players[digging_player_index]);
-//     my_chunk.playerPlace(this.id, data.x, data.y);
-//   }
-// };
-//
-// function onInteract(data) {
-//   console.log("interact sensors gone off");
-//   let interacting_player_index = map.onlinePlayerByClientId(this.id);
-//   if (interacting_player_index > -1 && data.x != undefined && data.y != undefined) {
-//     let my_chunk = map.getMyChunk(map.players[interacting_player_index]);
-//     my_chunk.playerInteract(this.id, data.x, data.y);
-//   }
-// };
-//
-// function onSelect(data) {
-//   //console.log("select sensors gone off");
-//   let selecting_player_index = map.onlinePlayerByClientId(this.id);
-//   if (selecting_player_index > -1 && data.what) {
-//     let my_chunk = map.getMyChunk(map.players[selecting_player_index]);
-//     my_chunk.playerSelect(this.id, data.what);
-//   }
-// };
-//
-// function onCraft(data) {
-//   //console.log("craft sensors gone off");
-//   let crafting_player_index = map.onlinePlayerByClientId(this.id);
-//   if (crafting_player_index > -1 && data.what) {
-//     let my_chunk = map.getMyChunk(map.players[crafting_player_index]);
-//     my_chunk.playerCraft(this.id, data.what);
-//   }
-// };
-
-//*
-//Load map from file and then open server for players
-// console.log("Starting aagrinder server version " + SERVER_VERSION);
-// let hrstart_server_load = process.hrtime();
-// loadServerProperties((props) => {
-//   LEVEL_NAME = props.level_name;
-//   WORLD_SEED = props.seed;
-//   map = new Map(WORLD_SEED);
-//   console.log("Preparing level \"" + LEVEL_NAME + "\"")
-//   loadfromFile(() => {
-//     map.prepareSpawnArea(() => {
-//       http.listen(port, function () {
-//         let hrend_server_load = process.hrtime(hrstart_server_load);
-//         console.log("Done (" + hrend_server_load[0] + "," + Math.floor(hrend_server_load[1] / 1000000) + "s)!");
-//         console.log('AAGRINDER server listening on *:' + port);
-//       });
-//     });
-//   });
-// });
 
 console.log("Starting aagrinder server version " + SERVER_VERSION);
 let hrstart_server_load = process.hrtime();
@@ -285,7 +215,7 @@ loadServerProperties((props) => {
   let subscribe = new Subscribe(map);
   playerActions = new PlayerActions(map.getBlock, syncher, Subscribe.resubscribe);
   //
-  playerActions.login('maze', null);
+  // playerActions.login('maze', null);
   // console.log('gonna tp')
   // playerActions.teleport('maze', 3, 128);
   // console.log('gonna tp')
@@ -296,13 +226,13 @@ loadServerProperties((props) => {
 
   console.log("Preparing level \"" + LEVEL_NAME + "\"")
   loadfromFile(() => {
-    map.prepareSpawnArea(() => {
+    // map.prepareSpawnArea(() => {
       http.listen(port, function () {
         let hrend_server_load = process.hrtime(hrstart_server_load);
         console.log("Done (" + hrend_server_load[0] + "," + Math.floor(hrend_server_load[1] / 1000000) + "s)!");
         console.log('AAGRINDER server listening on *:' + port);
       });
-    });
+    // });
   });
 });
 

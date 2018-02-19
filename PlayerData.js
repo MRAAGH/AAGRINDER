@@ -10,3 +10,11 @@ If the player does not exist in this world, they are added at coordinates null, 
 */
 
 const Player = require("./Player").Player;
+
+class PlayerData {
+  constructor(database){
+
+  }
+}
+
+exports.PlayerData = PlayerData;
