@@ -10,8 +10,9 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 // const mongoose = require('bluebird').promisifyAll(require('mongoose'));
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 
-mongoose.connect('mongodb://localhost:27017/aagrinder');
+mongoose.connect('mongodb://localhost:27017/aagrinder', {useMongoClient: true});
 
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
