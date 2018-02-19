@@ -337,12 +337,8 @@ It also acts as an abstraction over chunks,
 so that other classes do not need to worry about whether chunks exist or don't exist.
 Calling the getChunk method always works.
 If the chunk does not exist it is automatically generated on the fly.
-
-It also acts as an abstraction over players,
-so that new players are handled gracefully (so long as they are registered)
 */
 
-const Player = require("./Player").Player;
 const Chunk = require("./Chunk").Chunk;
 const WorldGenerator = require('./WorldGenerator').WorldGenerator;
 
@@ -389,27 +385,6 @@ class Map {
     let subchunky = (y%256+256)%256;
     let chunk = this.getChunk(chunkx, chunky);
     chunk[subchunky][subchunkx] = block;
-  }
-
-  prepareSpawnArea(callback) {
-    const prepare_dist = 2;
-    let chunk_count = (2 * prepare_dist + 1) * (2 * prepare_dist + 1);
-    let hrstart = process.hrtime();
-    let i = 0;
-    for (let y = -prepare_dist; y <= prepare_dist; y++) {
-      for (let x = -prepare_dist; x <= prepare_dist; x++) {
-        let hrend = process.hrtime(hrstart);
-        if (hrend[0] > 0) {
-          //At least a second has passed. Time to give the user an update.
-          let percent = Math.floor(100 * i / chunk_count);
-          console.log("Preparing spawn area: " + percent + "%");
-          hrstart = process.hrtime();
-        }
-        this.getChunk(x, y);
-        i++;
-      }
-    }
-    callback();
   }
 
   onlinePlayerByName(playerName){

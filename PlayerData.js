@@ -8,3 +8,5 @@ so that new players are handled gracefully (so long as they are registered)
 Calling getPlayerByName always works for registered usernames.
 If the player does not exist in this world, they are added at coordinates null, null
 */
+
+const Player = require("./Player").Player;
