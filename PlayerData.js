@@ -5,7 +5,6 @@ and loaded from disk.
 
 It also acts as an abstraction over players,
 so that new players are handled gracefully (so long as they are registered)
-Calling getPlayerByName always works for registered usernames.
 If the player does not exist in this world, they are added at coordinates null, null
 with empty inventory.
 */
@@ -63,12 +62,24 @@ class PlayerData {
           else{
             // player does not exist and needs to be added.
 
-            let newPlayer = new Player()
+            let newPlayer = new Player(null, null, name, socket);
+            this.knownPlayers.push(newPlayer);
+            this.onlinePlayers.push(newPlayer);
+            return resolve(newPlayer);
           }
 
         });
       });
     });
+  }
+
+  logout (socket){
+    for(let i = 0; i < this.onlinePlayers.length; i++){
+      if(this.onlinePlayers[i].socket.id === socket.id){
+        this.onlinePlayers.splice(i, 1);
+        return;
+      }
+    }
   }
 
   knownPlayerByName(name){

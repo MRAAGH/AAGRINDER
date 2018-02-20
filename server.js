@@ -219,16 +219,22 @@ loadServerProperties((props) => {
   let subscribe = new Subscribe(map);
   playerActions = new PlayerActions(map.getBlock, syncher, Subscribe.resubscribe);
 
-  playerData.login('maze', 'aaa').then(
+  playerData.login('maze', 'aaa', {id:'test'}).then(
     result => {
       console.log('YES')
       console.log(result)
 
+      playerData.logout({id:'test'});
+
+      console.log(playerData.onlinePlayers)
+      console.log(playerData.knownPlayers)
     },
     err => {
       console.log('NO ' + err)
     }
   );
+
+
 
   //
   // playerActions.login('maze', null);
