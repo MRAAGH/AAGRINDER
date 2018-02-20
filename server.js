@@ -214,10 +214,22 @@ loadServerProperties((props) => {
   LEVEL_NAME = props.level_name;
   WORLD_SEED = props.seed;
   map = new Map(WORLD_SEED);
-  playerData = new PlayerData();
+  let playerData = new PlayerData();
   let syncher = new Syncher(map);
   let subscribe = new Subscribe(map);
   playerActions = new PlayerActions(map.getBlock, syncher, Subscribe.resubscribe);
+
+  playerData.login('maze', 'aaa').then(
+    result => {
+      console.log('YES')
+      console.log(result)
+
+    },
+    err => {
+      console.log('NO ' + err)
+    }
+  );
+
   //
   // playerActions.login('maze', null);
   // console.log('gonna tp')

@@ -33,9 +33,14 @@ router.post('/register', (req, res) => {
     return;
   }
 
-  User.findOne({ name: req.body.name }, (err, exist) => {
-    if (exist && !err) {
+  User.findOne({ name: req.body.name }, (err, existingUser) => {
+    if (err) {
+      res.json({ message: 'Server error', success: false });
+      return;
+    }
+    if (existingUser) {
       res.json({ message: 'Username taken', success: false });
+      return;
     }
     else {
       let user = new User();
