@@ -10,7 +10,7 @@ If the chunk does not exist it is automatically generated on the fly.
 */
 
 const Chunk = require("./Chunk").Chunk;
-const WorldGenerator = require('./WorldGenerator').WorldGenerator;
+const WorldGenerator = require('./generators/WorldGenerator').WorldGenerator;
 
 class Map {
   constructor(WORLD_SEED) {
