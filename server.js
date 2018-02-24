@@ -236,17 +236,18 @@ loadServerProperties((props) => {
     spawn
   );
 
+
   playerData.login('maze', 'aaa', {id:'test'}).then(
     result => {
       console.log('YES')
-      console.log(result)
+      // console.log(result)
 
       playerActions.login(result);
 
-      playerData.logout({id:'test'});
-
-      console.log(playerData.onlinePlayers)
-      console.log(playerData.knownPlayers)
+      // playerData.logout({id:'test'});
+      //
+      // console.log(playerData.onlinePlayers)
+      // console.log(playerData.knownPlayers)
     },
     err => {
       console.log('NO ' + err)

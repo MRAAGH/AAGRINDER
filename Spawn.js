@@ -5,9 +5,6 @@ when they log in for the first time
 or when they log in but their position is obstructed.
 */
 
-// const PlayerData = require("./PlayerData").PlayerData;
-// const Map = require("./Map").Map;
-
 const PREPARE_DIST = 2;
 const PREPARE_CHUNK_COUNT = (2 * PREPARE_DIST + 1) * (2 * PREPARE_DIST + 1);
 const BASE_SPAWN_DISTANCE = 32;
@@ -44,21 +41,26 @@ class Spawn {
       // yes. Attempt to spawn there or up to 63 blocks above / below.
       let searchDirection = this.map.getBlock(player.x, player.y) === ' ' ? -1 : 1;
       for(let i = 0; i < 64; i++){
-        if(isValidSpawnSpot(player.x, player.y + i * searchDirection)){
-          console.log('sgffsdsg')
+        if(this.isValidSpawnSpot(player.x, player.y + i * searchDirection)){
           return({x: player.x, y: player.y + i * searchDirection});
         }
       }
-
+    }
+    else{
       // spawn the player somewhere around world spawn instead.
 
       let spawnDistance = BASE_SPAWN_DISTANCE;
+      let lel = 0;
       while(true){ // player spawning can not fail
+        lel++;
+        if(lel>100){
+          console.log('PLAYER SPAWN POINT FINDER FAILED FOR SOME REASON');
+          return null;
+        }
         for(let i = 0; i < SPAWN_ATTEMPTS; i++){
           let x = Math.floor((Math.random() - 0.5) * spawnDistance);
           let y = Math.floor((Math.random() - 0.5) * spawnDistance);
-          if(isValidSpawnSpot(x, y)){
-            console.log('sgffsdsg2222222222')
+          if(this.isValidSpawnSpot(x, y)){
             return({x: x, y: y});
           }
         }
@@ -69,8 +71,9 @@ class Spawn {
   }
 
   isValidSpawnSpot(x, y){
-    if(map.getBlock(x, y) !== ' ') return false;
-    if(map.getBlock(x, y - 1) === ' ') return false;
+    return true; // DEBUG ONLY!
+    if(this.map.getBlock(x, y) !== ' ') return false;
+    if(this.map.getBlock(x, y - 1) === ' ') return false;
     return true;
   }
 }

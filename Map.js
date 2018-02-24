@@ -44,7 +44,7 @@ class Map {
     let subchunkx = (x%256+256)%256;
     let subchunky = (y%256+256)%256;
     let chunk = this.getChunk(chunkx, chunky);
-    let block = chunk[subchunky][subchunkx];
+    let block = chunk.terrain[subchunky][subchunkx];
     return block;
   }
 
@@ -54,7 +54,7 @@ class Map {
     let subchunkx = (x%256+256)%256;
     let subchunky = (y%256+256)%256;
     let chunk = this.getChunk(chunkx, chunky);
-    chunk[subchunky][subchunkx] = block;
+    chunk.terrain[subchunky][subchunkx] = block;
   }
 
   onlinePlayerByName(playerName){

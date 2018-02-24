@@ -22,13 +22,14 @@ class PlayerActions {
   }
 
   login(player) {
+
     let spawnSpot = this.spawn.choosePlayerSpawnSpot(player);
 
     console.log(spawnSpot)
 
     // we assume this is a good spot and no checks need to be performed.
 
-    this.syncher.playerChangeBlocks()
+    this.syncher.playerChangeBlock(player, spawnSpot.x, spawnSpot.y, 'P');
 
     this.subscribe.resubscribe(player);
   }
