@@ -24,35 +24,43 @@ class Syncher{
 
   serverChangeBlocks(changeList){
     for(let i = 0; i < changeList.length; i++){
-      this.map.setBlock(changeList[i].x, changeList[i].y, changeList[i].block)
-      let chunkx = Math.floor(changeList[i].x/256);
-      let chunky = Math.floor(changeList[i].y/256);
-      let chunk = this.map.getChunk(chunkx, chunky);
-      for(let j = 0; j < chunk.subscribers.length; j++){
-        if(!chunk.subscribers[j].changeObj[changeList[i].y]){
-          chunk.subscribers[j].changeObj[changeList[i].y] = {};
-        }
-        chunk.subscribers[j].changeObj[changeList[i].y][changeList[i].x] = changeList[i].block;
+      serverChangeBlock(player, changeList[i].x, changeList[i].y, changeList[i].block);
+    }
+  }
+  serverChangeBlock(x, y, block){
+    this.map.setBlock(x, y, block)
+    let chunkx = Math.floor(x/256);
+    let chunky = Math.floor(y/256);
+    let chunk = this.map.getChunk(chunkx, chunky);
+    for(let j = 0; j < chunk.subscribers.length; j++){
+      if(!chunk.subscribers[j].changeObj[y]){
+        chunk.subscribers[j].changeObj[y] = {};
       }
+      chunk.subscribers[j].changeObj[y][x] = block;
     }
   }
 
   playerChangeBlocks(player, changeList){
     for(let i = 0; i < changeList.length; i++){
-      this.map.setBlock(changeList[i].x, changeList[i].y, changeList[i].block)
-      let chunkx = Math.floor(changeList[i].x/256);
-      let chunky = Math.floor(changeList[i].y/256);
-      let chunk = this.map.getChunk(chunkx, chunky);
-      for(let j = 0; j < chunk.subscribers.length; j++){
-        if(player.name == chunk.subscribers[j].name){
-          continue;
-        }
-        if(!chunk.subscribers[j].changeObj[changeList[i].y]){
-          chunk.subscribers[j].changeObj[changeList[i].y] = {};
-        }
-        chunk.subscribers[j].changeObj[changeList[i].y][changeList[i].x] = changeList[i].block;
-        // chunk.subscribers[j].changeList.push({x: changeList[i].x, y:changeList[i].y});
+      playerChangeBlock(player, changeList[i].x, changeList[i].y, changeList[i].block);
+    }
+  }
+  playerChangeBlock(player, x, y, block){
+    this.map.setBlock(x, y, block)
+    let chunkx = Math.floor(x/256);
+    let chunky = Math.floor(y/256);
+    let chunk = this.map.getChunk(chunkx, chunky);
+    for(let j = 0; j < chunk.subscribers.length; j++){
+      if(player.name == chunk.subscribers[j].name){
+        // skip the player who is doing this
+        // (this player doesn't need the update)
+        continue;
       }
+      if(!chunk.subscribers[j].changeObj[y]){
+        chunk.subscribers[j].changeObj[y] = {};
+      }
+      chunk.subscribers[j].changeObj[y][x] = block;
+      // chunk.subscribers[j].changeList.push({x: changeList[i].x, y:changeList[i].y});
     }
   }
 

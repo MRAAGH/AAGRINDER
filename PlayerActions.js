@@ -6,9 +6,6 @@ If a player changed a set of blocks, syncher.playerChangeBlocks must be called.
 // If a player inventory changed, syncher.changeInventory must be called.
 If the server changed a set of blocks, syncher.serverChangeBlocks must be called.
 
-Please do not call the same method of Syncher or Subscribe several times in one action.
-Because it is ugly and potentially slow.
-
 Do not modify chunks directly! It must go through the Syncher!
 May modify player inventory and position directly.
 Because we are not synching those between clients.
@@ -29,7 +26,9 @@ class PlayerActions {
 
     console.log(spawnSpot)
 
-    // syncher?
+    // we assume this is a good spot and no checks need to be performed.
+
+    this.syncher.playerChangeBlocks()
 
     this.subscribe.resubscribe(player);
   }
