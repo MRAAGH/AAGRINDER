@@ -10,6 +10,12 @@
 		margin: 0px;
 		padding: 0px;
 		overflow: hidden;
+		background: black;
+	}
+	#terminal {
+		margin: 0px;
+		padding: 0px;
+		width: 100%;
 	}
 	</style>
 
@@ -17,13 +23,15 @@
 	<script src="js/jquery3.2.1.js"></script>
 	<script src="socket.io/socket.io.js"></script>
 	<script src="js/PlayerClient.js"></script>
-	<script src="js/testclient.js"></script>
+	<script src="js/terminal.js"></script>
+	<script src="js/cli.js"></script>
+	<script src="js/gui.js"></script>
+	<script src="js/client.js"></script>
 </head>
 
+<!-- <body onkeypress="return myKeyPress(event)"> -->
 <body>
-
-	<div id='world' style="display: none;"></div>
-
+	<canvas id='terminal' width='2000' height='1000'>
 </body>
 
 </html>
