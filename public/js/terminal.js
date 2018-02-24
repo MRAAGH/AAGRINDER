@@ -2,7 +2,8 @@
 
 const PADDING = 5;
 const LINE_SPACING = 30;
-const CHAR_WIDTH = 18;
+const CHAR_WIDTH = 17.6;
+const MIN_TERMINAL_WIDTH = 200;
 
 class Terminal {
   constructor(canvas){
@@ -12,8 +13,14 @@ class Terminal {
   }
 
   resize(w, h){
-    $(this.canvas).attr('width', w + 'px');
-    $(this.canvas).attr('height', h + 'px');
+    if(w < MIN_TERMINAL_WIDTH){
+      // lol that is too narrow
+      return;
+    }
+    this.canvas.width = w;
+    this.canvas.height = h;
+    // $(this.canvas).attr('width', w + 'px');
+    // $(this.canvas).attr('height', h + 'px');
   }
 
   charHeight(){ // number of characters that fit
@@ -44,6 +51,7 @@ class Terminal {
 
   displayLine(line, ypos){
     this.ctx.fillStyle = "white";
+    this.ctx.font = '30px monospace';
     this.ctx.fillText(line, PADDING, PADDING + (ypos + 1) * LINE_SPACING);
   }
 }

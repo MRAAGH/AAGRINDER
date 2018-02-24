@@ -5,6 +5,7 @@ let key_states = [];
 let socket;
 
 let terminal;
+let bigTerminal;
 let cli;
 let gui;
 
@@ -26,17 +27,17 @@ $("document").ready(function () {
 
 
 
-  let canvas = document.getElementById("terminal");
+	let canvas = document.getElementById("terminal");
 
 	terminal = new Terminal(canvas);
-	//terminal.test('HHHHAAA');
+	bigTerminal = new BigTerminal(terminal);
+	cli = new Cli(bigTerminal);
+	gui = new Gui(terminal);
 
-	cli = new Cli(terminal);
-
-	cli.println('hello world');
-	cli.println('another line');
-	cli.println('a very long line which is probably too long for your screen and I am hoping this gets wrapped nicely. Woops it was not long enough so let\'s add some more.');
-	cli.display();
+	bigTerminal.println('hello world');
+	bigTerminal.println('another line');
+	bigTerminal.println('a very long line which is probably too long for your screen and I am hoping this gets wrapped nicely. Woops it was not long enough so let\'s add some more.');
+	bigTerminal.display();
 
 	//Align everything for the first time:
 	onResize(undefined);
@@ -197,5 +198,7 @@ function onSocketDisconnected(data){
 function onResize(e) {
 	let w = window.innerWidth;
 	let h = window.innerHeight;
-
+	terminal.resize(w, h);
+	bigTerminal.reformat();
+	bigTerminal.display();
 }

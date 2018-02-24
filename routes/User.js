@@ -18,16 +18,20 @@ router.post('/register', (req, res) => {
 
 
   if(
-    !/^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$/.test(req.body.name)
+    !/^[a-z]([a-z0-9 ]{0,10}[a-z0-9])?$/.test(req.body.name)
+    // !/^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$/.test(req.body.name)
   ){
-    res.json({ message: 'Username invalid ^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$', success: false });
+    res.json({ message: 'Username invalid ^[a-z]([a-z0-9 ]{0,10}[a-z0-9])?$', success: false });
+    // res.json({ message: 'Username invalid ^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$', success: false });
     return;
   }
 
   if(
-    !/^[A-Za-z0-9 ]{3,}$/.test(req.body.password)
+    !/^[a-z0-9 ]{3,}$/.test(req.body.password)
+    // !/^[A-Za-z0-9 ]{3,}$/.test(req.body.password)
   ){
-    res.json({ message: 'Password invalid ^[A-Za-z0-9 ]{3,}$', success: false });
+    res.json({ message: 'Password invalid ^[a-z0-9 ]{3,}$', success: false });
+    // res.json({ message: 'Password invalid ^[A-Za-z0-9 ]{3,}$', success: false });
     return;
   }
 
