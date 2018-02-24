@@ -52,6 +52,8 @@ app.get('/aa', function (req, res) {
 let LEVEL_NAME;
 let WORLD_SEED;
 let map;
+let playerData;
+let spawn;
 let syncher;
 let playerActions;
 let serverActions;
@@ -193,7 +195,16 @@ function onClientConnect(socket) {
 function onLogin(data) {
   //Username sent?
   if (data.username) {
-    map.login(data.username, this);
+    playerData.login(data.username, data.password, this).then(
+      result => {
+
+      },
+      err => {
+
+      }
+    );
+
+    // map.login(data.username, this);
     // let the_player_who_joined = map.join(username, this);
     // if (!the_player_who_joined) {
     //   //Failed login.
@@ -214,15 +225,23 @@ loadServerProperties((props) => {
   LEVEL_NAME = props.level_name;
   WORLD_SEED = props.seed;
   map = new Map(WORLD_SEED);
-  let playerData = new PlayerData();
+  playerData = playerData = new PlayerData();
+  spawn = new Spawn(map);
   let syncher = new Syncher(map);
   let subscribe = new Subscribe(map);
-  playerActions = new PlayerActions(map.getBlock, syncher, Subscribe.resubscribe);
+  playerActions = new PlayerActions(
+    map,
+    syncher,
+    subscribe,
+    spawn
+  );
 
   playerData.login('maze', 'aaa', {id:'test'}).then(
     result => {
       console.log('YES')
       console.log(result)
+
+      playerActions.login(result);
 
       playerData.logout({id:'test'});
 

@@ -11,21 +11,27 @@ Because it is ugly and potentially slow.
 
 Do not modify chunks directly! It must go through the Syncher!
 May modify player inventory and position directly.
+Because we are not synching those between clients.
 
 */
 
 class PlayerActions {
 
-  constructor(blockAt, syncher, resubscribe){
-    this.blockAt = blockAt;
+  constructor(map, syncher, subscribe, spawn){
+    this.map = map;
     this.syncher = syncher;
-    this.resubscribe = resubscribe;
+    this.subscribe = subscribe;
+    this.spawn = spawn;
   }
 
-  login(playerName, socket) {
-    let player = new Player(128, 128, playerName, socket);
-    this.players.push(player);
-    subscribe.resubscribe(player);
+  login(player) {
+    let spawnSpot = this.spawn.choosePlayerSpawnSpot(player);
+
+    console.log(spawnSpot)
+
+    // syncher?
+
+    this.subscribe.resubscribe(player);
   }
 
   logout(socket){
