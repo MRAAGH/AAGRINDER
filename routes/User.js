@@ -9,9 +9,7 @@ const SALT_WORK_FACTOR = 10;
 
 router.post('/register', (req, res) => {
   if(
-    req.body.name === undefined
-    || typeof(req.body.name) !== 'string'
-    || req.body.password === undefined
+    typeof(req.body.name) !== 'string'
     || typeof(req.body.password) !== 'string'
   ){
     res.json({ message: 'Missing form data', success: false });

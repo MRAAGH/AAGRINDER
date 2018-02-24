@@ -35,7 +35,7 @@ const ServerActions = require("./ServerActions").ServerActions;
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 8080;
 
 //app.get('/', function (req, res) { res.sendFile(__dirname + '/public/client.html'); });
 app.use(express.static(__dirname + '/public'));
@@ -74,22 +74,22 @@ process.stdin.on('data', function (text) {
 //add autosave option to server.properties
 /*
 cron.schedule('0 * * * *', function () {
-  saveToFile();
+saveToFile();
 });
 cron.schedule('10 * * * *', function () {
-  saveToFile();
+saveToFile();
 });
 cron.schedule('20 * * * *', function () {
-  saveToFile();
+saveToFile();
 });
 cron.schedule('30 * * * *', function () {
-  saveToFile();
+saveToFile();
 });
 cron.schedule('40 * * * *', function () {
-  saveToFile();
+saveToFile();
 });
 cron.schedule('50 * * * *', function () {
-  saveToFile();
+saveToFile();
 });*/
 
 function saveToFile(callback) {
@@ -194,13 +194,29 @@ function onClientConnect(socket) {
 
 function onLogin(data) {
   //Username sent?
-  if (data.username) {
+  if (
+    typeof(data.username) !== 'string'
+    || typeof(data.password) !== 'string'
+  ){
+    this.emit('loginerror', {message: 'incomplete data'})
+  }
+  else {
     playerData.login(data.username, data.password, this).then(
       result => {
+        console.log('YES')
+        this.emit('loginsuccess')
+        // console.log(result)
 
+        playerActions.login(result);
+
+        // playerData.logout({id:'test'});
+        //
+        // console.log(playerData.onlinePlayers)
+        // console.log(playerData.knownPlayers)
       },
       err => {
-
+        console.log('NO ' + err);
+        this.emit('loginerror', {message: err});
       }
     );
 
@@ -215,7 +231,7 @@ function onLogin(data) {
 
 function onClientDisconnect() {
   console.log("Client disconnected: " + this.id);
-  map.logout(this);
+  // map.logout(this);
 };
 
 
@@ -237,22 +253,22 @@ loadServerProperties((props) => {
   );
 
 
-  playerData.login('maze', 'aaa', {id:'test'}).then(
-    result => {
-      console.log('YES')
-      // console.log(result)
-
-      playerActions.login(result);
-
-      // playerData.logout({id:'test'});
-      //
-      // console.log(playerData.onlinePlayers)
-      // console.log(playerData.knownPlayers)
-    },
-    err => {
-      console.log('NO ' + err)
-    }
-  );
+  // playerData.login('maze', 'aaa', {id:'test'}).then(
+  //   result => {
+  //     console.log('YES')
+  //     // console.log(result)
+  //
+  //     playerActions.login(result);
+  //
+  //     // playerData.logout({id:'test'});
+  //     //
+  //     // console.log(playerData.onlinePlayers)
+  //     // console.log(playerData.knownPlayers)
+  //   },
+  //   err => {
+  //     console.log('NO ' + err)
+  //   }
+  // );
 
 
 
@@ -269,11 +285,11 @@ loadServerProperties((props) => {
   console.log("Preparing level \"" + LEVEL_NAME + "\"")
   loadfromFile(() => {
     // map.prepareSpawnArea(() => {
-      http.listen(port, function () {
-        let hrend_server_load = process.hrtime(hrstart_server_load);
-        console.log("Done (" + hrend_server_load[0] + "," + Math.floor(hrend_server_load[1] / 1000000) + "s)!");
-        console.log('AAGRINDER server listening on *:' + port);
-      });
+    http.listen(port, function () {
+      let hrend_server_load = process.hrtime(hrstart_server_load);
+      console.log("Done (" + hrend_server_load[0] + "," + Math.floor(hrend_server_load[1] / 1000000) + "s)!");
+      console.log('AAGRINDER server listening on *:' + port);
+    });
     // });
   });
 });
@@ -373,18 +389,18 @@ console.log(a[0]);
 
 /*
 function recursio(i) {
-  console.log(i);
-  if (i > 3) {
-    throw "bad";
-  }
-  recursio(i + 1);
+console.log(i);
+if (i > 3) {
+throw "bad";
+}
+recursio(i + 1);
 }
 
 try {
-  recursio(0);
+recursio(0);
 }
 catch (err) {
-  console.log(err);
+console.log(err);
 }
 //*/
 
@@ -415,12 +431,12 @@ let MersenneTwister = require('mersenne-twister');
 let hrstart = process.hrtime();
 let twister = new MersenneTwister(Math.floor(Math.random() * 65536));
 for (let i = 0; i < 10000000; i++) {
-  let a = twister.random_int() % 256;
+let a = twister.random_int() % 256;
 }
 let hrend = process.hrtime(hrstart);
 let hrstart2 = process.hrtime();
 for (let i = 0; i < 10000000; i++) {
-  let a = Math.floor(Math.random() * 256);
+let a = Math.floor(Math.random() * 256);
 }
 let hrend2 = process.hrtime(hrstart2);
 let hrend = process.hrtime(hrstart);
@@ -429,13 +445,13 @@ let aa = Math.floor(Math.random() * 65536);
 let aab = Math.floor(Math.random() * 256);
 let aabb = Math.floor(Math.random() * 256);
 for (let i = 0; i < 10000000; i++) {
-  aa *= aab;
-  aa += aabb;
-  let a = aa;
+aa *= aab;
+aa += aabb;
+let a = aa;
 }
 let hrend3 = process.hrtime(hrstart2);
 console.info("twister: %ds %dms\nmath.random: %ds %dms\npure math: %ds %dms",
-  hrend[0], hrend[1] / 1000000, hrend2[0], hrend2[1] / 1000000, hrend3[0], hrend3[1] / 1000000
+hrend[0], hrend[1] / 1000000, hrend2[0], hrend2[1] / 1000000, hrend3[0], hrend3[1] / 1000000
 )
 //*/
 
@@ -443,7 +459,7 @@ console.info("twister: %ds %dms\nmath.random: %ds %dms\npure math: %ds %dms",
 //Mersenne Twister API testing
 let MersenneTwister = require('mersenne-twister');
 for (let i = 0; i < 2; i++) {
-  let result = new MersenneTwister([i, 100]).random_int();
-  console.log(result);
+let result = new MersenneTwister([i, 100]).random_int();
+console.log(result);
 }
 //*/
