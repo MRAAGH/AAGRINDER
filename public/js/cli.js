@@ -13,12 +13,14 @@ class Cli {
     this.asterisks = false; // whether we are hiding the typed characters
     this.history = [];
     this.historyPos = 0;
+    this.editPos = 0;
   }
 
   // prompt, aka enable
   prompt(content){ // prompt the user to input something (and display static content)
     this.static = content;
     this.enabled = true;
+    this.editPos = 0;
     this.display();
   }
 
@@ -26,6 +28,7 @@ class Cli {
     this.static = content;
     this.enabled = true;
     this.asterisks = true;
+    this.editPos = 0;
     this.display();
   }
 
@@ -95,8 +98,13 @@ class Cli {
 				this.bigterminal.scrollDown();
 				break;
 
+				case 'Home':
+        this.home();
+				break;
+
 				case 'End':
-				this.bigterminal.scrollToEnd();
+        this.end();
+				// this.bigterminal.scrollToEnd();
 				break;
 
 				case 'ArrowUp':
@@ -125,24 +133,42 @@ class Cli {
       return false;
     }
     // type this:
-    this.editable += key
+    let left = this.editable.slice(0, this.editPos);
+    let right = this.editable.slice(this.editPos, this.editable.length);
+    this.editable = left + key + right;
+    this.editPos++;
     this.display();
     return false;
   }
 
   backspace(){
-    if(this.enabled && this.editable.length > 0){
-      this.editable = this.editable.substring(0, this.editable.length - 1);
+    if(this.editPos > 0){
+      let left = this.editable.slice(0, this.editPos - 1);
+      let right = this.editable.slice(this.editPos, this.editable.length);
+      this.editable = left + right;
+      this.editPos--;
       this.display();
     }
   }
 
   left(){
-
+    if(this.editPos > 0){
+      this.editPos--;
+    }
   }
 
   right(){
+    if(this.editPos < this.editable.length){
+      this.editPos++;
+    }
+  }
 
+  home(){
+    this.editPos = 0;
+  }
+
+  end(){
+    this.editPos = this.editable.length;
   }
 
   up(){
