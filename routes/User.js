@@ -28,10 +28,10 @@ router.post('/register', (req, res) => {
 
   if(
     // !/^[a-z0-9 ]{3,}$/.test(req.body.password)
-    !/^[A-Za-z0-9 ]{3,}$/.test(req.body.password)
+    !/^.{3,}$/.test(req.body.password)
   ){
     // res.json({ message: 'Password invalid ^[a-z0-9 ]{3,}$', success: false });
-    res.json({ message: 'Password invalid ^[A-Za-z0-9 ]{3,}$', success: false });
+    res.json({ message: 'Password invalid ^.{3,}$', success: false });
     return;
   }
 

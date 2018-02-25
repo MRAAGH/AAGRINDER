@@ -1,8 +1,8 @@
 // Wrapper for canvas, allows drawing text from an array of strings
 
 const PADDING = 5;
-const LINE_SPACING = 30;
-const CHAR_WIDTH = 17.6;
+const LINE_SPACING = 20;
+const CHAR_WIDTH = 11.7;
 
 class Terminal {
   constructor(canvas, width, height, xpos){
@@ -22,7 +22,7 @@ class Terminal {
   displayScreen(lines){
     this.ctx.clearRect(this.xpos * CHAR_WIDTH, 0, 4 * PADDING + this.width * CHAR_WIDTH, this.canvas.height);
     this.ctx.fillStyle = "white";
-    this.ctx.font = '30px monospace';
+    this.ctx.font = '20px monospace';
     for(let i = 0; i < lines.length; i++){
       this.ctx.fillText(
         lines[i],
