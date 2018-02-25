@@ -13,16 +13,19 @@ class BigTerminal {
 
   println(content){
     this.lines.push(content);
-    this.formatLine(content);
+    this.formatLine(content, this.formatted);
+    this.display();
   }
 
   modify(content){
     this.dynamic = content;
+    this.display();
   }
 
   commit(){
     this.println(this.dynamic);
     this.dynamic = '';
+    this.display();
   }
 
   printTruncate(content){ // cut off instead of wrapping
@@ -30,17 +33,17 @@ class BigTerminal {
     this.println(truncated);
   }
 
-  formatLine(line){
-    let w = this.terminal.charWidth();
+  formatLine(line, buffer){
+    let w = this.terminal.width;
     while(line.length > w){
-      this.formatted.push(line.substring(0, w - 1));
-      line = line.substring(w - 1);
+      buffer.push(line.substring(0, w));
+      line = line.substring(w);
     }
-    this.formatted.push(line);
+    buffer.push(line);
   }
 
   truncateLine(line){
-    let w = this.terminal.charWidth();
+    let w = this.terminal.width;
     if(line.length > w){
       return line.substring(0, w - 1);
     }
@@ -52,23 +55,23 @@ class BigTerminal {
   reformat(){ // wrap again (terminal size changed?)
     this.formatted = [];
     for(let i = 0; i < this.lines.length; i++){
-      this.formatLine(this.lines[i]);
+      this.formatLine(this.lines[i], this.formatted);
     }
   }
 
   display(){ // display current content
     let visibleLines = [];
-    for(let i = 0; i < this.terminal.charHeight() && i + this.scrollPos < this.formatted.length; i++){
+    for(let i = 0; i < this.terminal.height && i + this.scrollPos < this.formatted.length; i++){
       visibleLines.push(this.formatted[i + this.scrollPos]);
     }
     // is there space left at the end for displaying the dynamic line?
-    if(visibleLines.length < this.terminal.charHeight() && this.dynamic.length > 0){
-      let formattedDynamic = this.formatLine(this.dynamic);
-      for(let j = 0; j < formattedDynamic.length && visibleLines.length < this.terminal.charHeight(); j++){
+    if(visibleLines.length < this.terminal.height){
+      let formattedDynamic = [];
+      this.formatLine(this.dynamic, formattedDynamic);
+      for(let j = 0; j < formattedDynamic.length && visibleLines.length < this.terminal.height; j++){
         visibleLines.push(formattedDynamic[j]);
       }
     }
-    this.terminal.clear();
     this.terminal.displayScreen(visibleLines);
   }
 
@@ -79,13 +82,13 @@ class BigTerminal {
   }
 
   scrollDown(){
-    if(this.scrollPos + this.terminal.charHeight() < this.formatted){
+    if(this.scrollPos + this.terminal.height < this.formatted){
       this.scrollPos++;
     }
   }
 
   scrollToEnd(){
-    this.scrollPos = this.formatted.length - this.terminal.charHeight();
+    this.scrollPos = this.formatted.length - this.terminal.height;
     if(this.scrollpos < 0){
       this.scrollPos = 0;
     }
