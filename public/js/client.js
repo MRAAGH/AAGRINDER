@@ -47,6 +47,8 @@ $("document").ready(function () {
 	bigterminal.println('AAGRINDER');
 	bigterminal.println('');
 
+	setInterval(()=>cli.blink(), 500);
+
 	cli.prompt('login: ');
 
 

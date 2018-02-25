@@ -20,7 +20,7 @@ class Terminal {
   }
 
   displayScreen(lines){
-    this.ctx.clearRect(PADDING + this.xpos * CHAR_WIDTH, 0, 2 * PADDING + this.width * CHAR_WIDTH, this.canvas.height);
+    this.ctx.clearRect(this.xpos * CHAR_WIDTH, 0, 4 * PADDING + this.width * CHAR_WIDTH, this.canvas.height);
     this.ctx.fillStyle = "white";
     this.ctx.font = '30px monospace';
     for(let i = 0; i < lines.length; i++){

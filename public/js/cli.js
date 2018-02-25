@@ -9,16 +9,32 @@ class Cli {
     this.bigterminal = bigterminal;
     this.static = '';
     this.editable = '';
-    this.enabled = false; // whether we are allowing the user to type
+    this.enabled = false; // whether we are allowing the user to type and cursor blinking
     this.asterisks = false; // whether we are hiding the typed characters
     this.history = [];
     this.historyPos = 0;
     this.editPos = 0;
+    this.cursorOn = false;
+  }
+
+  blink(){
+    if (this.cursorOn){
+      this.cursorOn = false;
+      this.display();
+    }
+    else{
+      // only blink if enabled:
+      if(this.enabled){
+        this.cursorOn = true;
+        this.display();
+      }
+    }
   }
 
   // prompt, aka enable
   prompt(content){ // prompt the user to input something (and display static content)
     this.static = content;
+    this.editable = '';
     this.enabled = true;
     this.editPos = 0;
     this.display();
@@ -26,6 +42,7 @@ class Cli {
 
   promptPassword(content){
     this.static = content;
+    this.editable = '';
     this.enabled = true;
     this.asterisks = true;
     this.editPos = 0;
@@ -41,12 +58,15 @@ class Cli {
   }
 
   display(){
-    if(this.asterisks){
-      this.bigterminal.modify(this.static + this.toAsterisks(this.editable));
+    let displayedEditable = this.asterisks ? this.toAsterisks(this.editable) : this.editable;
+
+    if(this.cursorOn){
+      let left = displayedEditable.slice(0, this.editPos);
+      let right = displayedEditable.slice(this.editPos + 1, displayedEditable.length);
+      displayedEditable = left + '█' + right;
     }
-    else{
-      this.bigterminal.modify(this.static + this.editable);
-    }
+
+    this.bigterminal.modify(this.static + displayedEditable);
   }
 
   // commit, aka apply and disable
@@ -55,8 +75,9 @@ class Cli {
     if(this.asterisks){
       // hide them
       this.editable = '';
-      this.display();
     }
+    this.cursorOn = false;
+    this.display();
     this.bigterminal.commit();
 
     // add to command history (if it makes sense)
@@ -137,6 +158,7 @@ class Cli {
     let right = this.editable.slice(this.editPos, this.editable.length);
     this.editable = left + key + right;
     this.editPos++;
+    this.cursorOn = true;
     this.display();
     return false;
   }
@@ -147,6 +169,7 @@ class Cli {
       let right = this.editable.slice(this.editPos, this.editable.length);
       this.editable = left + right;
       this.editPos--;
+      this.cursorOn = true;
       this.display();
     }
   }
@@ -154,21 +177,29 @@ class Cli {
   left(){
     if(this.editPos > 0){
       this.editPos--;
+      this.cursorOn = true;
+      this.display();
     }
   }
 
   right(){
     if(this.editPos < this.editable.length){
       this.editPos++;
+      this.cursorOn = true;
+      this.display();
     }
   }
 
   home(){
     this.editPos = 0;
+    this.cursorOn = true;
+    this.display();
   }
 
   end(){
     this.editPos = this.editable.length;
+    this.cursorOn = true;
+    this.display();
   }
 
   up(){
