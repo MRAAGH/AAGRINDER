@@ -1,9 +1,9 @@
 
 // let BLOCKED_KEYS = [9, 35, 36, 70, 71];
-const BLOCKED_KEYS = [8, 9, 33, 34, 35, 36, 37, 38, 39, 40];
+const BLOCKED_KEYS = [8, 9, 33, 34, 35, 36, 37, 38, 39, 40, 191, 111];
 const CLI_SIZE = 0.25;
 const MIN_CANVAS_WIDTH = 200;
-const STATES = Object.freeze({
+const STATES = Object.freeze({ // enum
 	loginscreen: 0,
 	loginpassword: 1,
 	loginwait: 2,
@@ -11,7 +11,8 @@ const STATES = Object.freeze({
 	registerpassword: 4,
 	registerpassword2: 5,
 	registerwait: 6,
-	ingame: 7
+	ingame: 7,
+	connecting: 8
 });
 
 let key_states = [];
@@ -25,9 +26,10 @@ let bigterminal;
 let cli;
 let gui;
 let cliMode = true;
-let state = STATES.loginscreen;
+let state = STATES.connecting;
 
 let name = '';
+let registration = {};
 
 $("document").ready(function () {
 
@@ -44,17 +46,12 @@ $("document").ready(function () {
 	//Align everything for the first time:
 	onResize(undefined);
 
-	bigterminal.println('AAGRINDER');
-	bigterminal.println('');
+	bigterminal.println('connecting...');
 
 	setInterval(()=>cli.blink(), 500);
 
-	cli.prompt('login: ');
-
-
 	//Request socket connection from server:
 	socket = io();
-	console.log("Attempting to connect");
 
 	// Start listening for events
 	setEventHandlers();
@@ -69,16 +66,27 @@ let setEventHandlers = function () {
 	// Window resize
 	window.addEventListener("resize", onResize, false);
 
-	socket.on("connect", onSocketConnected);
+	socket.on("connect", data=>{
+		bigterminal.println('');
+		bigterminal.println('');
+		bigterminal.println('AAGRINDER');
+		bigterminal.println('');
+		bigterminal.println('try /register');
+		bigterminal.println('');
+		cli.prompt('login: ');
+		state = STATES.loginscreen;
+	});
 	socket.on("disconnect", onSocketDisconnected);
 	// socket.on("w", onWelcome);
 	// socket.on("t", onTerrainUpdate);
 	socket.on("loginsuccess", data=>{
-		console.log('loginsuccess', data)
-		// bigterminal.println(data)
+		bigterminal.println('login successful')
+		if(state === STATES.loginwait){
+			cli.prompt('');
+			state = STATES.ingame;
+		}
 	});
 	socket.on("loginerror", data=>{
-		console.log('loginerror', data)
 		bigterminal.println(data.message)
 		if(state === STATES.loginwait){
 			cli.prompt('login: ');
@@ -89,7 +97,6 @@ let setEventHandlers = function () {
 
 function onSocketConnected(data){
 	console.log('conn', data)
-	bigterminal.println('connected to server');
 }
 function onSocketDisconnected(data){
 	console.log('disconn', data)
@@ -104,18 +111,32 @@ function onKeydown(e) {
 		let result = cli.handleKey(e.key);
 		if(result !== false) {
 			// we got back what the user typed
+
 			switch(state){
+
+				case STATES.connecting:
+				// nothing
+				break;
+
 				case STATES.loginscreen:
 				if(result.length === 0){
 					// nothing was typed ... redisplay form
 					cli.prompt('login: ');
 				}
 				else{
-					// alright got username
-					name = result;
-					// prompt for password
-					cli.promptPassword('password for ' + name + ': ');
-					state = STATES.loginpassword;
+					// is it /register?
+					if(result === '/register'){
+						// straight to registration
+						cli.prompt('name: ');
+						state = STATES.registerscreen;
+					}
+					else{
+						// alright got username
+						name = result;
+						// prompt for password
+						cli.promptPassword('password for ' + name + ': ');
+						state = STATES.loginpassword;
+					}
 				}
 				break;
 
@@ -142,12 +163,71 @@ function onKeydown(e) {
 				break;
 
 				case STATES.registerscreen:
+				if(result.length === 0){
+					// nothing was typed ... redisplay form
+					cli.prompt('name: ');
+				}
+				else{
+					// alright got username
+					registration.name = result;
+					// prompt for password
+					cli.promptPassword('choose password: ');
+					state = STATES.registerpassword;
+				}
 				break;
 
 				case STATES.registerpassword:
+				if(result.length === 0){
+					// nothing was typed ... redisplay form
+					cli.promptPassword('choose password: ');
+				}
+				else{
+					// alright got username
+					registration.password = result;
+					// prompt for password
+					cli.promptPassword('repeat password: ');
+					state = STATES.registerpassword2;
+				}
 				break;
 
 				case STATES.registerpassword2:
+
+				if(result.length === 0){
+					// nothing was typed ... redisplay form
+					cli.promptPassword('repeat password: ');
+				}
+				else{
+					// alright got username and password
+					let password2 = result;
+
+		      if(registration.password !== password2){
+		        bigterminal.println('passwords do not match');
+						cli.prompt('login: ');
+						state = STATES.loginscreen;
+						registration = {};
+		      }
+					else {
+						// try to register
+			      bigterminal.println('requesting registration ...')
+
+			      let data = 'name=' + encodeURIComponent(registration.name) + '&password=' + encodeURIComponent(registration.password);
+						registration = {};
+
+						state = STATES.registerwait;
+
+			      $.ajax({
+			        type: "POST",
+			        url: "/api/users/register",
+			        data: data,
+			        processData: false,
+			        success: function(msg) {
+			          bigterminal.println(msg.message);
+								cli.prompt('login: ');
+								state = STATES.loginscreen;
+			        }
+			      });
+					}
+				}
 				break;
 
 				case STATES.registerwait:

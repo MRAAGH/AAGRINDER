@@ -93,6 +93,7 @@ class Cli {
 
     this.static = '';
     this.editable = '';
+    this.display();
     this.enabled = false;
     this.asterisks = false;
     return wasCommited;

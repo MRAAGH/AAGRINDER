@@ -29,7 +29,7 @@ class PlayerData {
           return reject('Server error');
         }
         if(!user){
-          return reject('Username not found');
+          return reject('User does not exist. Try /register');
         }
 
         bcrypt.compare(password, user.password, (err, isMatch) => {

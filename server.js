@@ -203,19 +203,11 @@ function onLogin(data) {
   else {
     playerData.login(data.username, data.password, this).then(
       result => {
-        console.log('YES')
         this.emit('loginsuccess')
-        // console.log(result)
 
         playerActions.login(result);
-
-        // playerData.logout({id:'test'});
-        //
-        // console.log(playerData.onlinePlayers)
-        // console.log(playerData.knownPlayers)
       },
       err => {
-        console.log('NO ' + err);
         this.emit('loginerror', {message: err});
       }
     );
