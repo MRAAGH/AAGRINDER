@@ -13,6 +13,7 @@ let cli;
 let gui;
 let cliMode = true;
 const CLI_SIZE = 0.25;
+const MIN_CANVAS_WIDTH = 200;
 
 
 $("document").ready(function () {
@@ -30,7 +31,7 @@ $("document").ready(function () {
 	//Align everything for the first time:
 	onResize(undefined);
 
-	bigterminal.println('             AAGRINDER');
+	bigterminal.println('AAGRINDER');
 	bigterminal.println('');
 
 	cli.prompt('login: ');
@@ -86,14 +87,36 @@ function onKeydown(e) {
 
 			switch(e.key){
 				case 'Backspace':
-					cli.backspace();
-					break;
+				cli.backspace();
+				break;
+				case 'PageUp':
+				bigterminal.scrollUp();
+				break;
+				case 'PageDown':
+				bigterminal.scrollDown();
+				break;
+				case 'End':
+				bigterminal.scrollToEnd();
+				break;
+				case 'ArrowUp':
+				cli.up();
+				break;
+				case 'ArrowDown':
+				cli.down();
+				break;
+				case 'ArrowLeft':
+				cli.left();
+				break;
+				case 'ArrowRight':
+				cli.right();
+				break;
 				case 'Enter':
-					let result = cli.commit();
-					console.log(result);
-					break;
+				let result = cli.commit();
+				cli.prompt('lalala ')
+				console.log(result);
+				break;
 				default:
-					console.log('ignored key: ' + e.key);
+				console.log('ignored key: ' + e.key);
 			}
 		}
 	}
@@ -121,96 +144,8 @@ function onKeydown(e) {
 //
 //
 // 	key_code = e.keyCode;
-// 	if (blocked_keys.indexOf(key_code) > -1) {
-// 		e.preventDefault(); //Prevent some of the browser's key bindings
-// 	}
 // 	if (!key_states[key_code]) {
 // 		key_states[key_code] = true;
-// 		//console.log("Pressed: " + key_code);
-// 		//Do key action.
-// 		//
-// 		// //Which mode are we in?
-// 		// if (inventory_open) {
-// 		// 	switch (key_code) {
-// 		// 		case 65: // A
-// 		// 		selectItem("A");
-// 		// 		break;
-// 		// 		case 66: // B
-// 		// 		selectItem("B");
-// 		// 		break;
-// 		// 		case 84: // T
-// 		// 		selectItem("T");
-// 		// 		break;
-// 		// 		case 72: // H
-// 		// 		selectItem("H");
-// 		// 		break;
-// 		// 		case 68: // D
-// 		// 		selectItem("D");
-// 		// 		break;
-// 		// 		case 107: // +
-// 		// 		case 187: // +
-// 		// 		selectItem("+");
-// 		// 		break;
-// 		// 		case 109: // -
-// 		// 		case 189: // -
-// 		// 		selectItem("-");
-// 		// 		break;
-// 		// 		case 79: // O
-// 		// 		selectItem("O");
-// 		// 		break;
-// 		// 		case 77: // M
-// 		// 		selectItem("M");
-// 		// 		break;
-// 		// 		case 71: // G
-// 		// 		selectItem("G");
-// 		// 		break;
-// 		// 		case 49: // 1
-// 		// 		craftItem(1);
-// 		// 		break;
-// 		// 		case 50: // 2
-// 		// 		craftItem(2);
-// 		// 		break;
-// 		// 		case 51: // 3
-// 		// 		craftItem(3);
-// 		// 		break;
-// 		// 		case 52: // 4
-// 		// 		craftItem(4);
-// 		// 		break;
-// 		// 		case 69: // E
-// 		// 		case 27: // Esc
-// 		// 		inventory_open = false;
-// 		// 		$(".inventory").hide();
-// 		// 		break;
-// 		// 	};
-// 		// }
-// 		// else {
-// 		// 	switch (key_code) {
-// 		// 		case 65: // A
-// 		// 		buttonCycle(65, () => {
-// 		// 			socket.emit('move', { dir: 2 });
-// 		// 		});
-// 		// 		break;
-// 		// 		case 68: // D
-// 		// 		buttonCycle(68, () => {
-// 		// 			socket.emit('move', { dir: 0 });
-// 		// 		});
-// 		// 		break;
-// 		// 		case 83: // S
-// 		// 		buttonCycle(83, () => {
-// 		// 			socket.emit('move', { dir: 3 });
-// 		// 		});
-// 		// 		break;
-// 		// 		case 87: // W
-// 		// 		buttonCycle(87, () => {
-// 		// 			socket.emit('move', { dir: 1 });
-// 		// 		});
-// 		// 		break;
-// 		// 		case 69: // E
-// 		// 		inventory_open = true;
-// 		// 		$(".inventory").show();
-// 		// 		break;
-// 		// 	};
-// 		// }
 // 	}
 // };
 
@@ -234,15 +169,17 @@ function onKeyup(e) {
 function onResize(e) {
 	let w = window.innerWidth;
 	let h = window.innerHeight;
-	mycanvas.width = w;
-	mycanvas.height = h;
-	let charWidth = Math.floor((mycanvas.width - 2 * PADDING) / CHAR_WIDTH) - 1;
-	let charWidthLeft = Math.floor(charWidth * CLI_SIZE);
-	let charWidthRight = charWidth - charWidthLeft;
-	let charHeight = Math.floor((mycanvas.height - 2 * PADDING) / LINE_SPACING);
-	cliterminal.resize(charWidthLeft, charHeight, 0);
-	guiterminal.resize(charWidthRight, charHeight, charWidthLeft);
-	bigterminal.reformat();
+	if(w > MIN_CANVAS_WIDTH){ // only apply resize if the canvas is reasonably big
+		mycanvas.width = w;
+		mycanvas.height = h;
+		let charWidth = Math.floor((mycanvas.width - 2 * PADDING) / CHAR_WIDTH) - 1;
+		let charWidthLeft = Math.floor(charWidth * CLI_SIZE);
+		let charWidthRight = charWidth - charWidthLeft;
+		let charHeight = Math.floor((mycanvas.height - 2 * PADDING) / LINE_SPACING);
+		cliterminal.resize(charWidthLeft, charHeight, 0);
+		guiterminal.resize(charWidthRight, charHeight, charWidthLeft);
+		bigterminal.reformat();
+	}
 }
 
 
