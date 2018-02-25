@@ -56,7 +56,6 @@ class BigTerminal {
 
   display(){ // display current content
     let visibleLines = [];
-    console.log('scrollPos',this.scrollPos)
     for(let i = 0; i < this.terminal.height && i + this.scrollPos < this.formatted.length; i++){
       visibleLines.push(this.formatted[i + this.scrollPos]);
     }
@@ -77,9 +76,7 @@ class BigTerminal {
   }
 
   scrollDown(){
-    console.log(this.scrollPos, this.terminal.height, this.formatted.length)
     if(this.scrollPos + this.terminal.height < this.formatted.length + this.formattedDynamic.length){
-      console.log('yey')
       this.scrollPos++;
     }
     this.display();

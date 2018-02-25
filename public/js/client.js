@@ -1,6 +1,19 @@
 
-// let blocked_keys = [9, 35, 36, 70, 71];
-let blocked_keys = [8, 9];
+// let BLOCKED_KEYS = [9, 35, 36, 70, 71];
+const BLOCKED_KEYS = [8, 9, 33, 34, 35, 36, 37, 38, 39, 40];
+const CLI_SIZE = 0.25;
+const MIN_CANVAS_WIDTH = 200;
+const STATES = Object.freeze({
+	loginscreen: 0,
+	loginpassword: 1,
+	loginwait: 2,
+	registerscreen: 3,
+	registerpassword: 4,
+	registerpassword2: 5,
+	registerwait: 6,
+	ingame: 7
+});
+
 let key_states = [];
 
 let socket;
@@ -12,9 +25,9 @@ let bigterminal;
 let cli;
 let gui;
 let cliMode = true;
-const CLI_SIZE = 0.25;
-const MIN_CANVAS_WIDTH = 200;
+let state = STATES.loginscreen;
 
+let name = '';
 
 $("document").ready(function () {
 
@@ -60,11 +73,15 @@ let setEventHandlers = function () {
 	// socket.on("t", onTerrainUpdate);
 	socket.on("loginsuccess", data=>{
 		console.log('loginsuccess', data)
-		bigterminal.println(data)
+		// bigterminal.println(data)
 	});
 	socket.on("loginerror", data=>{
 		console.log('loginerror', data)
-		bigterminal.println(data)
+		bigterminal.println(data.message)
+		if(state === STATES.loginwait){
+			cli.prompt('login: ');
+			state = STATES.loginscreen;
+		}
 	});
 };
 
@@ -78,45 +95,67 @@ function onSocketDisconnected(data){
 }
 
 function onKeydown(e) {
-	if (blocked_keys.indexOf(e.keyCode) > -1) {
+	if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
 		e.preventDefault(); //Prevent some of the browser's key bindings
 	}
 	if(cliMode){
-		if(!cli.handleKey(e.key)){
-			// cli did not handle it, let's do something else.
+		let result = cli.handleKey(e.key);
+		if(result !== false) {
+			// we got back what the user typed
+			switch(state){
+				case STATES.loginscreen:
+				if(result.length === 0){
+					// nothing was typed ... redisplay form
+					cli.prompt('login: ');
+				}
+				else{
+					// alright got username
+					name = result;
+					// prompt for password
+					cli.promptPassword('password for ' + name + ': ');
+					state = STATES.loginpassword;
+				}
+				break;
 
-			switch(e.key){
-				case 'Backspace':
-				cli.backspace();
+				case STATES.loginpassword:
+				if(result.length === 0){
+					// nothing was typed ... redisplay form
+					cli.promptPassword('password for ' + name + ': ');
+				}
+				else{
+					// alright got username and password
+					let password = result;
+					// try to login
+					socket.emit('login', {
+						username: name,
+						password: password
+					});
+					// and now we wait
+					state = STATES.loginwait;
+				}
 				break;
-				case 'PageUp':
-				bigterminal.scrollUp();
+
+				case STATES.loginwait:
+				// nothing
 				break;
-				case 'PageDown':
-				bigterminal.scrollDown();
+
+				case STATES.registerscreen:
 				break;
-				case 'End':
-				bigterminal.scrollToEnd();
+
+				case STATES.registerpassword:
 				break;
-				case 'ArrowUp':
-				cli.up();
+
+				case STATES.registerpassword2:
 				break;
-				case 'ArrowDown':
-				cli.down();
+
+				case STATES.registerwait:
+				// nothing
 				break;
-				case 'ArrowLeft':
-				cli.left();
+
+				case STATES.ingame:
+				// either chat or an in-game command
 				break;
-				case 'ArrowRight':
-				cli.right();
-				break;
-				case 'Enter':
-				let result = cli.commit();
-				cli.prompt('lalala ')
-				console.log(result);
-				break;
-				default:
-				console.log('ignored key: ' + e.key);
+
 			}
 		}
 	}
@@ -152,7 +191,7 @@ function onKeydown(e) {
 // Keyboard key up
 function onKeyup(e) {
 	key_code = e.keyCode;
-	if (blocked_keys.indexOf(key_code) > -1) {
+	if (BLOCKED_KEYS.indexOf(key_code) > -1) {
 		e.preventDefault(); //Prevent some of the browser's key bindings
 	}
 	if (key_states[key_code]) {
