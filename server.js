@@ -223,7 +223,8 @@ function onLogin(data) {
 
 function onClientDisconnect() {
   console.log("Client disconnected: " + this.id);
-  // map.logout(this);
+  let player = playerData.logout(this);
+  playerActions.logout(player);
 };
 
 

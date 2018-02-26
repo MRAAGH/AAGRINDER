@@ -10,11 +10,22 @@ class Cli {
     this.static = '';
     this.editable = '';
     this.enabled = false; // whether we are allowing the user to type and cursor blinking
+    this.focused = true; // another condition for cursor blinking
     this.asterisks = false; // whether we are hiding the typed characters
     this.history = [];
     this.historyPos = 0;
     this.editPos = 0;
     this.cursorOn = false;
+  }
+
+  focus(){
+    this.focused = true;
+  }
+
+  blur(){
+    this.focused = false;
+    this.cursorOn = false;
+    this.display();
   }
 
   blink(){
@@ -24,7 +35,7 @@ class Cli {
     }
     else{
       // only blink if enabled:
-      if(this.enabled){
+      if(this.enabled && this.focused){
         this.cursorOn = true;
         this.display();
       }
@@ -80,14 +91,6 @@ class Cli {
     this.display();
     this.bigterminal.commit();
 
-    // add to command history (if it makes sense)
-    if(this.editable !== ''){
-      if(this.history.length === 0 || this.editable !== this.history[this.history.length - 1]){
-        // it's no dupe.
-        // then it makes sense to add this to history.
-        this.history.push(this.editable);
-      }
-    }
     // jump to the end of history
     this.historyPos = this.history.length;
 
@@ -209,5 +212,16 @@ class Cli {
 
   down(){
 
+  }
+
+  addHistory(content){
+    // add to command history (if it makes sense)
+    if(content !== ''){
+      if(this.history.length === 0 || content !== this.history[this.history.length - 1]){
+        // it's no dupe.
+        // then it makes sense to add this to history.
+        this.history.push(content);
+      }
+    }
   }
 }

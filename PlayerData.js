@@ -76,10 +76,12 @@ class PlayerData {
   logout (socket){
     for(let i = 0; i < this.onlinePlayers.length; i++){
       if(this.onlinePlayers[i].socket.id === socket.id){
+        let player = this.onlinePlayers[i];
         this.onlinePlayers.splice(i, 1);
-        return;
+        return player;
       }
     }
+    return null;
   }
 
   knownPlayerByName(name){

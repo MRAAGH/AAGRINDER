@@ -25,7 +25,7 @@ let guiterminal;
 let bigterminal;
 let cli;
 let gui;
-let cliMode = true;
+let cliFocused = true;
 let state = STATES.connecting;
 
 let name = '';
@@ -63,6 +63,14 @@ let setEventHandlers = function () {
 	window.addEventListener("keydown", onKeydown, false);
 	window.addEventListener("keyup", onKeyup, false);
 
+	window.addEventListener("focus", event=>{
+		cli.focus();
+	}, false);
+	window.addEventListener("blur", event=>{
+		cli.blur();
+	}, false);
+
+
 	// Window resize
 	window.addEventListener("resize", onResize, false);
 
@@ -76,16 +84,21 @@ let setEventHandlers = function () {
 		cli.prompt('login: ');
 		state = STATES.loginscreen;
 	});
-	socket.on("disconnect", onSocketDisconnected);
-	// socket.on("w", onWelcome);
-	// socket.on("t", onTerrainUpdate);
+
+	socket.on("disconnect", data=>{
+		bigterminal.println('disconnected.');
+		cli.prompt('login: ');
+		state = STATES.loginscreen;
+	});
+
 	socket.on("loginsuccess", data=>{
 		bigterminal.println('login successful')
 		if(state === STATES.loginwait){
-			cli.prompt('');
+			cli.prompt('> ');
 			state = STATES.ingame;
 		}
 	});
+
 	socket.on("loginerror", data=>{
 		bigterminal.println(data.message)
 		if(state === STATES.loginwait){
@@ -95,19 +108,11 @@ let setEventHandlers = function () {
 	});
 };
 
-function onSocketConnected(data){
-	console.log('conn', data)
-}
-function onSocketDisconnected(data){
-	console.log('disconn', data)
-	bigterminal.println('disconnected from server');
-}
-
 function onKeydown(e) {
 	if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
 		e.preventDefault(); //Prevent some of the browser's key bindings
 	}
-	if(cliMode){
+	if(cliFocused){
 		let result = cli.handleKey(e.key);
 		if(result !== false) {
 			// we got back what the user typed
@@ -200,32 +205,32 @@ function onKeydown(e) {
 					// alright got username and password
 					let password2 = result;
 
-		      if(registration.password !== password2){
-		        bigterminal.println('passwords do not match');
+					if(registration.password !== password2){
+						bigterminal.println('passwords do not match');
 						cli.prompt('login: ');
 						state = STATES.loginscreen;
 						registration = {};
-		      }
+					}
 					else {
 						// try to register
-			      bigterminal.println('requesting registration ...')
+						bigterminal.println('requesting registration ...')
 
-			      let data = 'name=' + encodeURIComponent(registration.name) + '&password=' + encodeURIComponent(registration.password);
+						let data = 'name=' + encodeURIComponent(registration.name) + '&password=' + encodeURIComponent(registration.password);
 						registration = {};
 
 						state = STATES.registerwait;
 
-			      $.ajax({
-			        type: "POST",
-			        url: "/api/users/register",
-			        data: data,
-			        processData: false,
-			        success: function(msg) {
-			          bigterminal.println(msg.message);
+						$.ajax({
+							type: "POST",
+							url: "/api/users/register",
+							data: data,
+							processData: false,
+							success: function(msg) {
+								bigterminal.println(msg.message);
 								cli.prompt('login: ');
 								state = STATES.loginscreen;
-			        }
-			      });
+							}
+						});
 					}
 				}
 				break;
@@ -236,6 +241,11 @@ function onKeydown(e) {
 
 				case STATES.ingame:
 				// either chat or an in-game command
+
+				cli.addHistory(result);
+
+				cli.prompt('> ');
+
 				break;
 
 			}
@@ -256,7 +266,7 @@ function onKeydown(e) {
 // 		//console.log(e)
 // 	}
 //
-// 	if(cliMode){
+// 	if(cliFocused){
 // 		if(!cli.handleKey(keynum)){
 // 			// cli did not handle it, let's do something else.
 //
