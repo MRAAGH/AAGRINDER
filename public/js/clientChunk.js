@@ -2,14 +2,14 @@
 class Chunk {
   constructor(terrain){
     this.terrain = terrain; //a 2d char array
-    this.subscribers = [];
-    // this.change2D = {};
   }
 
   setCompressed(str){
+    this.terrain = [];
     for(let y = 0; y < 256; y++){
+      this.terrain[y] = [];
       for(let x = 0; x < 256; x++){
-        terrain[y][x] = str[y * 256 + x];
+        this.terrain[y][x] = str[y * 256 + x];
       }
     }
   }
@@ -26,5 +26,3 @@ class Chunk {
     return str;
   }
 }
-
-exports.Chunk = Chunk;

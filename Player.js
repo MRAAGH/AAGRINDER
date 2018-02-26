@@ -10,7 +10,7 @@ class Player {
     this.chunkUpdates = []; // the chunks which will be sent to this client as a whole
     this.changeObj = {}; // the terrain updates that the client actually needs
     this.hacker = false; // whether we are ignoring the player because he is desynched
-    this.hackedAt = -1; // the index of the action which caused desynch
+    this.curAction = -1; // the index of the last accepted action
     this.branch = 0; // the current branch of this session (each desynch spawns new branch)
   }
 

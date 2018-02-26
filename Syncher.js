@@ -13,8 +13,9 @@ Might be a hacker. In which case, ignore the action.
 */
 
 class Syncher{
-  constructor(map){
+  constructor(map, playerData){
     this.map = map;
+    this.playerData = playerData;
   }
 
   checkHacker(socket){
@@ -65,9 +66,9 @@ class Syncher{
   }
 
   sendUpdatesToClients(){
-    for(let i = 0; i < this.map.players.length; i++){
-      let player = this.map.players[i];
-      sendUpdatesToClient(player);
+    for(let i = 0; i < this.playerData.onlinePlayers.length; i++){
+      let player = this.playerData.onlinePlayers[i];
+      this.sendUpdatesToClient(player);
     }
   }
 
@@ -80,7 +81,7 @@ class Syncher{
     for(let i = 0; i < player.chunkUpdates.length; i++){
       let chunkx = player.chunkUpdates[i].x;
       let chunky = player.chunkUpdates[i].y;
-      let str = map.getChunk(chunkx, chunky);
+      let str = this.map.getChunk(chunkx, chunky).getCompressed();
       chunkUpdates.push({
         x: chunkx,
         y: chunky,

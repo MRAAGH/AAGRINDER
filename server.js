@@ -198,7 +198,7 @@ function onLogin(data) {
     typeof(data.username) !== 'string'
     || typeof(data.password) !== 'string'
   ){
-    this.emit('loginerror', {message: 'incomplete data'})
+    this.emit('loginerror', {message: 'incomplete data'});
   }
   else {
     playerData.login(data.username, data.password, this).then(
@@ -206,18 +206,13 @@ function onLogin(data) {
         this.emit('loginsuccess')
 
         playerActions.login(result);
+
+        syncher.sendUpdatesToClients();
       },
       err => {
         this.emit('loginerror', {message: err});
       }
     );
-
-    // map.login(data.username, this);
-    // let the_player_who_joined = map.join(username, this);
-    // if (!the_player_who_joined) {
-    //   //Failed login.
-    //   return false;
-    // }
   }
 };
 
@@ -238,7 +233,7 @@ loadServerProperties((props) => {
   map = new Map(WORLD_SEED);
   playerData = playerData = new PlayerData();
   spawn = new Spawn(map);
-  let syncher = new Syncher(map);
+  syncher = new Syncher(map, playerData);
   let subscribe = new Subscribe(map);
   playerActions = new PlayerActions(
     map,
@@ -246,36 +241,6 @@ loadServerProperties((props) => {
     subscribe,
     spawn
   );
-
-
-  // playerData.login('maze', 'aaa', {id:'test'}).then(
-  //   result => {
-  //     console.log('YES')
-  //     // console.log(result)
-  //
-  //     playerActions.login(result);
-  //
-  //     // playerData.logout({id:'test'});
-  //     //
-  //     // console.log(playerData.onlinePlayers)
-  //     // console.log(playerData.knownPlayers)
-  //   },
-  //   err => {
-  //     console.log('NO ' + err)
-  //   }
-  // );
-
-
-
-  //
-  // playerActions.login('maze', null);
-  // console.log('gonna tp')
-  // playerActions.teleport('maze', 3, 128);
-  // console.log('gonna tp')
-  // playerActions.teleport('maze', 254, 2);
-  // playerActions.players.splice(0, 1);
-
-
 
   console.log("Preparing level \"" + LEVEL_NAME + "\"")
   loadfromFile(() => {
@@ -288,173 +253,3 @@ loadServerProperties((props) => {
     // });
   });
 });
-
-//*/
-
-/*********************************************************/
-/***                     TEST AREA                     ***/
-/*********************************************************/
-
-/*
-//  FIXED ISLANDS
-let Island = require("./Island").Island;
-let i_s_s = 192;
-console.log("---");
-let a = new Island(57, 77, i_s_s, 5);
-a.print();
-console.log("---");
-let b = new Island(34, 17, i_s_s, 5);
-b.print();
-console.log("---");
-let c = new Island(92, 44, i_s_s, 5);
-c.print();
-console.log("---");
-let d = new Island(34, 12, i_s_s, 5);
-d.print();
-console.log("---");
-//*/
-
-/*
-//  RANDOM ISLANDS
-let Island = require("./Island").Island;
-let i_s_s = 192;
-console.log("---");
-let a = new Island(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000), i_s_s, 5);
-a.print();
-console.log("---");
-let b = new Island(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000), i_s_s, 5);
-b.print();
-console.log("---");
-let c = new Island(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000), i_s_s, 5);
-c.print();
-console.log("---");
-let d = new Island(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000), i_s_s, 5);
-d.print();
-console.log("---");
-//*/
-
-
-/*
-//  FIXED TREES
-let Tree = require("./Tree").Tree;
-console.log("---");
-let a = new Tree(0, 0, 32, 5);
-a.print();
-console.log("---");
-let b = new Tree(0, 0, 32, 500);
-b.print();
-console.log("---");
-let c = new Tree(0, 0, 32, 50);
-c.print();
-console.log("---");
-let d = new Tree(0, 0, 32, 666);
-d.print();
-console.log("---");
-let e = new Tree(0, 0, 32, 143);
-e.print();
-console.log("---");
-//*/
-
-/*
-//  RANDOM TREES
-let Tree = require("./Tree").Tree;
-console.log("---");
-let a = new Tree(0, 0, 32, Math.floor(Math.random() * 1000));
-a.print();
-console.log("---");
-let b = new Tree(0, 0, 32, Math.floor(Math.random() * 1000));
-b.print();
-console.log("---");
-let c = new Tree(0, 0, 32, Math.floor(Math.random() * 1000));
-c.print();
-console.log("---");
-let d = new Tree(0, 0, 32, Math.floor(Math.random() * 1000));
-d.print();
-console.log("---");
-//*/
-
-/*
-let a = [];
-a[0] = "aaa";
-let b = [];
-b[0] = a[0];
-b[0] = b[0].substr(0, 1) + "new_content" + b[0].substr(1 + "new_content".length);
-console.log(a[0]);
-//*/
-
-/*
-function recursio(i) {
-console.log(i);
-if (i > 3) {
-throw "bad";
-}
-recursio(i + 1);
-}
-
-try {
-recursio(0);
-}
-catch (err) {
-console.log(err);
-}
-//*/
-
-/*
-//Test undefined
-let a;
-console.log("a " + a);
-let b = [];
-//b[3] = 3;
-console.log("b[3] " + b[3]);
-console.log((b[3] ? "Y" : "N"));
-console.log((!b[3] ? "Y" : "N"));
-
-//*/
-
-/*
-//Test negative index
-let ggg = [];
-ggg[2] = 3;
-ggg[0] = 3;
-ggg[-1] = 3;
-console.log(JSON.stringify(ggg));
-//*/
-
-/*
-//Benchmark random
-let MersenneTwister = require('mersenne-twister');
-let hrstart = process.hrtime();
-let twister = new MersenneTwister(Math.floor(Math.random() * 65536));
-for (let i = 0; i < 10000000; i++) {
-let a = twister.random_int() % 256;
-}
-let hrend = process.hrtime(hrstart);
-let hrstart2 = process.hrtime();
-for (let i = 0; i < 10000000; i++) {
-let a = Math.floor(Math.random() * 256);
-}
-let hrend2 = process.hrtime(hrstart2);
-let hrend = process.hrtime(hrstart);
-let hrstart3 = process.hrtime();
-let aa = Math.floor(Math.random() * 65536);
-let aab = Math.floor(Math.random() * 256);
-let aabb = Math.floor(Math.random() * 256);
-for (let i = 0; i < 10000000; i++) {
-aa *= aab;
-aa += aabb;
-let a = aa;
-}
-let hrend3 = process.hrtime(hrstart2);
-console.info("twister: %ds %dms\nmath.random: %ds %dms\npure math: %ds %dms",
-hrend[0], hrend[1] / 1000000, hrend2[0], hrend2[1] / 1000000, hrend3[0], hrend3[1] / 1000000
-)
-//*/
-
-/*
-//Mersenne Twister API testing
-let MersenneTwister = require('mersenne-twister');
-for (let i = 0; i < 2; i++) {
-let result = new MersenneTwister([i, 100]).random_int();
-console.log(result);
-}
-//*/

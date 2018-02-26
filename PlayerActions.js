@@ -32,6 +32,12 @@ class PlayerActions {
     this.syncher.playerChangeBlock(player, spawnSpot.x, spawnSpot.y, 'P');
 
     this.subscribe.resubscribe(player);
+
+    // send player state to the client, becaue this is missing in terrain updates
+    player.socket.emit('p', {
+      x: player.x,
+      y: player.y
+    });
   }
 
   logout(player){

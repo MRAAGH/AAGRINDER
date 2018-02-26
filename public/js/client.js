@@ -27,6 +27,10 @@ let cli;
 let gui;
 let cliFocused = true;
 let state = STATES.connecting;
+let player;
+let syncher;
+let map;
+
 
 let name = '';
 let registration = {};
@@ -96,6 +100,7 @@ let setEventHandlers = function () {
 		if(state === STATES.loginwait){
 			cli.promptCommand('> ');
 			state = STATES.ingame;
+			startGame();
 		}
 	});
 
@@ -106,7 +111,23 @@ let setEventHandlers = function () {
 			state = STATES.loginscreen;
 		}
 	});
+
+	socket.on('t', data=>{ // terrain update
+		syncher.applyTerrainUpdate(data);
+		console.log(map);
+	});
+
+	socket.on('p', data=>{ // player update
+		player.applyPlayerUpdate(data);
+		console.log(player);
+	});
 };
+
+function startGame(){
+	player = new Player();
+	map = new Map();
+	syncher = new Syncher(map, player);
+}
 
 function onKeydown(e) {
 	if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
@@ -249,34 +270,33 @@ function onKeydown(e) {
 			}
 		}
 	}
+	//
+	// // Keyboard key down
+	// function onKeydown(e) {
+	// return;
+	// 	let keynum;
+	//
+	// 	if(window.event) { // IE
+	// 		keynum = e.keyCode;
+	// 	} else if(e.which){ // Netscape/Firefox/Opera
+	// 		keynum = e.which;
+	// 		//console.log(e.which);
+	// 		//console.log(e)
+	// 	}
+	//
+	// 	if(cliFocused){
+	// 		if(!cli.handleKey(keynum)){
+	// 			// cli did not handle it, let's do something else.
+	//
+	// 		}
+	// 	}
+	//
+	//
+	// 	key_code = e.keyCode;
+	// 	if (!key_states[key_code]) {
+	// 		key_states[key_code] = true;
+	// 	}
 }
-//
-// // Keyboard key down
-// function onKeydown(e) {
-// return;
-// 	let keynum;
-//
-// 	if(window.event) { // IE
-// 		keynum = e.keyCode;
-// 	} else if(e.which){ // Netscape/Firefox/Opera
-// 		keynum = e.which;
-// 		//console.log(e.which);
-// 		//console.log(e)
-// 	}
-//
-// 	if(cliFocused){
-// 		if(!cli.handleKey(keynum)){
-// 			// cli did not handle it, let's do something else.
-//
-// 		}
-// 	}
-//
-//
-// 	key_code = e.keyCode;
-// 	if (!key_states[key_code]) {
-// 		key_states[key_code] = true;
-// 	}
-// };
 
 // Keyboard key up
 function onKeyup(e) {
@@ -287,10 +307,12 @@ function onKeyup(e) {
 	if (key_states[key_code]) {
 		key_states[key_code] = false;
 		//Do key action.
-		/*switch (key_code) {
+		/*
+		switch (key_code) {
 		case 37: // Left
 		break;
-	};*/
+	};
+	*/
 }
 };
 
