@@ -18,11 +18,11 @@ class BigTerminal {
     this.display();
   }
 
-  modify(content){
+  modify(content, silent){
     this.dynamic = content;
     this.formattedDynamic = [];
     this.formatLine(this.dynamic, this.formattedDynamic);
-    this.scrollToEnd();
+    if(!silent) this.scrollToEnd();
     this.display();
   }
 

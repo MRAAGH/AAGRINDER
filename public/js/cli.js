@@ -33,13 +33,13 @@ class Cli {
   blink(){
     if (this.cursorOn){
       this.cursorOn = false;
-      this.display();
+      this.display(true); //silent
     }
     else{
       // only blink if enabled:
       if(this.enabled && this.focused){
         this.cursorOn = true;
-        this.display();
+        this.display(true); // silent
       }
     }
   }
@@ -83,7 +83,7 @@ class Cli {
     return ast;
   }
 
-  display(){
+  display(silent){
     let displayedEditable = this.asterisks ? this.toAsterisks(this.editable) : this.editable;
 
     if(this.cursorOn){
@@ -92,7 +92,7 @@ class Cli {
       displayedEditable = left + '█' + right;
     }
 
-    this.bigterminal.modify(this.static + displayedEditable);
+    this.bigterminal.modify(this.static + displayedEditable, silent);
   }
 
   // commit, aka apply and disable
