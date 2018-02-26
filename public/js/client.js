@@ -94,7 +94,7 @@ let setEventHandlers = function () {
 	socket.on("loginsuccess", data=>{
 		bigterminal.println('login successful')
 		if(state === STATES.loginwait){
-			cli.prompt('> ');
+			cli.promptCommand('> ');
 			state = STATES.ingame;
 		}
 	});
@@ -242,9 +242,7 @@ function onKeydown(e) {
 				case STATES.ingame:
 				// either chat or an in-game command
 
-				cli.addHistory(result);
-
-				cli.prompt('> ');
+				cli.promptCommand('> ');
 
 				break;
 

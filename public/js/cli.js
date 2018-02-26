@@ -13,6 +13,7 @@ class Cli {
     this.focused = true; // another condition for cursor blinking
     this.asterisks = false; // whether we are hiding the typed characters
     this.isCommand = false; // whether we are adding it to command history
+    this.commandBackup = '';
     this.history = [];
     this.historyPos = 0;
     this.editPos = 0;
@@ -233,13 +234,43 @@ class Cli {
   }
 
   up(){
-    if(this.historyPos > 0){
-
+    if(!this.isCommand){
+      // history makes no sense atm
+      return;
     }
+    if(this.historyPos === 0){
+      // nothing is up
+      return;
+    }
+    if(this.historyPos === this.history.length){
+      // we are at the current command. Back it up.
+      this.commandBackup = this.editable;
+    }
+    this.historyPos--;
+    this.editable = this.history[this.historyPos];
+    this.editPos = this.editable.length;
+    this.display();
   }
 
   down(){
-
+    if(!this.isCommand){
+      // history makes no sense atm
+      return;
+    }
+    if(this.historyPos === this.history.length){
+      // nothing is down
+      return;
+    }
+    this.historyPos++;
+    if(this.historyPos == this.history.length){
+      // this is the current command
+      this.editable = this.commandBackup;
+    }
+    else{
+      this.editable = this.history[this.historyPos];
+    }
+    this.editPos = this.editable.length;
+    this.display();
   }
 
 }

@@ -224,7 +224,9 @@ function onLogin(data) {
 function onClientDisconnect() {
   console.log("Client disconnected: " + this.id);
   let player = playerData.logout(this);
-  playerActions.logout(player);
+  if(player !== null){
+    playerActions.logout(player);
+  }
 };
 
 
