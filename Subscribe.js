@@ -99,7 +99,11 @@ class Subscribe{
     // console.log(player.subscriptions)
   }
 
-
+  unsubscribeAll(player){
+    for(let i = 0; i < player.subscriptions.length; i++){
+      this.unsubscribe(player, player.subscriptions[i].x, player.subscriptions[i].y);
+    }
+  }
 }
 
 exports.Subscribe = Subscribe;

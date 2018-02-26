@@ -34,14 +34,10 @@ class PlayerActions {
     this.subscribe.resubscribe(player);
   }
 
-  logout(socket){
-    for(let i = 0; i < this.players.length; i++){
-      if(this.players[i].socket.id == socket.id){
-        this.players.splice[i];
-        return;
-      }
-    }
-    console.log('Player socket not found: ' + socket.id);
+  logout(player){
+    this.syncher.playerChangeBlock(player, player.x, player.y, ' ');
+
+    this.subscribe.unsubscribeAll(player);
   }
 
   teleport(playerName, x, y){

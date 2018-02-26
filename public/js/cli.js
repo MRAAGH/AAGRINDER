@@ -12,6 +12,7 @@ class Cli {
     this.enabled = false; // whether we are allowing the user to type and cursor blinking
     this.focused = true; // another condition for cursor blinking
     this.asterisks = false; // whether we are hiding the typed characters
+    this.isCommand = false; // whether we are adding it to command history
     this.history = [];
     this.historyPos = 0;
     this.editPos = 0;
@@ -47,14 +48,27 @@ class Cli {
     this.static = content;
     this.editable = '';
     this.enabled = true;
+    this.isCommand = false;
+    this.asterisks = false;
     this.editPos = 0;
     this.display();
   }
 
-  promptPassword(content){
+  promptCommand(content){ // gets added to command history
     this.static = content;
     this.editable = '';
     this.enabled = true;
+    this.isCommand = true;
+    this.asterisks = false;
+    this.editPos = 0;
+    this.display();
+  }
+
+  promptPassword(content){ // not visible on screen
+    this.static = content;
+    this.editable = '';
+    this.enabled = true;
+    this.isCommand = false;
     this.asterisks = true;
     this.editPos = 0;
     this.display();
@@ -82,7 +96,7 @@ class Cli {
 
   // commit, aka apply and disable
   commit(){ // turn the currently typed text into a "command"
-  let wasCommited = this.editable;
+    let wasCommited = this.editable;
     if(this.asterisks){
       // hide them
       this.editable = '';
@@ -91,6 +105,17 @@ class Cli {
     this.display();
     this.bigterminal.commit();
 
+    if(this.isCommand){
+      // add to command history (if it makes sense)
+      if(this.editable !== ''){
+        if(this.history.length === 0 || this.editable !== this.history[this.history.length - 1]){
+          // it's no dupe.
+          // then it makes sense to add this to history.
+          this.history.push(this.editable);
+        }
+      }
+    }
+
     // jump to the end of history
     this.historyPos = this.history.length;
 
@@ -98,6 +123,7 @@ class Cli {
     this.editable = '';
     this.display();
     this.enabled = false;
+    this.isCommand = false;
     this.asterisks = false;
     return wasCommited;
   }
@@ -110,50 +136,50 @@ class Cli {
 
       // It is not a simple key, such as 'A' or '~'
 
-			switch(key){
-				case 'Backspace':
-				this.backspace();
-				break;
+      switch(key){
+        case 'Backspace':
+        this.backspace();
+        break;
 
-				case 'PageUp':
-				this.bigterminal.scrollUp();
-				break;
+        case 'PageUp':
+        this.bigterminal.scrollUp();
+        break;
 
-				case 'PageDown':
-				this.bigterminal.scrollDown();
-				break;
+        case 'PageDown':
+        this.bigterminal.scrollDown();
+        break;
 
-				case 'Home':
+        case 'Home':
         this.home();
-				break;
+        break;
 
-				case 'End':
+        case 'End':
         this.end();
-				// this.bigterminal.scrollToEnd();
-				break;
+        // this.bigterminal.scrollToEnd();
+        break;
 
-				case 'ArrowUp':
-				this.up();
-				break;
+        case 'ArrowUp':
+        this.up();
+        break;
 
-				case 'ArrowDown':
-				this.down();
-				break;
+        case 'ArrowDown':
+        this.down();
+        break;
 
-				case 'ArrowLeft':
-				this.left();
-				break;
+        case 'ArrowLeft':
+        this.left();
+        break;
 
-				case 'ArrowRight':
-				this.right();
-				break;
+        case 'ArrowRight':
+        this.right();
+        break;
 
-				case 'Enter':
-				let result = this.commit();
+        case 'Enter':
+        let result = this.commit();
         return result;
-				default:
-				console.log('ignored key: ' + key);
-			}
+        default:
+        console.log('ignored key: ' + key);
+      }
       // whatever it was, it is not going to be typed.
       return false;
     }
@@ -207,21 +233,13 @@ class Cli {
   }
 
   up(){
+    if(this.historyPos > 0){
 
+    }
   }
 
   down(){
 
   }
 
-  addHistory(content){
-    // add to command history (if it makes sense)
-    if(content !== ''){
-      if(this.history.length === 0 || content !== this.history[this.history.length - 1]){
-        // it's no dupe.
-        // then it makes sense to add this to history.
-        this.history.push(content);
-      }
-    }
-  }
 }
