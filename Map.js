@@ -9,7 +9,7 @@ Calling the getChunk method always works.
 If the chunk does not exist it is automatically generated on the fly.
 */
 
-const Chunk = require("./Chunk").Chunk;
+const Chunk = require('./Chunk').Chunk;
 const WorldGenerator = require('./generators/WorldGenerator').WorldGenerator;
 
 class Map {
@@ -28,7 +28,7 @@ class Map {
       // Chunk does not exist. Generate it.
       let terrain = [];
       for(let i = 0; i < 256; i++){
-        terrain[i] = []
+        terrain[i] = [];
         for(let j = 0; j < 256; j++){
           terrain[i][j] = ' ';
         }

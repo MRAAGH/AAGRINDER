@@ -26,7 +26,7 @@ class Spawn {
         if (hrend[0] > 0) {
           //At least a second has passed. Time to give the admin an update.
           let percent = Math.floor(100 * i / PREPARE_CHUNK_COUNT);
-          console.log("Preparing spawn area: " + percent + "%");
+          console.log('Preparing spawn area: ' + percent + '%');
           hrstart = process.hrtime();
         }
         this.getChunk(x, y);

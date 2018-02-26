@@ -138,47 +138,47 @@ class Cli {
       // It is not a simple key, such as 'A' or '~'
 
       switch(key){
-        case 'Backspace':
+      case 'Backspace':
         this.backspace();
         break;
 
-        case 'PageUp':
+      case 'PageUp':
         this.bigterminal.scrollUp();
         break;
 
-        case 'PageDown':
+      case 'PageDown':
         this.bigterminal.scrollDown();
         break;
 
-        case 'Home':
+      case 'Home':
         this.home();
         break;
 
-        case 'End':
+      case 'End':
         this.end();
         // this.bigterminal.scrollToEnd();
         break;
 
-        case 'ArrowUp':
+      case 'ArrowUp':
         this.up();
         break;
 
-        case 'ArrowDown':
+      case 'ArrowDown':
         this.down();
         break;
 
-        case 'ArrowLeft':
+      case 'ArrowLeft':
         this.left();
         break;
 
-        case 'ArrowRight':
+      case 'ArrowRight':
         this.right();
         break;
 
-        case 'Enter':
+      case 'Enter':
         let result = this.commit();
         return result;
-        default:
+      default:
         console.log('ignored key: ' + key);
       }
       // whatever it was, it is not going to be typed.

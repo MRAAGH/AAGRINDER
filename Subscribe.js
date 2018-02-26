@@ -8,7 +8,7 @@ const CHUNK_PROBES = [
   {x: -64, y: +96},
   {x: +64, y: -96},
   {x: -64, y: -96}
-]
+];
 
 class Subscribe{
   constructor(map){
@@ -17,7 +17,7 @@ class Subscribe{
   }
 
   subscribe(player, chunkx, chunky){
-    console.log('sub '+player.name+' '+chunkx+' '+chunky)
+    console.log('sub '+player.name+' '+chunkx+' '+chunky);
     player.subscriptions.push({x:chunkx, y:chunky});
     player.chunkUpdates.push({x:chunkx, y:chunky});
     let chunk = this.map.getChunk(chunkx, chunky); // and generate if necessary
@@ -25,7 +25,7 @@ class Subscribe{
   }
 
   unsubscribe(player, chunkx, chunky){
-    console.log('unsub '+player.name+' '+chunkx+' '+chunky)
+    console.log('unsub '+player.name+' '+chunkx+' '+chunky);
     for(let i = 0; i < player.subscriptions.length; i++){
       if(player.subscriptions[i].x == chunkx && player.subscriptions[i].y == chunky){
         player.subscriptions.splice(i, 1);
@@ -42,7 +42,7 @@ class Subscribe{
   }
 
   resubscribe(player){
-    console.log('resub '+player.name)
+    console.log('resub '+player.name);
     let newSubscriptions = [];
     for(let p = 0; p < CHUNK_PROBES.length; p++){
       let chunkx = Math.floor((player.x + CHUNK_PROBES[p].x)/256);

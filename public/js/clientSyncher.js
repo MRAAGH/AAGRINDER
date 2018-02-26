@@ -39,7 +39,7 @@ class Syncher {
     // apply chunk updates
     if(data.c){
       for(let i = 0; i < data.c.length; i++){
-        this.map.loadChunk(data.c[i].x, data.c[i].y, data.c[i].t)
+        this.map.loadChunk(data.c[i].x, data.c[i].y, data.c[i].t);
       }
     }
   }

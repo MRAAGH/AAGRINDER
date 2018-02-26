@@ -40,7 +40,7 @@ let Cellular = function (_SEED, _terrain, _first_frontier, _guide_function, _spr
 
       let checkRelative = function (relative_x, relative_y) {
         return c(x + relative_x, y + relative_y, block);
-      }
+      };
 
       //Decide whether to create a block here:
       let chance = guide_function(checkRelative, frontiers_done, frontiers_left);
@@ -88,7 +88,7 @@ let Cellular = function (_SEED, _terrain, _first_frontier, _guide_function, _spr
 
   return {
     final_frontier: frontier
-  }
-}
+  };
+};
 
 exports.Cellular = Cellular;

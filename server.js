@@ -1,10 +1,10 @@
-const SERVER_VERSION = "0.0.1"
+const SERVER_VERSION = '0.0.1';
 
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const md5 = require("md5");
+const md5 = require('md5');
 const cron = require('node-cron');
 const fs = require('fs');
 const bodyParser = require('body-parser');
@@ -14,23 +14,23 @@ mongoose.Promise = require('bluebird');
 
 mongoose.connect('mongodb://localhost:27017/aagrinder', {useMongoClient: true});
 
-app.use(bodyParser.json({limit: "50mb"}));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit:50000}));
 
 var users = require('./routes/User');
 app.use('/api/users', users);
 
 
 
-const Player = require("./Player").Player;
+const Player = require('./Player').Player;
 // const Chunk = require("./Chunk").Chunk;
-const Map = require("./Map").Map;
-const PlayerData = require("./PlayerData").PlayerData;
-const Spawn = require("./Spawn").Spawn;
-const Syncher = require("./Syncher").Syncher;
-const Subscribe = require("./Subscribe").Subscribe;
-const PlayerActions = require("./PlayerActions").PlayerActions;
-const ServerActions = require("./ServerActions").ServerActions;
+const Map = require('./Map').Map;
+const PlayerData = require('./PlayerData').PlayerData;
+const Spawn = require('./Spawn').Spawn;
+const Syncher = require('./Syncher').Syncher;
+const Subscribe = require('./Subscribe').Subscribe;
+const PlayerActions = require('./PlayerActions').PlayerActions;
+const ServerActions = require('./ServerActions').ServerActions;
 
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
@@ -44,8 +44,8 @@ app.use(express.static(__dirname + '/public'));
 // app.get('/public/js/jquery', function (req, res) { res.sendFile(__dirname + '/public/js/jquery3.2.1.js'); });
 
 app.get('/aa', function (req, res) {
-  let u = "/aa has been accessed."
-  console.log(JSON.stringify(u))
+  let u = '/aa has been accessed.';
+  console.log(JSON.stringify(u));
   res.json(u);
 });
 
@@ -64,7 +64,7 @@ process.stdin.on('data', function (text) {
   }
   if (text.trim() === 'stop') {
     saveToFile(() => {
-      console.log("STOPPING SERVER");
+      console.log('STOPPING SERVER');
       process.exit();
     });
   }
@@ -94,10 +94,10 @@ saveToFile();
 
 function saveToFile(callback) {
   let savingString = map.saveToJSON();
-  fs.writeFile("saves/" + LEVEL_NAME + ".txt", savingString, function (err) {
+  fs.writeFile('saves/' + LEVEL_NAME + '.txt', savingString, function (err) {
     if (err) console.log(err);
     else {
-      console.log('saved map to file: saves/' + LEVEL_NAME + ".txt");
+      console.log('saved map to file: saves/' + LEVEL_NAME + '.txt');
       if (callback) {
         callback();
       }
@@ -111,8 +111,8 @@ function loadfromFile(callback) {
   return;
 
   //Check if file exists
-  if (fs.existsSync("saves/" + LEVEL_NAME + ".txt")) {
-    fs.readFile("saves/" + LEVEL_NAME + ".txt", function (err, loadedString) {
+  if (fs.existsSync('saves/' + LEVEL_NAME + '.txt')) {
+    fs.readFile('saves/' + LEVEL_NAME + '.txt', function (err, loadedString) {
       if (err) console.log(err);
       else {
         map.loadFromJSON(loadedString);
@@ -130,16 +130,16 @@ function loadfromFile(callback) {
 }
 
 function loadServerProperties(callback) {
-  console.log("Loading properties");
+  console.log('Loading properties');
   //Check if file exists
-  if (fs.existsSync("server.properties")) {
-    fs.readFile("server.properties", function (err, loadedString) {
+  if (fs.existsSync('server.properties')) {
+    fs.readFile('server.properties', function (err, loadedString) {
       if (err) console.log(err);
       else {
         let loaded_properties = JSON.parse(loadedString);
         let bad_file_format = false;
         if (loaded_properties.level_name == undefined) {
-          loaded_properties.level_name = "world";
+          loaded_properties.level_name = 'world';
           bad_file_format = true;
         }
         if (loaded_properties.seed == undefined) {
@@ -148,7 +148,7 @@ function loadServerProperties(callback) {
         }
         if (bad_file_format) {
           let corrected_properties_string = JSON.stringify(loaded_properties);
-          fs.writeFile("server.properties", corrected_properties_string, function (err) {
+          fs.writeFile('server.properties', corrected_properties_string, function (err) {
             if (err) console.log(err);
             else {
               callback(loaded_properties);
@@ -163,11 +163,11 @@ function loadServerProperties(callback) {
   }
   else {
     loaded_properties = {
-      level_name: "world",
+      level_name: 'world',
       seed: Math.floor(Math.random() * 65536)
     };
     let corrected_properties_string = JSON.stringify(loaded_properties);
-    fs.writeFile("server.properties", corrected_properties_string, function (err) {
+    fs.writeFile('server.properties', corrected_properties_string, function (err) {
       if (err) console.log(err);
       else {
         callback(loaded_properties);
@@ -178,8 +178,8 @@ function loadServerProperties(callback) {
 
 io.on('connection', function (socket) {
   onClientConnect(socket);
-  socket.on("login", onLogin);
-  socket.on("disconnect", onClientDisconnect);
+  socket.on('login', onLogin);
+  socket.on('disconnect', onClientDisconnect);
   // socket.on("m", onMovePlayer);
   // socket.on("d", onDig);
   // socket.on("p", onPlace);
@@ -189,8 +189,8 @@ io.on('connection', function (socket) {
 });
 
 function onClientConnect(socket) {
-  console.log("Client connected: " + socket.id);
-};
+  console.log('Client connected: ' + socket.id);
+}
 
 function onLogin(data) {
   //Username sent?
@@ -203,7 +203,7 @@ function onLogin(data) {
   else {
     playerData.login(data.username, data.password, this).then(
       result => {
-        this.emit('loginsuccess')
+        this.emit('loginsuccess');
 
         playerActions.login(result);
 
@@ -214,18 +214,18 @@ function onLogin(data) {
       }
     );
   }
-};
+}
 
 function onClientDisconnect() {
-  console.log("Client disconnected: " + this.id);
+  console.log('Client disconnected: ' + this.id);
   let player = playerData.logout(this);
   if(player !== null){
     playerActions.logout(player);
   }
-};
+}
 
 
-console.log("Starting aagrinder server version " + SERVER_VERSION);
+console.log('Starting aagrinder server version ' + SERVER_VERSION);
 let hrstart_server_load = process.hrtime();
 loadServerProperties((props) => {
   LEVEL_NAME = props.level_name;
@@ -242,12 +242,12 @@ loadServerProperties((props) => {
     spawn
   );
 
-  console.log("Preparing level \"" + LEVEL_NAME + "\"")
+  console.log('Preparing level "' + LEVEL_NAME + '"');
   loadfromFile(() => {
     // map.prepareSpawnArea(() => {
     http.listen(port, function () {
       let hrend_server_load = process.hrtime(hrstart_server_load);
-      console.log("Done (" + hrend_server_load[0] + "," + Math.floor(hrend_server_load[1] / 1000000) + "s)!");
+      console.log('Done (' + hrend_server_load[0] + ',' + Math.floor(hrend_server_load[1] / 1000000) + 's)!');
       console.log('AAGRINDER server listening on *:' + port);
     });
     // });

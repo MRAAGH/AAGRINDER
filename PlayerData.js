@@ -10,7 +10,7 @@ with empty inventory.
 */
 
 const User = require('./schemes/UserScheme.js');
-const Player = require("./Player").Player;
+const Player = require('./Player').Player;
 const bcrypt = require('bcryptjs');
 
 class PlayerData {

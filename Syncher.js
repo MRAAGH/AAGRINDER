@@ -29,7 +29,7 @@ class Syncher{
     }
   }
   serverChangeBlock(x, y, block){
-    this.map.setBlock(x, y, block)
+    this.map.setBlock(x, y, block);
     let chunkx = Math.floor(x/256);
     let chunky = Math.floor(y/256);
     let chunk = this.map.getChunk(chunkx, chunky);
@@ -47,7 +47,7 @@ class Syncher{
     }
   }
   playerChangeBlock(player, x, y, block){
-    this.map.setBlock(x, y, block)
+    this.map.setBlock(x, y, block);
     let chunkx = Math.floor(x/256);
     let chunky = Math.floor(y/256);
     let chunk = this.map.getChunk(chunkx, chunky);
@@ -75,7 +75,7 @@ class Syncher{
   sendUpdatesToClient(player){
     let message = {
       b: player.changeObj, // block updates
-    }
+    };
 
     let chunkUpdates = [];
     for(let i = 0; i < player.chunkUpdates.length; i++){
@@ -97,7 +97,7 @@ class Syncher{
       message.h = {i: player.hackedAt, b: player.branch};
     }
 
-    player.socket.emit("t", message);
+    player.socket.emit('t', message);
   }
 }
 

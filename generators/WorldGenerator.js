@@ -2,7 +2,7 @@
 //It is a projection from chunk coordinates and world seed to terrain.
 
 let MersenneTwister = require('mersenne-twister');
-let Island = require("./Island").Island;
+let Island = require('./Island').Island;
 
 let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
   //console.log("generator called for " + _chunkX + ", " + _chunkY);
@@ -24,11 +24,11 @@ let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
     for (let i = 0; i < size; i++) {
       local_terrain[i] = [];
       for (let j = 0; j < size; j++) {
-        local_terrain[i][j] = " ";
+        local_terrain[i][j] = ' ';
       }
     }
     return local_terrain;
-  }
+  };
 
   let getIslandPositions = function () {
     let minX = chunkGlobalX - spawn_distance_beyond_chunk;
@@ -64,7 +64,7 @@ let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
 
     //console.log("Chose " + chosen_positions.length + " positions in total");
     return chosen_positions;
-  }
+  };
 
   let getIsland = function (globalX, globalY) {
     //console.log("Creating island at " + (globalX - chunkGlobalX + draw_distance_beyond_chunk) + ", " + (globalY - chunkGlobalY + draw_distance_beyond_chunk) + " in the draw area");
@@ -72,7 +72,7 @@ let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
     let new_island = new Island(globalX, globalY, island_surface_size, WORLD_SEED);
     //console.log("Generated this island: " + JSON.stringify(new_island));
     return new_island;
-  }
+  };
   /*
   (allpositions = []) && false
   
@@ -201,10 +201,10 @@ let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
       for (let x = 0; x < overlapX; x++) {
         //Now, keep in mind the y coordinate is reversed in the island
         //console.log("island1: " + (island_surface_size - y - origin1y - 1) + ", " + (x + origin1x));
-        if (island1.terrain[island_surface_size - y - origin1y - 1][x + origin1x] != " ") {
+        if (island1.terrain[island_surface_size - y - origin1y - 1][x + origin1x] != ' ') {
           //There's something here in island 1.
           //console.log("island2: " + (island_surface_size - y - origin2y - 2) + ", " + (x + origin2x));
-          if (island2.terrain[island_surface_size - y - origin2y - 1][x + origin2x] != " ") {
+          if (island2.terrain[island_surface_size - y - origin2y - 1][x + origin2x] != ' ') {
             //There's also something here in island 2!
             //Abort abort abort
             return true;
@@ -213,7 +213,7 @@ let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
       }
     }
     return false;
-  }
+  };
 
   let addIslandToLayer = function (island, layer) {
     let minX = island.cornerGlobalX - layer_global_cornerX;
@@ -226,12 +226,12 @@ let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
       for (let x = 0; x < island_surface_size; x++) {
         //console.log("Will change layer at " + (minX + x) + ", " + (minY + y));
         let block = island.terrain[island_surface_size - y - 1][x];
-        if (block != " ") {
+        if (block != ' ') {
           layer[minY + y][minX + x] = island.terrain[island_surface_size - y - 1][x];
         }
       }
     }
-  }
+  };
 
   let extractChunkTerrain = function (layer) {
     // We generated a lot more than just this chunk. Though, only this chunk is reliable. Crop it out:
@@ -243,7 +243,7 @@ let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
       }
     }
     return chunk_terrain;
-  }
+  };
 
   let hrstart = process.hrtime();
 
@@ -292,7 +292,7 @@ let WorldGenerator = function (_chunkX, _chunkY, _WORLD_SEED, silent) {
 
   let hrend = process.hrtime(hrstart);
   if (silent == false || silent == undefined) {
-    console.info("generated chunk %d, %d [%ds %dms, %d islands, %d island collisions, %d trees, %d tree collisions]",
+    console.info('generated chunk %d, %d [%ds %dms, %d islands, %d island collisions, %d trees, %d tree collisions]',
       _chunkX,
       _chunkY,
       hrend[0], hrend[1] / 1000000,

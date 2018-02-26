@@ -10,7 +10,7 @@ class Terminal {
     this.width = width;
     this.height = height;
     this.xpos = xpos;
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext('2d');
   }
 
   resize(w, h, xpos){
@@ -21,7 +21,7 @@ class Terminal {
 
   displayScreen(lines){
     this.ctx.clearRect(this.xpos * CHAR_WIDTH, 0, 4 * PADDING + this.width * CHAR_WIDTH, this.canvas.height);
-    this.ctx.fillStyle = "white";
+    this.ctx.fillStyle = 'white';
     this.ctx.font = '20px monospace';
     for(let i = 0; i < lines.length; i++){
       this.ctx.fillText(

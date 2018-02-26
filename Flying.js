@@ -23,7 +23,7 @@ let Flying = function (
   let interacting_player = _interacting_player;
 
   let clicked_block = centralizedBlockAt(interactX, interactY);
-  if (clicked_block != "O") {
+  if (clicked_block != 'O') {
     return false;
   }
 
@@ -49,11 +49,11 @@ let Flying = function (
       direction: direction,
       id: id,
       discover_segment: discover_segment
-    }
-  }
+    };
+  };
 
 
-  //DISCOVER WIRING
+    //DISCOVER WIRING
 
   let engineDFS = function (x, y, cluster) {
     if (engine_temp_layer[y] == undefined) {
@@ -66,7 +66,7 @@ let Flying = function (
       let other_y = y + geometry_engine[direction].y;
       //Is there another engine next to this one?
       if ((engine_temp_layer[other_y] == undefined || engine_temp_layer[other_y][other_x] == undefined)
-        && centralizedBlockAt(other_x, other_y) == "M") {
+        && centralizedBlockAt(other_x, other_y) == 'M') {
         engineDFS(other_x, other_y, cluster);
       }
     }
@@ -82,12 +82,12 @@ let Flying = function (
       let other_y = y + geometry_engine_wiring[direction].y;
       let block_there = centralizedBlockAt(other_x, other_y);
       //Test for engine:
-      if (block_there == "M") {
+      if (block_there == 'M') {
         //is it already part of a cluster?
         if (engine_temp_layer[other_y] != undefined && engine_temp_layer[other_y][other_x] != undefined) {
           if (engine_clusters[engine_temp_layer[other_y][other_x]].direction != direction) {
             //Wrong direction. One cluster can't go in several directions at once!
-            throw "bad_cluster";
+            throw 'bad_cluster';
           }
           //Otherwise, do nothing. Powering the same cluster in several places is allowed, but useless.
         }
@@ -105,7 +105,7 @@ let Flying = function (
       let other_y = y + geometry_wiring[direction].y;
       let block_there = centralizedBlockAt(other_x, other_y);
       if ((wiring_temp_layer[other_y] == undefined || wiring_temp_layer[other_y][other_x] == undefined)
-        && block_there == "+") {
+        && block_there == '+') {
         wiringDFS(other_x, other_y);
       }
     }
@@ -155,15 +155,15 @@ let Flying = function (
       segment_temp_layer[y][x] = mah_block;
       block_count++;
       if (block_count > block_limit) {
-        throw "block_limit_exceeded";
+        throw 'block_limit_exceeded';
       }
-      if (mah_block == "T") {
+      if (mah_block == 'T') {
         moving_plants.push({ x: x, y: y });
       }
-      else if (mah_block == "P") {
+      else if (mah_block == 'P') {
         moving_players.push({ x: x, y: y });
       }
-      else if (mah_block == "G") {
+      else if (mah_block == 'G') {
         moving_grinders.push({ x: x, y: y });
       }
       //Spread to adjacent blocks:
@@ -173,18 +173,18 @@ let Flying = function (
         let other_block = centralizedBlockAt(other_x, other_y);
 
         if ((segment_temp_layer[other_y] == undefined || segment_temp_layer[other_y][other_x] == undefined)
-          && other_block != " ") {
+          && other_block != ' ') {
           if (direction != flight_direction
-            && mah_block == "+" && other_block == "+") {
+            && mah_block == '+' && other_block == '+') {
             //Not spreading from wire to wire onless it's in the flight direction
             //console.log("BAD SPREAD")
             continue;
           }
-          if (other_block == "M"
+          if (other_block == 'M'
             && engine_temp_layer[other_y] != undefined
             && engine_temp_layer[other_y][other_x] != id) {
             //Activating two connected engine clusters at once is not allowed. Yet. Not sure what it'd do.
-            throw "clusters_linked";
+            throw 'clusters_linked';
           }
           else {
             //console.log("GONE "+direction+"!");
@@ -227,7 +227,7 @@ let Flying = function (
             //alright there's a moving block here
             if (segment_temp_layer[y + mod_y] == undefined || segment_temp_layer[y + mod_y][x + mod_x] == undefined) {
               //and there's NOT another moving block in front of it
-              if (centralizedBlockAt(x + mod_x, y + mod_y) != " ") {
+              if (centralizedBlockAt(x + mod_x, y + mod_y) != ' ') {
                 //But there is a nonmoving block instead! Can't move! Abort!
                 return false;
               }
@@ -274,27 +274,27 @@ let Flying = function (
         }
         let mah_block = centralizedBlockAt(x, y);
         //Can't dig air:
-        if (mah_block == " ") {
+        if (mah_block == ' ') {
           return;
         }
         //Can't dig player:
-        if (mah_block == "P") {
+        if (mah_block == 'P') {
           return;
         }
         //Can't dig bellow player:
-        if (centralizedBlockAt(x, y - 1) == "P") {
+        if (centralizedBlockAt(x, y - 1) == 'P') {
           return;
         }
         //Alright, dig.
-        centralizedSetBlock(x, y, " ");
+        centralizedSetBlock(x, y, ' ');
         //And collect.
         let block_code = interacting_player.inventory.block2blockCode(mah_block);
         interacting_player.inventory.earnBlock(block_code);
         //Also, plant stuff
-        if (mah_block == "T") {
+        if (mah_block == 'T') {
           removePlantAt(x, y);
         }
-      }
+      };
 
       //Grinder movement:
       for (let i = 0; i < moving_grinders.length; i++) {
@@ -314,7 +314,7 @@ let Flying = function (
           //console.log("Testing " + x + ", " + y);
           if (segment_temp_layer[y] != undefined && segment_temp_layer[y][x] != undefined) {
             //console.log("destroying!");
-            centralizedSetBlock(x, y, " ");
+            centralizedSetBlock(x, y, ' ');
           }
         }
       }
@@ -342,7 +342,7 @@ let Flying = function (
       can_move: can_move,
       apply_movement: apply_movement,
       direction: direction
-    }
+    };
   };
 
   let segments = [];
@@ -367,6 +367,6 @@ let Flying = function (
 
   //console.log("dun");
   return true;
-}
+};
 
 exports.Flying = Flying;
