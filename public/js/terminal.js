@@ -31,4 +31,18 @@ class Terminal {
       );
     }
   }
+
+  clearScreen(){
+    this.ctx.clearRect(this.xpos * CHAR_WIDTH, 0, 4 * PADDING + this.width * CHAR_WIDTH, this.canvas.height);
+    this.ctx.font = '20px monospace';
+  }
+
+  displayCharacter(x, y, char, color){
+    this.ctx.fillStyle = color;
+    this.ctx.fillText(
+      char,
+      PADDING + (this.xpos + x) * CHAR_WIDTH,
+      PADDING + (y + 1) * LINE_SPACING
+    );
+  }
 }

@@ -37,13 +37,14 @@ class Map {
     let chunky = Math.floor(y / 256);
     let subchunkx = (x%256+256)%256;
     let subchunky = (y%256+256)%256;
+
     if(!this.chunks[chunky]){
       return ' ';
     }
     if(!this.chunks[chunky][chunkx]){
       return ' ';
     }
-    let chunk = chunks[chunky][chunkx];
+    let chunk = this.chunks[chunky][chunkx];
     let block = chunk.terrain[subchunky][subchunkx];
     return block;
   }
@@ -59,7 +60,7 @@ class Map {
     if(!this.chunks[chunky][chunkx]){
       return;
     }
-    let chunk = chunks[chunky][chunkx];
+    let chunk = this.chunks[chunky][chunkx];
     chunk.terrain[subchunky][subchunkx] = block;
   }
 

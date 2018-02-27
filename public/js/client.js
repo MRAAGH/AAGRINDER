@@ -45,7 +45,6 @@ $('document').ready(function () {
   guiterminal = new Terminal(mycanvas,10,10,10);
   bigterminal = new BigTerminal(cliterminal);
   cli = new Cli(bigterminal);
-  gui = new Gui(guiterminal);
 
   //Align everything for the first time:
   onResize(undefined);
@@ -53,6 +52,16 @@ $('document').ready(function () {
   bigterminal.println('connecting...');
 
   setInterval(()=>cli.blink(), 500);
+  setInterval(()=>{
+    if(state === STATES.ingame){
+
+      //game tick goes here
+
+      
+      gui.display();
+
+    }
+  }, 100);
 
   //Request socket connection from server:
   socket = io();
@@ -114,12 +123,10 @@ let setEventHandlers = function () {
 
   socket.on('t', data=>{ // terrain update
     syncher.applyTerrainUpdate(data);
-    console.log(map);
   });
 
   socket.on('p', data=>{ // player update
     player.applyPlayerUpdate(data);
-    console.log(player);
   });
 };
 
@@ -127,6 +134,9 @@ function startGame(){
   player = new Player();
   map = new Map();
   syncher = new Syncher(map, player);
+  gui = new Gui(guiterminal, map, player);
+  cliFocused = false;
+
 }
 
 function onKeydown(e) {
