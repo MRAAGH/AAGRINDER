@@ -25,6 +25,6 @@ function parseColor(input){
     if(found){
       return found; // there was a color name
     }
-    return 'ffffff';
   }
+  return 'ffffff';
 }
