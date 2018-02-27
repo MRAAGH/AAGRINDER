@@ -29,8 +29,8 @@ class Gui {
 
     let w = this.terminal.width;
     let h = this.terminal.height;
-    let left = player.x - Math.floor(w / 2);
-    let top = player.y - Math.floor(h / 2);
+    let left = this.player.x - Math.floor(w / 2);
+    let top = this.player.y - Math.floor(h / 2);
     // let lists = {};
     for(let y = 0; y < h; y++){
       for(let x = 0; x < w; x++){

@@ -29,7 +29,10 @@ class PlayerActions {
 
     // we assume this is a good spot and no checks need to be performed.
 
-    this.syncher.playerChangeBlock(player, spawnSpot.x, spawnSpot.y, 'P');
+    player.x = spawnSpot.x;
+    player.y = spawnSpot.y;
+
+    this.syncher.playerChangeBlock(player, player.x, player.y, 'P');
 
     this.subscribe.resubscribe(player);
 

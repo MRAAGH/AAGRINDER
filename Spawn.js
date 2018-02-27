@@ -71,7 +71,7 @@ class Spawn {
   }
 
   isValidSpawnSpot(x, y){
-    return true; // DEBUG ONLY!
+    // return true; // DEBUG ONLY!
     if(this.map.getBlock(x, y) !== ' ') return false;
     if(this.map.getBlock(x, y - 1) === ' ') return false;
     return true;

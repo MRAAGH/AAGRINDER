@@ -57,7 +57,7 @@ $('document').ready(function () {
 
       //game tick goes here
 
-      
+
       gui.display();
 
     }
@@ -127,6 +127,7 @@ let setEventHandlers = function () {
 
   socket.on('p', data=>{ // player update
     player.applyPlayerUpdate(data);
+    console.log(data);
   });
 };
 

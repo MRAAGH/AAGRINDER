@@ -26,12 +26,10 @@ class Map {
     }
     if(!this.chunks[chunky][chunkx]){
       // Chunk does not exist. Generate it.
+      let reverseterrain = WorldGenerator(chunkx, chunky, this.WORLD_SEED, false);
       let terrain = [];
       for(let i = 0; i < 256; i++){
-        terrain[i] = [];
-        for(let j = 0; j < 256; j++){
-          terrain[i][j] = ' ';
-        }
+        terrain[i] = reverseterrain[255 - i];
       }
       this.chunks[chunky][chunkx] = new Chunk(terrain);
     }
