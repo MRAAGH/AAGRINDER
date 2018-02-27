@@ -17,8 +17,7 @@ mongoose.connect('mongodb://localhost:27017/aagrinder', {useMongoClient: true});
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit:50000}));
 
-var users = require('./routes/User');
-app.use('/api/users', users);
+app.use('/api/users', require('./routes/User'));
 
 
 
@@ -180,6 +179,7 @@ io.on('connection', function (socket) {
   onClientConnect(socket);
   socket.on('login', onLogin);
   socket.on('disconnect', onClientDisconnect);
+  socket.on('chat', onChat);
   // socket.on("m", onMovePlayer);
   // socket.on("d", onDig);
   // socket.on("p", onPlace);
@@ -221,6 +221,21 @@ function onClientDisconnect() {
   let player = playerData.logout(this);
   if(player !== null){
     playerActions.logout(player);
+  }
+}
+
+function onChat(data) {
+  // who speaks?
+  let player = playerData.onlinePlayerBySocket(this);
+  if(player){
+    // prepend player name
+    let message = player.name + ': ' + data.message;
+
+    console.log(message);
+
+    for(let i = 0; i < playerData.onlinePlayers.length; i++){
+      playerData.onlinePlayers[i].socket.emit('chat', {message: message});
+    }
   }
 }
 

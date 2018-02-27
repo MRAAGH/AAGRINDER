@@ -86,49 +86,61 @@ let setEventHandlers = function () {
   // Window resize
   window.addEventListener('resize', onResize, false);
 
-  socket.on('connect', data=>{
-    bigterminal.println('');
-    bigterminal.println('');
-    bigterminal.println('AAGRINDER');
-    // bigterminal.println('');
-    // bigterminal.println('try /register');
-    bigterminal.println('');
-    cli.prompt('login: ');
-    state = STATES.loginscreen;
-  });
-
-  socket.on('disconnect', data=>{
-    bigterminal.println('disconnected.');
-    cli.prompt('login: ');
-    state = STATES.loginscreen;
-  });
-
-  socket.on('loginsuccess', data=>{
-    bigterminal.println('login successful');
-    if(state === STATES.loginwait){
-      cli.promptCommand('> ');
-      state = STATES.ingame;
-      startGame();
-    }
-  });
-
-  socket.on('loginerror', data=>{
-    bigterminal.println(data.message);
-    if(state === STATES.loginwait){
-      cli.prompt('login: ');
-      state = STATES.loginscreen;
-    }
-  });
-
-  socket.on('t', data=>{ // terrain update
-    syncher.applyTerrainUpdate(data);
-  });
-
-  socket.on('p', data=>{ // player update
-    player.applyPlayerUpdate(data);
-    console.log(data);
-  });
+  socket.on('connect', onSocketConnect);
+  socket.on('disconnect', onSocketDisconnect);
+  socket.on('loginsuccess', onSocketLoginSuccess);
+  socket.on('loginerror', onSocketLoginError);
+  socket.on('t', onSocketTerrainUpdate);
+  socket.on('p', onSocketPlayerUpdate);
+  socket.on('chat', onSocketChat);
 };
+
+function onSocketConnect(data){
+  bigterminal.println('');
+  bigterminal.println('');
+  bigterminal.println('AAGRINDER');
+  // bigterminal.println('');
+  // bigterminal.println('try /register');
+  bigterminal.println('');
+  cli.prompt('login: ');
+  state = STATES.loginscreen;
+}
+
+function onSocketDisconnect(data){
+  bigterminal.println('disconnected.');
+  cli.prompt('login: ');
+  state = STATES.loginscreen;
+}
+
+function onSocketLoginSuccess(data){
+  bigterminal.println('login successful');
+  if(state === STATES.loginwait){
+    cli.promptCommand('> ');
+    state = STATES.ingame;
+    startGame();
+  }
+}
+
+function onSocketLoginError(data){
+  bigterminal.println(data.message);
+  if(state === STATES.loginwait){
+    cli.prompt('login: ');
+    state = STATES.loginscreen;
+  }
+}
+
+function onSocketTerrainUpdate(data){
+  syncher.applyTerrainUpdate(data);
+}
+
+function onSocketPlayerUpdate(data){
+  player.applyPlayerUpdate(data);
+  console.log(data);
+}
+
+function onSocketChat(data){
+  bigterminal.println(data.message);
+}
 
 function startGame(){
   player = new Player();
@@ -140,6 +152,7 @@ function startGame(){
 
 function focusCli(){
   cli.focus();
+  bigterminal.scrollToEnd();
 }
 
 function focusGui(){
@@ -153,6 +166,7 @@ function onKeydown(e) {
   if(cli.focused){
     if(state === STATES.ingame && e.key === 'Escape'){
       focusGui();
+      return;
     }
 
     let result = cli.handleKey(e.key);
@@ -303,7 +317,23 @@ function onKeydown(e) {
       case STATES.ingame:
         // either chat or an in-game command
 
-        cli.promptCommand('> ');
+        if(result.length > 0){
+          if(/^ *\//.test(result)){
+            // command
+
+
+          }
+          else{
+            // chat
+
+            socket.emit('chat', {message: result});
+          }
+          cli.promptCommand('> ');
+        }
+        else{
+          cli.promptCommand('> ', true); // silent, which means no autoscroll
+        }
+
 
         focusGui();
 

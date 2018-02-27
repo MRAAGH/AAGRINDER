@@ -22,12 +22,14 @@ class Cli {
 
   focus(){
     this.focused = true;
+    this.cursorOn = false;
+    this.display(true);
   }
 
   blur(){
     this.focused = false;
     this.cursorOn = false;
-    this.display();
+    this.display(true);
   }
 
   blink(){
@@ -55,14 +57,14 @@ class Cli {
     this.display();
   }
 
-  promptCommand(content){ // gets added to command history
+  promptCommand(content, silent){ // gets added to command history
     this.static = content;
     this.editable = '';
     this.enabled = true;
     this.isCommand = true;
     this.asterisks = false;
     this.editPos = 0;
-    this.display();
+    if(!silent) this.display();
   }
 
   promptPassword(content){ // not visible on screen
@@ -102,9 +104,6 @@ class Cli {
       // hide them
       this.editable = '';
     }
-    this.cursorOn = false;
-    this.display();
-    this.bigterminal.commit();
 
     if(this.isCommand){
       // add to command history (if it makes sense)
@@ -116,13 +115,21 @@ class Cli {
         }
       }
     }
+    else{
+      // not a command. Let's display it on screen I guess
+      this.cursorOn = false;
+      this.display();
+      this.bigterminal.commit();
+    }
 
     // jump to the end of history
     this.historyPos = this.history.length;
 
-    this.static = '';
-    this.editable = '';
-    this.display();
+    if(!(this.isCommand && this.editable === '')){
+      this.static = '';
+      this.editable = '';
+      this.display();
+    }
     this.enabled = false;
     this.isCommand = false;
     this.asterisks = false;

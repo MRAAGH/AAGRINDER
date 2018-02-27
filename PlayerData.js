@@ -102,6 +102,15 @@ class PlayerData {
     }
     return null;
   }
+
+  onlinePlayerBySocket(socket){
+    for(let i = 0; i < this.onlinePlayers.length; i++){
+      if(this.onlinePlayers[i].socket.id === socket.id){
+        return this.onlinePlayers[i];
+      }
+    }
+    return null;
+  }
 }
 
 exports.PlayerData = PlayerData;

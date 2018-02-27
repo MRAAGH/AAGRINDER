@@ -13,8 +13,12 @@ class BigTerminal {
   }
 
   println(content){
+    let wasScrolledToEnd = this.isScrolledToEnd();
     this.lines.push(content);
     this.formatLine(content, this.formatted);
+    if(wasScrolledToEnd){
+      this.scrollToEnd();
+    }
     this.display();
   }
 
@@ -88,5 +92,13 @@ class BigTerminal {
       this.scrollPos = 0;
     }
     this.display();
+  }
+
+  isScrolledToEnd(){
+    let endScrollPos = this.formatted.length + this.formattedDynamic.length - this.terminal.height;
+    if(endScrollPos < 0){
+      endScrollPos = 0;
+    }
+    return endScrollPos === this.scrollPos;
   }
 }
