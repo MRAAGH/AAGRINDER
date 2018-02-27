@@ -9,21 +9,8 @@ class Chunk {
     for(let y = 0; y < 256; y++){
       this.terrain[y] = [];
       for(let x = 0; x < 256; x++){
-        // if(str[y * 256 + x] != ' ')console.log(str[y * 256 + x], 'at', x, y)
         this.terrain[y][x] = str[y * 256 + x];
       }
     }
-  }
-
-  getCompressed(){
-    // A simple RLE to compress big areas of air and stone (NYI)
-    let str = '';
-    let i = 0;
-    for(let y = 0; y < 256; y++){
-      for(let x = 0; x < 256; x++){
-        str += this.terrain[y][x];
-      }
-    }
-    return str;
   }
 }
