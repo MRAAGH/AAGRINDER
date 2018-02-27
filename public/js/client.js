@@ -352,6 +352,18 @@ function onKeydown(e) {
         case 'Enter': case 'Return':
           focusCli();
           break;
+        case 'ArrowUp':
+          player.cursorUp();
+          break;
+        case 'ArrowDown':
+          player.cursorDown();
+          break;
+        case 'ArrowLeft':
+          player.cursorLeft();
+          break;
+        case 'ArrowRight':
+          player.cursorRight();
+          break;
       }
   	}
   }

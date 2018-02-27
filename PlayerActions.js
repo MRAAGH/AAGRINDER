@@ -44,7 +44,8 @@ class PlayerActions {
     // send player state to the client, becaue this is missing in terrain updates
     player.socket.emit('p', {
       x: player.x,
-      y: player.y
+      y: player.y,
+      reach: player.reach
     });
   }
 
