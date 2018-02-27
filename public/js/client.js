@@ -1,7 +1,7 @@
 
 // let BLOCKED_KEYS = [9, 35, 36, 70, 71];
 const BLOCKED_KEYS = [8, 9, 33, 34, 35, 36, 37, 38, 39, 40, 191, 111];
-const CLI_SIZE = 0.25;
+const CLI_SIZE = 0.3;
 const MIN_CANVAS_WIDTH = 200;
 const STATES = Object.freeze({ // enum
   loginscreen: 0,
@@ -338,7 +338,7 @@ function onResize(e) {
     let charWidthLeft = Math.floor(charWidth * CLI_SIZE);
     let charWidthRight = charWidth - charWidthLeft;
     let charHeight = Math.floor((mycanvas.height - 2 * PADDING) / LINE_SPACING);
-    cliterminal.resize(charWidthLeft, charHeight, 0);
+    cliterminal.resize(charWidthLeft - 2, charHeight, 0);
     guiterminal.resize(charWidthRight, charHeight, charWidthLeft);
     bigterminal.reformat();
   }

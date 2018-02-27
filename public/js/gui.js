@@ -5,18 +5,6 @@
 
 // Plain CPU rendering. Nothing fancy.
 
-const SPRITES = {
-  'P': {char: 'P', color: 'white'}, // TEMP
-  'B': {char: 'B', color: 'grey'},
-  'A': {char: 'A', color: 'green'},
-  'H': {char: 'H', color: 'orange'},
-  '+': {char: '+', color: 'red'},
-  'O': {char: 'O', color: 'grey'},
-  'M': {char: 'M', color: 'red'},
-  'G': {char: 'G', color: 'blue'},
-  'D': {char: 'D', color: 'blue'}
-}
-
 class Gui {
   constructor(terminal, map, player){
     this.terminal = terminal;
