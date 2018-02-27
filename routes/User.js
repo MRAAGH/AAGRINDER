@@ -11,6 +11,7 @@ router.post('/register', (req, res) => {
   if(
     typeof(req.body.name) !== 'string'
     || typeof(req.body.password) !== 'string'
+    || typeof(req.body.color) !== 'string'
   ){
     res.json({ message: 'Missing form data', success: false });
     return;
@@ -18,21 +19,36 @@ router.post('/register', (req, res) => {
 
 
   if(
-    // !/^[a-z]([a-z0-9 ]{0,10}[a-z0-9])?$/.test(req.body.name)
     !/^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$/.test(req.body.name)
   ){
-    // res.json({ message: 'Username invalid ^[a-z]([a-z0-9 ]{0,10}[a-z0-9])?$', success: false });
     res.json({ message: 'Username invalid ^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$', success: false });
     return;
   }
 
   if(
-    // !/^[a-z0-9 ]{3,}$/.test(req.body.password)
     !/^.{3,}$/.test(req.body.password)
   ){
-    // res.json({ message: 'Password invalid ^[a-z0-9 ]{3,}$', success: false });
     res.json({ message: 'Password invalid ^.{3,}$', success: false });
     return;
+  }
+
+  if(
+    !/^[0-9abcdef]{6}$/.test(req.body.color)
+  ){
+    res.json({ message: 'Color invalid ^[0-9abcdef]{6}$', success: false });
+    return;
+  }
+
+  {
+    // check the color
+    let r = parseInt(req.body.color.substring(0, 3), 16);
+    let g = parseInt(req.body.color.substring(2, 5), 16);
+    let b = parseInt(req.body.color.substring(4, 7), 16);
+
+    if(r + g + b < 150){
+      res.json({ message: 'Color too dark', success: false });
+      return;
+    }
   }
 
   User.findOne({ name: req.body.name }, (err, existingUser) => {
@@ -48,7 +64,7 @@ router.post('/register', (req, res) => {
       let user = new User();
       user.name = req.body.name;
       user.password = '';
-      user.color = 'blue';
+      user.color = req.body.color;
 
       bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
         if (err) {

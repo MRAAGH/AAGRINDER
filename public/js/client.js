@@ -1,5 +1,4 @@
 
-// let BLOCKED_KEYS = [9, 35, 36, 70, 71];
 const BLOCKED_KEYS = [8, 9, 33, 34, 35, 36, 37, 38, 39, 40, 191, 111];
 const CLI_SIZE = 0.3;
 const MIN_CANVAS_WIDTH = 200;
@@ -12,7 +11,8 @@ const STATES = Object.freeze({ // enum
   registerpassword2: 5,
   registerwait: 6,
   ingame: 7,
-  connecting: 8
+  connecting: 8,
+  registercolor: 9
 });
 
 let key_states = [];
@@ -227,6 +227,7 @@ function onKeydown(e) {
         }
         break;
 
+
       case STATES.registerpassword2:
 
         if(result.length === 0){
@@ -244,26 +245,45 @@ function onKeydown(e) {
             registration = {};
           }
           else {
-            // try to register
-            bigterminal.println('requesting registration ...');
-
-            let data = 'name=' + encodeURIComponent(registration.name) + '&password=' + encodeURIComponent(registration.password);
-            registration = {};
-
-            state = STATES.registerwait;
-
-            $.ajax({
-              type: 'POST',
-              url: '/api/users/register',
-              data: data,
-              processData: false,
-              success: function(msg) {
-                bigterminal.println(msg.message);
-                cli.prompt('login: ');
-                state = STATES.loginscreen;
-              }
-            });
+            // prompt for color
+            cli.prompt('what is your favorite color? ');
+            state = STATES.registercolor;
           }
+        }
+        break;
+
+
+      case STATES.registercolor:
+
+        if(result.length === 0){
+          // nothing was typed ... redisplay form
+          cli.prompt('what is your favorite color? ');
+        }
+        else{
+          // alright got username and password
+          registration.color = result;
+
+          // try to register
+          bigterminal.println('requesting registration ...');
+
+          let data = 'name=' + encodeURIComponent(registration.name)
+          + '&password=' + encodeURIComponent(registration.password)
+          + '&color=' + encodeURIComponent(registration.color);
+          registration = {};
+
+          state = STATES.registerwait;
+
+          $.ajax({
+            type: 'POST',
+            url: '/api/users/register',
+            data: data,
+            processData: false,
+            success: function(msg) {
+              bigterminal.println(msg.message);
+              cli.prompt('login: ');
+              state = STATES.loginscreen;
+            }
+          });
         }
         break;
 

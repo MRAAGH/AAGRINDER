@@ -15,9 +15,10 @@ class Chunk {
           block += str[y * 256 + x + offset + 1];
           offset++;
         }
-        // else if(block === 'P'){
-        //   block += str.substring(y * 256 + x + offset + 1, y * 256 + x + offset + 7)
-        // }
+        else if(block === 'P'){
+          block += str.substring(y * 256 + x + offset + 1, y * 256 + x + offset + 7)
+          offset += 6;
+        }
         this.terrain[y][x] = block;
       }
     }

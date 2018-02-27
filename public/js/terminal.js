@@ -21,7 +21,7 @@ class Terminal {
 
   displayScreen(lines){
     this.clearScreen();
-    this.ctx.fillStyle = 'white';
+    this.ctx.fillStyle = '#7f7f7f';
     for(let i = 0; i < lines.length; i++){
       this.ctx.fillText(
         lines[i],

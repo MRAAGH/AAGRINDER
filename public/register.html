@@ -14,13 +14,16 @@
       let name = $('#name').val()
       let password = $('#password').val()
       let password2 = $('#password2').val()
+      let color = $('#color').val()
       if(password !== password2){
         $('#response').text('Passwords do not match!')
         return false;
       }
       $('#response').text('Requesting registration ...')
 
-      let data = 'name=' + encodeURIComponent(name) + '&password=' + encodeURIComponent(password);
+      let data = 'name=' + encodeURIComponent(name)
+      + '&password=' + encodeURIComponent(password)
+      + '&color=' + encodeURIComponent(color);
 
       $.ajax({
         type: "POST",
@@ -50,9 +53,9 @@
       <tr>
         <td>password again:</td><td><input type='password' id="password2" name="password2"></td>
       </tr>
-      <!-- <tr>
+      <tr>
         <td>favorite color:</td><td><input id="color" name="color"></td>
-      </tr> -->
+      </tr>
       <tr>
         <td></td>
         <td><button type="submit">

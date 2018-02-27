@@ -55,6 +55,7 @@ class PlayerData {
             else{
               // looks good
               knownPlayer.socket = socket;
+              knownPlayer.color = user.color;
               this.onlinePlayers.push(knownPlayer);
               return resolve(knownPlayer);
             }
@@ -62,7 +63,7 @@ class PlayerData {
           else{
             // player does not exist and needs to be added.
 
-            let newPlayer = new Player(null, null, name, socket);
+            let newPlayer = new Player(null, null, name, socket, user.color);
             this.knownPlayers.push(newPlayer);
             this.onlinePlayers.push(newPlayer);
             return resolve(newPlayer);

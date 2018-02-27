@@ -32,7 +32,12 @@ class PlayerActions {
     player.x = spawnSpot.x;
     player.y = spawnSpot.y;
 
-    this.syncher.playerChangeBlock(player, player.x, player.y, 'P');
+    // verify that player color is ok ... if it is not, this'll break everything
+    if(!/^[0-9abcdef]{6}$/.test(player.color)){
+      player.color = 'ffffff';
+    }
+
+    this.syncher.playerChangeBlock(player, player.x, player.y, 'P' + player.color);
 
     this.subscribe.resubscribe(player);
 

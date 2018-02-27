@@ -1,9 +1,10 @@
 
 
 class Player {
-  constructor(x, y, name, socket){
+  constructor(x, y, name, socket, color){
     this.x = x; // world pos
     this.y = y; // world pos
+    this.color = color;
     this.name = name; // username
     this.socket = socket; // websocket of the current session
     this.subscriptions = []; // the chunks which are having updates sent to this client
