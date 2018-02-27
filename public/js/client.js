@@ -75,13 +75,10 @@ let setEventHandlers = function () {
   window.addEventListener('keydown', onKeydown, false);
   window.addEventListener('keyup', onKeyup, false);
 
-  window.addEventListener('focus', event=>{
-    cli.focus();
-  }, false);
-  window.addEventListener('blur', event=>{
-    cli.blur();
-  }, false);
+  window.addEventListener('focus', event=>{cli.focus();}, false);
+  window.addEventListener('blur', event=>{cli.blur();}, false);
 
+  window.addEventListener('mousemove', onMouseMove, false);
 
   // Window resize
   window.addEventListener('resize', onResize, false);
@@ -157,6 +154,12 @@ function focusCli(){
 
 function focusGui(){
   cli.blur();
+}
+
+function onMouseMove(e){
+  if(state === STATES.ingame){
+    gui.handleMouse(e);
+  }
 }
 
 function onKeydown(e) {
