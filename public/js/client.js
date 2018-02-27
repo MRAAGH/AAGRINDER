@@ -1,4 +1,6 @@
 
+parseColor('aBra ka.da . bra #ff9843')
+
 const BLOCKED_KEYS = [8, 9, 33, 34, 35, 36, 37, 38, 39, 40, 191, 111];
 const CLI_SIZE = 0.3;
 const MIN_CANVAS_WIDTH = 200;
