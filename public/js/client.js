@@ -15,7 +15,7 @@ const STATES = Object.freeze({ // enum
   registercolor: 9
 });
 
-let key_states = [];
+let keyStates = [];
 
 let socket;
 
@@ -25,7 +25,6 @@ let guiterminal;
 let bigterminal;
 let cli;
 let gui;
-let cliFocused = true;
 let state = STATES.connecting;
 let player;
 let syncher;
@@ -91,8 +90,8 @@ let setEventHandlers = function () {
     bigterminal.println('');
     bigterminal.println('');
     bigterminal.println('AAGRINDER');
-    bigterminal.println('');
-    bigterminal.println('try /register');
+    // bigterminal.println('');
+    // bigterminal.println('try /register');
     bigterminal.println('');
     cli.prompt('login: ');
     state = STATES.loginscreen;
@@ -136,15 +135,26 @@ function startGame(){
   map = new Map();
   syncher = new Syncher(map, player);
   gui = new Gui(guiterminal, map, player);
-  cliFocused = false;
+  focusGui();
+}
 
+function focusCli(){
+  cli.focus();
+}
+
+function focusGui(){
+  cli.blur();
 }
 
 function onKeydown(e) {
   if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
     e.preventDefault(); //Prevent some of the browser's key bindings
   }
-  if(cliFocused){
+  if(cli.focused){
+    if(state === STATES.ingame && e.key === 'Escape'){
+      focusGui();
+    }
+
     let result = cli.handleKey(e.key);
     if(result !== false) {
       // we got back what the user typed
@@ -227,7 +237,6 @@ function onKeydown(e) {
         }
         break;
 
-
       case STATES.registerpassword2:
 
         if(result.length === 0){
@@ -251,7 +260,6 @@ function onKeydown(e) {
           }
         }
         break;
-
 
       case STATES.registercolor:
 
@@ -297,47 +305,36 @@ function onKeydown(e) {
 
         cli.promptCommand('> ');
 
+        focusGui();
+
         break;
 
       }
     }
   }
-  //
-  // // Keyboard key down
-  // function onKeydown(e) {
-  // return;
-  // 	let keynum;
-  //
-  // 	if(window.event) { // IE
-  // 		keynum = e.keyCode;
-  // 	} else if(e.which){ // Netscape/Firefox/Opera
-  // 		keynum = e.which;
-  // 		//console.log(e.which);
-  // 		//console.log(e)
-  // 	}
-  //
-  // 	if(cliFocused){
-  // 		if(!cli.handleKey(keynum)){
-  // 			// cli did not handle it, let's do something else.
-  //
-  // 		}
-  // 	}
-  //
-  //
-  // 	key_code = e.keyCode;
-  // 	if (!key_states[key_code]) {
-  // 		key_states[key_code] = true;
-  // 	}
+  else{
+    // gui is focused currently
+
+  	if (!keyStates[e.keyCode]) {
+  		keyStates[e.keyCode] = true;
+
+      switch(e.key){
+        case 'Enter': case 'Return':
+          focusCli();
+          break;
+      }
+  	}
+  }
 }
 
 // Keyboard key up
 function onKeyup(e) {
-  key_code = e.keyCode;
-  if (BLOCKED_KEYS.indexOf(key_code) > -1) {
+  e.keyCode = e.keyCode;
+  if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
     e.preventDefault(); //Prevent some of the browser's key bindings
   }
-  if (key_states[key_code]) {
-    key_states[key_code] = false;
+  if (keyStates[e.keyCode]) {
+    keyStates[e.keyCode] = false;
     //Do key action.
     /*
 		switch (key_code) {
