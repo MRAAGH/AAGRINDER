@@ -96,6 +96,8 @@ function onSocketConnect(data){
   bigterminal.println('');
   bigterminal.println('');
   bigterminal.println('AAGRINDER');
+  bigterminal.println('Welcome!');
+  bigterminal.println('try /register');
   // bigterminal.println('');
   // bigterminal.println('try /register');
   bigterminal.println('');
@@ -189,7 +191,7 @@ function onKeydown(e) {
         }
         else{
           // is it /register?
-          if(result === '/register'){
+          if(result === '/register' || result === '/r'){
             // straight to registration
             cli.prompt('name: ');
             state = STATES.registerscreen;

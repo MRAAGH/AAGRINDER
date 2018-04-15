@@ -13,6 +13,7 @@ const User = require('./schemes/UserScheme.js');
 const Player = require('./Player').Player;
 const bcrypt = require('bcryptjs');
 
+
 class PlayerData {
   constructor(){
     this.onlinePlayers = [];
@@ -20,17 +21,27 @@ class PlayerData {
   }
 
   login(name, password, socket){
+    // this is my injection guard
+    if(
+      !/^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$/.test(name)
+    ){
+      return Promise.reject('User does not exist. Try /register');
+    }
 
-    // first, verify password
+    // verify password
 
     return new Promise((resolve, reject) => {
-      User.findOne({ name: name }, (err, user) => {
+      connection.query('SELECT name, password FROM users WHERE name="' + name + '";', (err, foundUsers, fields) => {
         if(err){
           return reject('Server error');
         }
-        if(!user){
+        if(foundUsers.length < 1){
           return reject('User does not exist. Try /register');
         }
+
+        let user = foundUsers[0];
+
+        console.log(JSON.stringify(user));
 
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) {

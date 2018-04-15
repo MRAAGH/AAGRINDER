@@ -3,8 +3,6 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 
-const User = require('../schemes/UserScheme.js');
-
 const SALT_WORK_FACTOR = 10;
 
 router.post('/register', (req, res) => {
@@ -51,20 +49,23 @@ router.post('/register', (req, res) => {
     }
   }
 
-  User.findOne({ name: req.body.name }, (err, existingUser) => {
+
+
+  connection.query('SELECT name FROM users WHERE name="' + req.body.name + '";', (err, existingUser, fields) => {
     if (err) {
       res.json({ message: 'Server error', success: false });
       return;
     }
-    if (existingUser) {
+    if (existingUser.length > 0) {
       res.json({ message: 'Username taken', success: false });
       return;
     }
     else {
-      let user = new User();
-      user.name = req.body.name;
-      user.password = '';
-      user.color = req.body.color;
+      let user = {
+        name: req.body.name,
+        password: '',
+        color: req.body.color
+      }
 
       bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
         if (err) {
@@ -81,9 +82,13 @@ router.post('/register', (req, res) => {
           }
           user.password = hash;
 
-          user.save((err) => {
+          connection.query(
+            // 'INSERT INTO users VALUES ("aaa","aaa","00ff00");',
+            'INSERT INTO users VALUES ("' + user.name + '","' + user.password + '","' + user.color + '");',
+            (err, existingUser, fields) => {
             if (err) {
               console.log('Failed to save user!')
+              console.log(err)
               res.json({ message: 'Server error', success: false });
               return;
             }

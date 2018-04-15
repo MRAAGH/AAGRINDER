@@ -8,11 +8,13 @@ const md5 = require('md5');
 const cron = require('node-cron');
 const fs = require('fs');
 const bodyParser = require('body-parser');
-// const mongoose = require('bluebird').promisifyAll(require('mongoose'));
-const mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
+const mysql = require('mysql');
 
-mongoose.connect('mongodb://localhost:27017/aagrinder', {useMongoClient: true});
+// const mongoose = require('bluebird').promisifyAll(require('mongoose'));
+// const mongoose = require('mongoose');
+// mongoose.Promise = require('bluebird');
+
+// mongoose.connect('mongodb://localhost:27017/aagrinder', {useMongoClient: true});
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit:50000}));
@@ -145,6 +147,22 @@ function loadServerProperties(callback) {
           loaded_properties.seed = Math.floor(Math.random() * 65536);
           bad_file_format = true;
         }
+        if (loaded_properties.database_username == undefined) {
+          loaded_properties.database_host = 'localhost';
+          bad_file_format = true;
+        }
+        if (loaded_properties.database_username == undefined) {
+          loaded_properties.database_username = 'root';
+          bad_file_format = true;
+        }
+        if (loaded_properties.database_password == undefined) {
+          loaded_properties.database_password = '';
+          bad_file_format = true;
+        }
+        if (loaded_properties.database_name == undefined) {
+          loaded_properties.database_name = 'aagrinder';
+          bad_file_format = true;
+        }
         if (bad_file_format) {
           let corrected_properties_string = JSON.stringify(loaded_properties);
           fs.writeFile('server.properties', corrected_properties_string, function (err) {
@@ -163,7 +181,11 @@ function loadServerProperties(callback) {
   else {
     loaded_properties = {
       level_name: 'world',
-      seed: Math.floor(Math.random() * 65536)
+      seed: Math.floor(Math.random() * 65536),
+      database_host: 'localhost',
+      database_username: 'root',
+      database_password: '',
+      database_name: 'aagrinder'
     };
     let corrected_properties_string = JSON.stringify(loaded_properties);
     fs.writeFile('server.properties', corrected_properties_string, function (err) {
@@ -243,6 +265,15 @@ function onChat(data) {
 console.log('Starting aagrinder server version ' + SERVER_VERSION);
 let hrstart_server_load = process.hrtime();
 loadServerProperties((props) => {
+  // now we have database authentication things
+  // the connection is a global variable atm
+  connection = mysql.createConnection({
+    host     : props.database_host,
+    user     : props.database_username,
+    password : props.database_password,
+    database : props.database_name
+  });
+
   LEVEL_NAME = props.level_name;
   WORLD_SEED = props.seed;
   map = new Map(WORLD_SEED);
