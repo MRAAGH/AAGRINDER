@@ -9,7 +9,6 @@ If the player does not exist in this world, they are added at coordinates null, 
 with empty inventory.
 */
 
-const User = require('./schemes/UserScheme.js');
 const Player = require('./Player').Player;
 const bcrypt = require('bcryptjs');
 

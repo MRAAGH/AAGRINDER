@@ -27,6 +27,7 @@ let cli;
 let gui;
 let state = STATES.connecting;
 let player;
+let playerActions;
 let syncher;
 let map;
 
@@ -144,7 +145,8 @@ function onSocketChat(data){
 function startGame(){
   player = new Player();
   map = new Map();
-  syncher = new Syncher(map, player);
+  syncher = new Syncher(map, player, socket);
+  playerActions = new PlayerActions(player, map, syncher);
   gui = new Gui(guiterminal, map, player);
   focusGui();
 }
@@ -352,7 +354,7 @@ function onKeydown(e) {
 
   	if (!keyStates[e.keyCode]) {
   		keyStates[e.keyCode] = true;
-
+      console.log(e.key)
       switch(e.key){
         case 'Enter': case 'Return':
           focusCli();
@@ -368,6 +370,18 @@ function onKeydown(e) {
           break;
         case 'ArrowRight':
           player.cursorRight();
+          break;
+        case 'w':
+          playerActions.moveUp();
+          break;
+        case 'a':
+          playerActions.moveLeft();
+          break;
+        case 's':
+          playerActions.moveDown();
+          break;
+        case 'd':
+          playerActions.moveRight();
           break;
       }
   	}

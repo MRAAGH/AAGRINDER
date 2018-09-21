@@ -15,17 +15,33 @@ Note that the server does not always detect interference.
 If the client makes an action while a server update is traveling over the internet,
 the server will not notice interferences and the client might get desynched.
 */
-
+"use strict";
 class Syncher {
-  constructor(map, player){
+  constructor(map, player, socket){
     this.map = map;
     this.player = player;
     this.actions = []; // a list of actions which have yet to be confirmed by server
     this.branch = 0;
+    this.socket = socket;
   }
 
-  action(action){ // player action (movement, placement, diggment, interaction)
+  action(name, data, changes){ // player action (movement, placement, diggment, interaction)
+    let actionId = this.actions.length;
+    for(let b of changes.b){
+      b.p = this.map.getBlock(b.x, b.y);
+      this.map.setBlock(b.x, b.y, b.b);
+    }
+    this.player.x += changes.px;
+    this.player.y += changes.py;
 
+    this.actions.push(changes);
+
+    let action = {
+      a: name,
+      i: actionId,
+      d: data,
+    };
+    this.socket.emit('a', action);
   }
 
   applyTerrainUpdate(data){ // this is the core
