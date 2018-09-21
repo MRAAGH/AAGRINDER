@@ -19,6 +19,14 @@ class PlayerActions {
     this.syncher = syncher;
     this.subscribe = subscribe;
     this.spawn = spawn;
+    this.actionFunctions = {
+      'l':(player, data)=>{
+        syncher.playerChangeBlock(player, player.x, player.y, ' ');
+        syncher.playerChangeBlock(player, player.x-1, player.y, 'P'+player.color);
+        player.x -= 1;
+        return true;
+      },
+    };
   }
 
   login(player) {
@@ -60,6 +68,17 @@ class PlayerActions {
     player.x = x;
     player.y = y;
     subscribe.resubscribe(player);
+  }
+
+  action(player, actionName, data){
+    if(this.actionFunctions[actionName]){
+      let success = this.actionFunctions[actionName](player, data);
+      if(success){
+        this.syncher.sendUpdatesToClients();
+      }
+      return success;
+    }
+    return false;
   }
 }
 

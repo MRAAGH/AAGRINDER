@@ -36,7 +36,7 @@ const ServerActions = require('./ServerActions').ServerActions;
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8082;
 
 //app.get('/', function (req, res) { res.sendFile(__dirname + '/public/client.html'); });
 app.use(express.static(__dirname + '/public'));
@@ -202,6 +202,7 @@ io.on('connection', function (socket) {
   socket.on('login', onLogin);
   socket.on('disconnect', onClientDisconnect);
   socket.on('chat', onChat);
+  socket.on('a', onAction);
   // socket.on("m", onMovePlayer);
   // socket.on("d", onDig);
   // socket.on("p", onPlace);
@@ -261,6 +262,18 @@ function onChat(data) {
   }
 }
 
+function onAction(data) {
+  console.log(this);
+  let player = playerData.onlinePlayerBySocket(this);
+  if(player.hacker){
+    // we are ignoring this player (hacks / desynch)
+    return false;
+  }
+  if (!playerActions.action(player, data.a, data.d)){
+    player.hacker = true;
+    player.hackedAt = data.i;
+  }
+}
 
 console.log('Starting aagrinder server version ' + SERVER_VERSION);
 let hrstart_server_load = process.hrtime();
