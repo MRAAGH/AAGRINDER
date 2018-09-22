@@ -54,7 +54,11 @@ class Syncher {
 
     // apply block updates
     if(data.b){
-
+      for(const y of Object.getOwnPropertyNames(data.b)){
+        for(const x of Object.getOwnPropertyNames(data.b[y])){
+          this.map.setBlock(x, y, data.b[y][x]);
+        }
+      }
     }
 
     // apply chunk updates

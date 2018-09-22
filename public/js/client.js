@@ -138,7 +138,6 @@ function onSocketTerrainUpdate(data){
 
 function onSocketPlayerUpdate(data){
   player.applyPlayerUpdate(data);
-  console.log(data);
 }
 
 function onSocketChat(data){

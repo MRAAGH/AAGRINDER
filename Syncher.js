@@ -98,13 +98,12 @@ class Syncher{
     if(chunkUpdates.length > 0){
       message.c = chunkUpdates;
     }
-
+    player.changeObj = {};
     player.chunkUpdates = [];
 
     if(player.hacker){
       message.h = {i: player.hackedAt, b: player.branch};
     }
-    console.log(message);
     if(Object.keys(message).length){
       player.socket.emit('t', message);
     }
