@@ -88,7 +88,9 @@ class PlayerActions {
     if(this.actionFunctions[actionName]){
       const view = this.syncher.createView(player)
       this.actionFunctions[actionName](view, data);
-      return view.apply();
+      const success = view.apply();
+      this.subscribe.resubscribe(player);
+      return success;
     }
     return false;
   }

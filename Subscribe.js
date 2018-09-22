@@ -42,7 +42,7 @@ class Subscribe{
   }
 
   resubscribe(player){
-    console.log('resub '+player.name);
+    // console.log('resub '+player.name);
     let newSubscriptions = [];
     for(let p = 0; p < CHUNK_PROBES.length; p++){
       let chunkx = Math.floor((player.x + CHUNK_PROBES[p].x)/256);

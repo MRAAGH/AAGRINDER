@@ -56,7 +56,7 @@ $('document').ready(function () {
     if(state === STATES.ingame){
 
       //game tick goes here
-
+      gameTick();
 
       gui.display();
 
@@ -131,8 +131,6 @@ function onSocketLoginError(data){
 }
 
 function onSocketTerrainUpdate(data){
-  console.log("////////////////////////////")
-  console.log(data);
   syncher.applyTerrainUpdate(data);
 }
 
@@ -160,6 +158,33 @@ function focusCli(){
 
 function focusGui(){
   cli.blur();
+}
+
+function gameTick(){
+  if(keyStates[38]){ // ArrowUp
+    player.cursorUp();
+  }
+  if(keyStates[40]){ // ArrowDown
+    player.cursorDown();
+  }
+  if(keyStates[37]){ // ArrowLeft
+    player.cursorLeft();
+  }
+  if(keyStates[39]){ // ArrowRight
+    player.cursorRight();
+  }
+  if(keyStates[87]){ // w
+    playerActions.action('u', {});
+  }
+  if(keyStates[65]){ // a
+    playerActions.action('l', {});
+  }
+  if(keyStates[83]){ // s
+    playerActions.action('d', {});
+  }
+  if(keyStates[68]){ // d
+    playerActions.action('r', {});
+  }
 }
 
 function onMouseMove(e){
@@ -356,33 +381,10 @@ function onKeydown(e) {
 
   	if (!keyStates[e.keyCode]) {
   		keyStates[e.keyCode] = true;
+      console.log(e.keyCode);
       switch(e.key){
         case 'Enter': case 'Return':
           focusCli();
-          break;
-        case 'ArrowUp':
-          player.cursorUp();
-          break;
-        case 'ArrowDown':
-          player.cursorDown();
-          break;
-        case 'ArrowLeft':
-          player.cursorLeft();
-          break;
-        case 'ArrowRight':
-          player.cursorRight();
-          break;
-        case 'w':
-          playerActions.action('u', {});
-          break;
-        case 'a':
-          playerActions.action('l', {});
-          break;
-        case 's':
-          playerActions.action('d', {});
-          break;
-        case 'd':
-          playerActions.action('r', {});
           break;
       }
   	}
