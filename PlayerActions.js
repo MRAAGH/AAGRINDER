@@ -21,10 +21,32 @@ class PlayerActions {
     this.spawn = spawn;
     this.actionFunctions = {
       'l':(player, data)=>{
-        syncher.playerChangeBlock(player, player.x, player.y, ' ');
-        syncher.playerChangeBlock(player, player.x-1, player.y, 'P'+player.color);
-        player.x -= 1;
-        return true;
+        let view = this.syncher.createView(player);
+        view.setBlock(player.x, player.y, ' ');
+        view.setBlock(player.x-1, player.y, 'P');
+        view.movePlayerX(-1);
+        return view.apply();
+      },
+      'r':(player, data)=>{
+        let view = this.syncher.createView(player);
+        view.setBlock(player.x, player.y, ' ');
+        view.setBlock(player.x+1, player.y, 'P');
+        view.movePlayerX(1);
+        return view.apply();
+      },
+      'd':(player, data)=>{
+        let view = this.syncher.createView(player);
+        view.setBlock(player.x, player.y, ' ');
+        view.setBlock(player.x, player.y-1, 'P');
+        view.movePlayerY(-1);
+        return view.apply();
+      },
+      'u':(player, data)=>{
+        let view = this.syncher.createView(player);
+        view.setBlock(player.x, player.y, ' ');
+        view.setBlock(player.x, player.y+1, 'P');
+        view.movePlayerY(1);
+        return view.apply();
       },
     };
   }

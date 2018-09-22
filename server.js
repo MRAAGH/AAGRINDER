@@ -36,7 +36,7 @@ const ServerActions = require('./ServerActions').ServerActions;
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
-const port = process.env.PORT || 8082;
+const port = process.env.PORT || 8080;
 
 //app.get('/', function (req, res) { res.sendFile(__dirname + '/public/client.html'); });
 app.use(express.static(__dirname + '/public'));
@@ -263,7 +263,6 @@ function onChat(data) {
 }
 
 function onAction(data) {
-  console.log(this);
   let player = playerData.onlinePlayerBySocket(this);
   if(player.hacker){
     // we are ignoring this player (hacks / desynch)
@@ -306,7 +305,7 @@ loadServerProperties((props) => {
     // map.prepareSpawnArea(() => {
     http.listen(port, function () {
       let hrend_server_load = process.hrtime(hrstart_server_load);
-      console.log('Done (' + hrend_server_load[0] + ',' + Math.floor(hrend_server_load[1] / 1000000) + 's)!');
+      console.log('Done (' + hrend_server_load[0] + '.' + Math.floor(hrend_server_load[1] / 1000000) + 's)!');
       console.log('AAGRINDER server listening on *:' + port);
     });
     // });

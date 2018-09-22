@@ -18,6 +18,10 @@ class Syncher{
     this.playerData = playerData;
   }
 
+  createView(player){
+    return new View(this, player);
+  }
+
   checkHacker(socket){
     let player = this.map.playerBySocketId(socket.id);
     return player.hacker;
@@ -43,7 +47,7 @@ class Syncher{
 
   playerChangeBlocks(player, changeList){
     for(let i = 0; i < changeList.length; i++){
-      playerChangeBlock(player, changeList[i].x, changeList[i].y, changeList[i].block);
+      this.playerChangeBlock(player, changeList[i].x, changeList[i].y, changeList[i].block);
     }
   }
   playerChangeBlock(player, x, y, block){
@@ -98,6 +102,49 @@ class Syncher{
     }
 
     player.socket.emit('t', message);
+  }
+}
+
+/*
+A view provides easier interaction with the syncher.
+Block checks and changes are automatically logged and queued
+and applied at the correct moment.
+*/
+
+class View{
+  constructor(syncher, player){
+    this.syncher = syncher;
+    this.player = player;
+    this.queue = [];
+    this.touched = [];
+    this.playerMovement = {x:0,y:0};
+  }
+  setBlock(x, y, b){
+    this.queue.push({x:x,y:y,block:b});
+    this.touched.push({x:x,y:y});
+  }
+  getBlock(x, y){
+    this.touched.push({x:x,y:y});
+    return this.syncher.map.getBlock(x,y);
+  }
+  movePlayerX(dist){
+    this.playerMovement.x += dist;
+  }
+  movePlayerY(dist){
+    this.playerMovement.y += dist;
+  }
+  apply(){
+    for(const t of this.touched){
+      if(this.player.changeObj[t.y] && this.player.changeObj[t.y][t.x]){
+        // collision! abort abort abort
+        return false;
+      }
+    }
+    this.player.x += this.playerMovement.x;
+    this.player.y += this.playerMovement.y;
+    this.syncher.playerChangeBlocks(this.player, this.queue);
+    this.syncher.sendUpdatesToClients();
+    return true;
   }
 }
 
