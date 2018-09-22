@@ -77,12 +77,14 @@ class Syncher{
   }
 
   sendUpdatesToClient(player){
-    let message = {
-      b: player.changeObj, // block updates
-    };
+    let message = {};
+    if (Object.keys(player.changeObj).length){
+      message.b = player.changeObj;
+    }
 
     let chunkUpdates = [];
     for(let i = 0; i < player.chunkUpdates.length; i++){
+      console.log('chunk update!')
       let chunkx = player.chunkUpdates[i].x;
       let chunky = player.chunkUpdates[i].y;
       let str = this.map.getChunk(chunkx, chunky).getCompressed();
@@ -97,11 +99,15 @@ class Syncher{
       message.c = chunkUpdates;
     }
 
+    player.chunkUpdates = [];
+
     if(player.hacker){
       message.h = {i: player.hackedAt, b: player.branch};
     }
-
-    player.socket.emit('t', message);
+    console.log(message);
+    if(Object.keys(message).length){
+      player.socket.emit('t', message);
+    }
   }
 }
 
