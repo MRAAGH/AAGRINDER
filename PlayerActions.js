@@ -20,40 +20,32 @@ class PlayerActions {
     this.subscribe = subscribe;
     this.spawn = spawn;
     this.actionFunctions = {
-      'l':(player, data)=>{
-        let view = this.syncher.createView(player);
-        view.setBlock(player.x, player.y, ' ');
-        view.setBlock(player.x-1, player.y, 'P');
+      'l':(view, data)=>{
+        view.setBlock(view.player.x, view.player.y, ' ');
+        view.setBlock(view.player.x-1, view.player.y, view.player.playerBlock());
         view.movePlayerX(-1);
-        return view.apply();
       },
-      'r':(player, data)=>{
-        let view = this.syncher.createView(player);
-        view.setBlock(player.x, player.y, ' ');
-        view.setBlock(player.x+1, player.y, 'P');
+      'r':(view, data)=>{
+        view.setBlock(view.player.x, view.player.y, ' ');
+        view.setBlock(view.player.x+1, view.player.y, view.player.playerBlock());
         view.movePlayerX(1);
-        return view.apply();
       },
-      'd':(player, data)=>{
-        let view = this.syncher.createView(player);
-        view.setBlock(player.x, player.y, ' ');
-        view.setBlock(player.x, player.y-1, 'P');
+      'd':(view, data)=>{
+        view.setBlock(view.player.x, view.player.y, ' ');
+        view.setBlock(view.player.x, view.player.y-1, view.player.playerBlock());
         view.movePlayerY(-1);
-        return view.apply();
       },
-      'u':(player, data)=>{
-        let view = this.syncher.createView(player);
-        view.setBlock(player.x, player.y, ' ');
-        view.setBlock(player.x, player.y+1, 'P');
+      'u':(view, data)=>{
+        view.setBlock(view.player.x, view.player.y, ' ');
+        view.setBlock(view.player.x, view.player.y+1, view.player.playerBlock());
         view.movePlayerY(1);
-        return view.apply();
       },
     };
   }
 
   login(player) {
 
-    let spawnSpot = this.spawn.choosePlayerSpawnSpot(player);
+    const spawnSpot = this.spawn.choosePlayerSpawnSpot(player);
 
     console.log(spawnSpot);
 
@@ -67,7 +59,7 @@ class PlayerActions {
       player.color = 'ffffff';
     }
 
-    this.syncher.playerChangeBlock(player, player.x, player.y, 'P' + player.color);
+    this.syncher.playerChangeBlock(player, player.x, player.y, player.playerBlock());
 
     this.subscribe.resubscribe(player);
 
@@ -86,7 +78,7 @@ class PlayerActions {
   }
 
   teleport(playerName, x, y){
-    let player = this.playerByName(playerName);
+    const player = this.playerByName(playerName);
     player.x = x;
     player.y = y;
     subscribe.resubscribe(player);
@@ -94,11 +86,9 @@ class PlayerActions {
 
   action(player, actionName, data){
     if(this.actionFunctions[actionName]){
-      let success = this.actionFunctions[actionName](player, data);
-      if(success){
-        this.syncher.sendUpdatesToClients();
-      }
-      return success;
+      const view = this.syncher.createView(player)
+      this.actionFunctions[actionName](view, data);
+      return view.apply();
     }
     return false;
   }

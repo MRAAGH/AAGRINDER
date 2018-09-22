@@ -226,7 +226,9 @@ function onLogin(data) {
   else {
     playerData.login(data.username, data.password, this).then(
       result => {
-        this.emit('loginsuccess');
+        const message = {color: result.color};
+        console.log(result.color);
+        this.emit('loginsuccess', message);
 
         playerActions.login(result);
 
@@ -285,29 +287,39 @@ loadServerProperties((props) => {
     password : props.database_password,
     database : props.database_name
   });
+  connection.query(`
+CREATE TABLE IF NOT EXISTS users (
+  id int NOT NULL AUTO_INCREMENT,
+  name varchar(20) NOT NULL,
+  password varchar(70) NOT NULL,
+  color char(6) NOT NULL DEFAULT 'ffffff',
+  PRIMARY KEY (id),
+  UNIQUE KEY (name)
+)
+    `,()=>{
+      LEVEL_NAME = props.level_name;
+      WORLD_SEED = props.seed;
+      map = new Map(WORLD_SEED);
+      playerData = playerData = new PlayerData();
+      spawn = new Spawn(map);
+      syncher = new Syncher(map, playerData);
+      let subscribe = new Subscribe(map);
+      playerActions = new PlayerActions(
+        map,
+        syncher,
+        subscribe,
+        spawn
+      );
 
-  LEVEL_NAME = props.level_name;
-  WORLD_SEED = props.seed;
-  map = new Map(WORLD_SEED);
-  playerData = playerData = new PlayerData();
-  spawn = new Spawn(map);
-  syncher = new Syncher(map, playerData);
-  let subscribe = new Subscribe(map);
-  playerActions = new PlayerActions(
-    map,
-    syncher,
-    subscribe,
-    spawn
-  );
-
-  console.log('Preparing level "' + LEVEL_NAME + '"');
-  loadfromFile(() => {
-    // map.prepareSpawnArea(() => {
-    http.listen(port, function () {
-      let hrend_server_load = process.hrtime(hrstart_server_load);
-      console.log('Done (' + hrend_server_load[0] + '.' + Math.floor(hrend_server_load[1] / 1000000) + 's)!');
-      console.log('AAGRINDER server listening on *:' + port);
-    });
-    // });
+      console.log('Preparing level "' + LEVEL_NAME + '"');
+      loadfromFile(() => {
+        // map.prepareSpawnArea(() => {
+        http.listen(port, function () {
+          let hrend_server_load = process.hrtime(hrstart_server_load);
+          console.log('Done (' + hrend_server_load[0] + '.' + Math.floor(hrend_server_load[1] / 1000000) + 's)!');
+          console.log('AAGRINDER server listening on *:' + port);
+        });
+        // });
+      })
   });
 });

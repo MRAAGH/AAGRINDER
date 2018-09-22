@@ -1,7 +1,6 @@
 
 const SPRITES = {
 
-  'P': {char: 'P', color: 'white'}, // TEMP
   'B': {char: 'B', color: '#7f7f7f'},
   'A': {char: 'A', color: '#1f7f29'},
   'H': {char: 'H', color: '#91702a'},
@@ -25,4 +24,4 @@ const SPRITES = {
   '-d': {char: '┬', color: '#1f7f29'},
   '-e': {char: '┤', color: '#1f7f29'},
   '-f': {char: '┼', color: '#1f7f29'},
-}
+};

@@ -117,7 +117,8 @@ function onSocketLoginSuccess(data){
   if(state === STATES.loginwait){
     cli.promptCommand('> ');
     state = STATES.ingame;
-    startGame();
+    console.log(data)
+    startGame(data.color);
   }
 }
 
@@ -130,6 +131,8 @@ function onSocketLoginError(data){
 }
 
 function onSocketTerrainUpdate(data){
+  console.log("////////////////////////////")
+  console.log(data);
   syncher.applyTerrainUpdate(data);
 }
 
@@ -142,8 +145,8 @@ function onSocketChat(data){
   bigterminal.println(data.message);
 }
 
-function startGame(){
-  player = new Player();
+function startGame(playerColor){
+  player = new Player(playerColor);
   map = new Map();
   syncher = new Syncher(map, player, socket);
   playerActions = new PlayerActions(player, map, syncher);
@@ -354,7 +357,6 @@ function onKeydown(e) {
 
   	if (!keyStates[e.keyCode]) {
   		keyStates[e.keyCode] = true;
-      console.log(e.key)
       switch(e.key){
         case 'Enter': case 'Return':
           focusCli();
@@ -372,16 +374,16 @@ function onKeydown(e) {
           player.cursorRight();
           break;
         case 'w':
-          playerActions.moveUp();
+          playerActions.action('u', {});
           break;
         case 'a':
-          playerActions.moveLeft();
+          playerActions.action('l', {});
           break;
         case 's':
-          playerActions.moveDown();
+          playerActions.action('d', {});
           break;
         case 'd':
-          playerActions.moveRight();
+          playerActions.action('r', {});
           break;
       }
   	}

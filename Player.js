@@ -16,6 +16,10 @@ class Player {
     this.branch = 0; // the current branch of this session (each desynch spawns new branch)
   }
 
+  playerBlock(){
+    return 'P'+this.color;
+  }
+
 
 }
 

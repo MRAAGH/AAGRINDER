@@ -84,7 +84,7 @@ router.post('/register', (req, res) => {
 
           connection.query(
             // 'INSERT INTO users VALUES ("aaa","aaa","00ff00");',
-            'INSERT INTO users VALUES ("' + user.name + '","' + user.password + '","' + user.color + '");',
+            'INSERT INTO users (name, password, color) VALUES ("' + user.name + '","' + user.password + '","' + user.color + '");',
             (err, existingUser, fields) => {
             if (err) {
               console.log('Failed to save user!')

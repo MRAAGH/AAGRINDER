@@ -25,6 +25,11 @@ class Syncher {
     this.socket = socket;
   }
 
+  createView(){
+    return new View(this, this.player);
+  }
+
+
   action(name, data, changes){ // player action (movement, placement, diggment, interaction)
     let actionId = this.actions.length;
     for(let b of changes.b){
@@ -58,5 +63,34 @@ class Syncher {
         this.map.loadChunk(data.c[i].x, data.c[i].y, data.c[i].t);
       }
     }
+  }
+}
+
+class View{
+  constructor(syncher, player){
+    this.syncher = syncher;
+    this.player = player;
+    this.queue = [];
+    this.playerMovement = {x:0,y:0};
+  }
+  setBlock(x, y, b){
+    this.queue.push({x:x,y:y,b:b});
+  }
+  getBlock(x, y){
+    return this.syncher.map.getBlock(x,y);
+  }
+  movePlayerX(dist){
+    this.playerMovement.x += dist;
+  }
+  movePlayerY(dist){
+    this.playerMovement.y += dist;
+  }
+  apply(name){
+    let changes = {b : this.queue,
+      px : this.playerMovement.x,
+      py : this.playerMovement.y,
+    };
+    this.syncher.action(name, {}, changes);
+    return true;
   }
 }

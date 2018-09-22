@@ -30,7 +30,7 @@ class PlayerData {
     // verify password
 
     return new Promise((resolve, reject) => {
-      connection.query('SELECT name, password FROM users WHERE name="' + name + '";', (err, foundUsers, fields) => {
+      connection.query('SELECT name, password, color FROM users WHERE name="' + name + '";', (err, foundUsers, fields) => {
         if(err){
           return reject('Server error');
         }
@@ -38,9 +38,8 @@ class PlayerData {
           return reject('User does not exist. Try /register');
         }
 
-        let user = foundUsers[0];
-
-        console.log(JSON.stringify(user));
+        const user = foundUsers[0];
+        console.log(user);
 
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) {

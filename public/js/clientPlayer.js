@@ -1,12 +1,17 @@
 
 class Player {
-  constructor(){
+  constructor(color){
     this.x = 0;
     this.y = 0;
 		this.cursorx = 0;
     this.cursory = 0;
     this.reach = 0;
+    this.color = color;
     this.inventory = 'nyi';
+  }
+
+  playerBlock(){
+    return 'P'+this.color;
   }
 
   applyPlayerUpdate(data){

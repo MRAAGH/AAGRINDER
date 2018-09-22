@@ -36,6 +36,7 @@ class Gui {
           // this.terminal.displayCharacter(x, h - y - 1, SPRITES[block].char, SPRITES[block].color);
         }
         else if(block[0] === 'P'){
+          console.log(block);
           buffer[h - y - 1][x] = {
             char: 'P',
             color: '#' + block.substring(1)
