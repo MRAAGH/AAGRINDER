@@ -123,6 +123,7 @@ class View{
     this.queue = [];
     this.touched = [];
     this.playerMovement = {x:0,y:0};
+    this.rejected = false;
   }
   setBlock(x, y, b){
     this.queue.push({x:x,y:y,block:b});
@@ -139,6 +140,9 @@ class View{
     this.playerMovement.y += dist;
   }
   apply(){
+    if(this.rejected){
+      return false;
+    }
     for(const t of this.touched){
       if(this.player.changeObj[t.y] && this.player.changeObj[t.y][t.x]){
         // collision! abort abort abort
@@ -150,6 +154,9 @@ class View{
     this.syncher.playerChangeBlocks(this.player, this.queue);
     this.syncher.sendUpdatesToClients();
     return true;
+  }
+  reject(){
+    this.rejected = true;
   }
 }
 

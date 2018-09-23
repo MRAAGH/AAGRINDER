@@ -203,12 +203,6 @@ io.on('connection', function (socket) {
   socket.on('disconnect', onClientDisconnect);
   socket.on('chat', onChat);
   socket.on('a', onAction);
-  // socket.on("m", onMovePlayer);
-  // socket.on("d", onDig);
-  // socket.on("p", onPlace);
-  // socket.on("i", onInteract);
-  // socket.on("select", onSelect);
-  // socket.on("craft", onCraft);
 });
 
 function onClientConnect(socket) {

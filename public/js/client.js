@@ -192,6 +192,20 @@ function gameTick(){
   if(keyStates[68]){ // d
     playerActions.action('r', {});
   }
+  if(keyStates[8]){ // Backspace
+    playerActions.action('D', {
+      x: player.cursorx,
+      y: player.cursory,
+      r: true,
+    });
+  }
+  if(keyStates[32]){ // Space
+    playerActions.action('P', {
+      x: player.cursorx,
+      y: player.cursory,
+      r: true,
+    });
+  }
 }
 
 function onMouseMove(e){

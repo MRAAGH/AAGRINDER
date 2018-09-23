@@ -44,14 +44,41 @@ class PlayerActions{
         view.setBlock(view.player.x, view.player.y+1, view.player.playerBlock());
         view.movePlayerY(1);
       },
+      'D':(view, data)=>{
+        let x, y;
+        if(data.r){
+          x = view.player.x + data.x;
+          y = view.player.y + data.y;
+        }
+        else{
+          x = data.x;
+          y = data.y;
+        }
+        console.log(x,y)
+        if(Math.abs(view.player.x - x) > view.player.reach
+        || Math.abs(view.player.y - y) > view.player.reach){
+          // should not be able to reach!
+          view.reject();
+          return;
+        }
+        // must be a diggable block
+        const dug = view.getBlock(x, y);
+        if(dug === ' ' || dug.substr(0, 1) === 'P'){
+          view.reject();
+          return;
+        }
+        // ok dig it
+        view.setBlock(x, y, ' ');
+        // TODO: should probably add it to the inventory ;)
+      },
     };
   }
-  
+
   action(actionName, data){
     if(this.actionFunctions[actionName]){
       const view = this.syncher.createView()
       this.actionFunctions[actionName](view, data);
-      return view.apply(actionName);
+      return view.apply(actionName, data);
     }
     return false;
   }

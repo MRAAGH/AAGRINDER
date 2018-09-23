@@ -76,6 +76,7 @@ class View{
     this.player = player;
     this.queue = [];
     this.playerMovement = {x:0,y:0};
+    this.rejected = false;
   }
   setBlock(x, y, b){
     this.queue.push({x:x,y:y,b:b});
@@ -89,12 +90,18 @@ class View{
   movePlayerY(dist){
     this.playerMovement.y += dist;
   }
-  apply(name){
+  apply(name, data){
+    if(this.rejected){
+      return false;
+    }
     let changes = {b : this.queue,
       px : this.playerMovement.x,
       py : this.playerMovement.y,
     };
-    this.syncher.action(name, {}, changes);
+    this.syncher.action(name, data, changes);
     return true;
+  }
+  reject(){
+    this.rejected = true;
   }
 }
