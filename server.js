@@ -271,6 +271,7 @@ function onAction(data) {
     return false;
   }
   if (!playerActions.action(player, data.a, data.d)){
+    console.log("HACKS! ("+player.name+")")
     player.hacker = true;
     player.hackedAt = data.i;
   }

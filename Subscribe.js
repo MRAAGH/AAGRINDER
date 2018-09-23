@@ -42,6 +42,13 @@ class Subscribe{
   }
 
   resubscribe(player){
+    const distance = Math.abs(player.resubscribePosition.x - player.x) + Math.abs(player.resubscribePosition.y - player.y);
+    if(distance < 128){
+      return;
+    }
+    player.resubscribePosition.x = player.x;
+    player.resubscribePosition.y = player.y;
+
     // console.log('resub '+player.name);
     let newSubscriptions = [];
     for(let p = 0; p < CHUNK_PROBES.length; p++){
