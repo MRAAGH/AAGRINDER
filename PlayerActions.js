@@ -1,16 +1,12 @@
 /*
 Player actions.
 
-If a player moved, resubscribe must be called.
-If a player changed a set of blocks, syncher.playerChangeBlocks must be called.
-// If a player inventory changed, syncher.changeInventory must be called.
-If the server changed a set of blocks, syncher.serverChangeBlocks must be called.
-
-Do not modify chunks directly! It must go through the Syncher!
 May modify player inventory and position directly.
 Because we are not synching those between clients.
 
 */
+
+require('./public/js/sharedGameLogic.js');
 
 class PlayerActions {
 
@@ -19,55 +15,8 @@ class PlayerActions {
     this.syncher = syncher;
     this.subscribe = subscribe;
     this.spawn = spawn;
-    this.actionFunctions = {
-      'l':(view, data)=>{
-        view.setBlock(view.player.x, view.player.y, ' ');
-        view.setBlock(view.player.x-1, view.player.y, view.player.playerBlock());
-        view.movePlayerX(-1);
-      },
-      'r':(view, data)=>{
-        view.setBlock(view.player.x, view.player.y, ' ');
-        view.setBlock(view.player.x+1, view.player.y, view.player.playerBlock());
-        view.movePlayerX(1);
-      },
-      'd':(view, data)=>{
-        view.setBlock(view.player.x, view.player.y, ' ');
-        view.setBlock(view.player.x, view.player.y-1, view.player.playerBlock());
-        view.movePlayerY(-1);
-      },
-      'u':(view, data)=>{
-        view.setBlock(view.player.x, view.player.y, ' ');
-        view.setBlock(view.player.x, view.player.y+1, view.player.playerBlock());
-        view.movePlayerY(1);
-      },
-      'D':(view, data)=>{
-        let x, y;
-        if(data.r){
-          x = view.player.x + data.x;
-          y = view.player.y + data.y;
-        }
-        else{
-          x = data.x;
-          y = data.y;
-        }
-        console.log(x,y)
-        if(Math.abs(view.player.x - x) > view.player.reach
-        || Math.abs(view.player.y - y) > view.player.reach){
-          // should not be able to reach!
-          view.reject();
-          return;
-        }
-        // must be a diggable block
-        const dug = view.getBlock(x, y);
-        if(dug === ' ' || dug.substr(0, 1) === 'P'){
-          view.reject();
-          return;
-        }
-        // ok dig it
-        view.setBlock(x, y, ' ');
-        // TODO: should probably add it to the inventory ;)
-      },
-    };
+    this.actionFunctions = sharedActionFunctions;
+    console.log(this.actionFunctions);
   }
 
   login(player) {
