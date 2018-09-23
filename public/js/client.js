@@ -76,7 +76,14 @@ let setEventHandlers = function () {
   window.addEventListener('keydown', onKeydown, false);
   window.addEventListener('keyup', onKeyup, false);
 
-  window.addEventListener('focus', event=>{cli.focus();}, false);
+  window.addEventListener('focus', event=>{
+    if(state === STATES.ingame){
+      focusGui();
+    }
+    else{
+      focusCli();
+    }
+  }, false);
   window.addEventListener('blur', event=>{cli.blur();}, false);
 
   window.addEventListener('mousemove', onMouseMove, false);
