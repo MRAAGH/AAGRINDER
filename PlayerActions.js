@@ -1,6 +1,12 @@
 /*
 Player actions.
 
+If a player moved, resubscribe must be called.
+If a player changed a set of blocks, syncher.playerChangeBlocks must be called.
+// If a player inventory changed, syncher.changeInventory must be called.
+If the server changed a set of blocks, syncher.serverChangeBlocks must be called.
+
+Do not modify chunks directly! It must go through the Syncher!
 May modify player inventory and position directly.
 Because we are not synching those between clients.
 

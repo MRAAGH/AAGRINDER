@@ -9,19 +9,25 @@ It is that simple! :D
 
 # How to find a server?
 I don't have a public server, and I don't know of any other servers.
-This might change in the future.
-But for now, you will probably need to set up your own server with your friends.
+I will probably set one up in the future.
+Right now, I suggest waiting. Check back in a few months to see if this readme has changed.
 
 # How to run a server?
+You need a mysql database running, for storing account data.
+This may change in the future if authentication becomes centralized,
+and then you won't need your own database.
+
+You need to install [node.js](https://nodejs.org/en/).
+
 ```
-$ git clone git@github.com:MRAAGH/aagrinder.git
+$ git clone https://github.com/MRAAGH/aagrinder.git
 $ cd aagrinder
 $ npm install
 $ npm start
 ```
 
 A server.properties file will be created.
-You can open and modify it if you wish, then restart the server.
+You can open and modify it as you wish, then restart the server.
 
 You also need to configure ports and IP's if you want others to be able to connect.
 But this is advanced stuff.
@@ -29,5 +35,9 @@ If you don't know what I am talking about, maybe you should find someone else to
 
 # How finished is the game?
 Very unfinished at this point.
-Hardly playable and it looks and feels different than it is supposed to.
-I need to get to work, hehe
+
+At the time of writing this, you can't even move properly
+and there is no inventory.
+
+But at least you can register, log in, chat,
+break stuff and see how other players are also breaking stuff, yay
