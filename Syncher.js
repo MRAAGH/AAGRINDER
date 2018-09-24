@@ -101,9 +101,9 @@ class Syncher{
     player.changeObj = {};
     player.chunkUpdates = [];
 
-    if(player.hacker){
-      message.h = {i: player.hackedAt, b: player.branch};
-    }
+    // if(player.hacker){
+    //   message.h = {i: player.hackedAt, b: player.branch};
+    // }
     if(Object.keys(message).length){
       player.socket.emit('t', message);
     }

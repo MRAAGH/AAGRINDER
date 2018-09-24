@@ -97,6 +97,7 @@ let setEventHandlers = function () {
   socket.on('loginerror', onSocketLoginError);
   socket.on('t', onSocketTerrainUpdate);
   socket.on('p', onSocketPlayerUpdate);
+  socket.on('h', onSocketHacker);
   socket.on('chat', onSocketChat);
 };
 
@@ -139,6 +140,14 @@ function onSocketLoginError(data){
 
 function onSocketTerrainUpdate(data){
   syncher.applyTerrainUpdate(data);
+}
+
+function onSocketHacker(data){
+  console.log("-----------HACKER-----------");
+  console.log(data);
+  bigterminal.println('kicked for hacks.');
+  cli.prompt('login: ');
+  state = STATES.loginscreen;
 }
 
 function onSocketPlayerUpdate(data){

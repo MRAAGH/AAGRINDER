@@ -267,7 +267,9 @@ function onAction(data) {
   if (!playerActions.action(player, data.a, data.d)){
     console.log("HACKS! ("+player.name+")")
     player.hacker = true;
+    player.branch++;
     player.hackedAt = data.i;
+    player.socket.emit('h', {'i': player.hackedAt, 'b': player.branch});
   }
 }
 
