@@ -36,6 +36,7 @@ class Spawn {
   }
 
   choosePlayerSpawnSpot(player){
+    // TODO: remove this hack here for fixating spawnpoint
     return {x:0,y:0};
     // does the player have a position?
     if(player.x !== null && player.y !== null){

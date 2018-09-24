@@ -2,19 +2,18 @@
 /*
 Synching client with server.
 All terrain-changing things must go through here.
-Sends to the server local terrain changes.
-Receives from the server terrain changes caused by
-other players and the server itself.
+Sends local events to the server, together with an id.
+Receives from the server events caused by other players and the
+server itself.
 
-Handles server's request that the client needs to be rolled back.
-This happens if this client's action interferes with an action by the server
-or by another player.
-Another case when that might happen is if the player is trying to hack :P
+Keeps local events in a stack.
+Corrects order when server events are received by
+undoing local events and then redoing them.
 
-Note that the server does not always detect interference.
-If the client makes an action while a server update is traveling over the internet,
-the server will not notice interferences and the client might get desynched.
+Local events can become invalid when attempting to reapply them.
+If that happens, we ignore those events. The server does the same.
 */
+
 "use strict";
 class Syncher {
   constructor(map, player, socket){
@@ -23,6 +22,7 @@ class Syncher {
     this.actions = []; // a list of actions which have yet to be confirmed by server
     this.branch = 0;
     this.socket = socket;
+    this.lastServerEventId = '0';
   }
 
   createView(){
@@ -47,7 +47,6 @@ class Syncher {
     let emittedAction = {
       a: name,
       i: actionId,
-      b: this.branch,
       d: data,
     };
     this.socket.emit('a', emittedAction);
@@ -61,7 +60,6 @@ class Syncher {
         b: [],
         px: 0,
         py: 0,
-        r: false,
       };
       for(const y of Object.getOwnPropertyNames(data.b)){
         for(const x of Object.getOwnPropertyNames(data.b[y])){

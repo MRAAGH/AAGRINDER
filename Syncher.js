@@ -1,30 +1,34 @@
 
 /*
 Synching clients and server.
-All terrain-changing things must go through here.
-Sends to players the terrain updates they need, when they need them.
-If a player does an invalid action (hack) or there are synching issues,
-the Syncher requests the client to rollback to a previous state
-and ignores that client's actions until the rollback has been confirmed.
+All terrain-changing, player position changing and inventory changing things
+must go through here.
 
-Before the Action class methods are called for player actions,
-call Syncher's method to see if this is a player we are listening to.
-Might be a hacker. In which case, ignore the action.
+Synching on the server side is quite trivial: just keep track of indices.
+Events happen in a determined order on the server.
+Each event has an id, which was set by the creator of the event.
+Clients are notified of each event visible to them (except for the one
+client who triggered the event, as that one already knows about it).
+
+Along with each event notification, we send its id and the id of the
+previous event (ignoring those events irrelevant to the client).
+We expect the client to correct the event order on its end
+in case of desynchronization by undoing and redoing its own events.
+If the client sends an invalid action (because its world was not
+properly updated when the action was taken), we ignore the action.
+We expect the client to do the same as soon as it finds out what
+really happened.
 */
 
 class Syncher{
   constructor(map, playerData){
     this.map = map;
     this.playerData = playerData;
+    this.lastEventId = '0';
   }
 
   createView(player){
     return new View(this, player);
-  }
-
-  checkHacker(socket){
-    let player = this.map.playerBySocketId(socket.id);
-    return player.hacker;
   }
 
   serverChangeBlocks(changeList){
@@ -69,18 +73,15 @@ class Syncher{
     }
   }
 
-  sendUpdatesToClients(){
+  sendUpdatesToClients(id){
     for(let i = 0; i < this.playerData.onlinePlayers.length; i++){
       const player = this.playerData.onlinePlayers[i];
-      if(player.hacker){
-        console.log('skipping player ' + player.name)
-        continue;
-      }
-      this.sendUpdatesToClient(player);
+      this.sendUpdatesToClient(player, id);
     }
+    this.lastEventId = id;
   }
 
-  sendUpdatesToClient(player){
+  sendUpdatesToClient(player, updateId){
     let message = {};
     if (Object.keys(player.changeObj).length){
       message.b = player.changeObj;
@@ -95,7 +96,7 @@ class Syncher{
       chunkUpdates.push({
         x: chunkx,
         y: chunky,
-        t: str
+        t: str,
       });
     }
 
@@ -105,10 +106,10 @@ class Syncher{
     player.changeObj = {};
     player.chunkUpdates = [];
 
-    // if(player.hacker){
-    //   message.h = {i: player.hackedAt, b: player.branch};
-    // }
     if(Object.keys(message).length){
+      message.i = eventId;
+      message.l = player.lastEventId;
+      player.lastEventId = eventId;
       player.socket.emit('t', message);
     }
   }
@@ -125,16 +126,16 @@ class View{
     this.syncher = syncher;
     this.player = player;
     this.queue = [];
-    this.touched = [];
+    // this.touched = [];
     this.playerMovement = {x:0,y:0};
     this.rejected = false;
   }
   setBlock(x, y, b){
     this.queue.push({x:x,y:y,block:b});
-    this.touched.push({x:x,y:y});
+    // this.touched.push({x:x,y:y});
   }
   getBlock(x, y){
-    this.touched.push({x:x,y:y});
+    // this.touched.push({x:x,y:y});
     return this.syncher.map.getBlock(x,y);
   }
   movePlayerX(dist){
@@ -147,12 +148,12 @@ class View{
     if(this.rejected){
       return false;
     }
-    for(const t of this.touched){
-      if(this.player.changeObj[t.y] && this.player.changeObj[t.y][t.x]){
+    // for(const t of this.touched){
+      // if(this.player.changeObj[t.y] && this.player.changeObj[t.y][t.x]){
         // collision! abort abort abort
-        return false;
-      }
-    }
+        // return false;
+      // }
+    // }
     this.player.x += this.playerMovement.x;
     this.player.y += this.playerMovement.y;
     this.syncher.playerChangeBlocks(this.player, this.queue);

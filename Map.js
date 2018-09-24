@@ -74,6 +74,7 @@ class Map {
       }
     }
 
+    // TODO:
     // check the database
 
   }

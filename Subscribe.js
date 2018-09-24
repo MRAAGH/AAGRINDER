@@ -1,6 +1,7 @@
 
 /*
 Makes sure that the clients are getting updates for exactly those chunks they can see.
+TODO: chunk probes are probably a bad idea and should be substituted by different logic. And the area needs to be bigger. And, oh, may I mention that this doesn't even work? Sometimes I find unloaded chunks.
 */
 
 const CHUNK_PROBES = [

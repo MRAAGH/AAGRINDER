@@ -9,6 +9,8 @@ changes and stores them in a stack, making rollback possible.
 
 The Syncher also gets the action name and data (coordinates, specifiers ...)
 and sends this to the server together with the internal action id.
+This data is stored in the stack together with the changes,
+making fast-forward possible after rollback.
 
 Basically, this class here just defines what happens to the world after
 world-changing buttons are pressed.

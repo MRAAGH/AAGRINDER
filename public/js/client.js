@@ -151,10 +151,8 @@ function onSocketHacker(data){
   console.log("-----------HACKER-----------");
   console.log(data);
   bigterminal.println('HACKS');
-  // fix all the mistakes
+  // fix the mistake
   syncher.rollback(data.b, data.i);
-  // tell the server it's been fixed
-  playerActions.action('p', {});
 }
 
 function onSocketPlayerUpdate(data){

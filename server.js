@@ -261,21 +261,9 @@ function onChat(data) {
 function onAction(data) {
   console.log(data.a);
   let player = playerData.onlinePlayerBySocket(this);
-  if(player.hacker && player.branch !== data.b){
-    // we are ignoring this player (hacks / desynch)
-    console.log('bad pony: ', player.name);
-    return false;
-  }
-  else{
-    console.log('cleared hacker flag for ', player.name, ' at action ', data);
-    player.hacker = false;
-  }
   if (!playerActions.action(player, data.a, data.d)){
-    console.log("HACKS! ("+player.name+")")
-    player.hacker = true;
-    player.branch++;
-    player.hackedAt = data.i;
-    player.socket.emit('h', {'i': player.hackedAt, 'b': player.branch});
+    console.log("HACKS! ("+player.name+") at "+data.i)
+    player.socket.emit('h', {'i': data.i});
   }
 }
 
