@@ -16,6 +16,7 @@ const STATES = Object.freeze({ // enum
 });
 
 let keyStates = [];
+let freshKeys = [];
 
 let socket;
 
@@ -177,38 +178,44 @@ function focusGui(){
 }
 
 function gameTick(){
-  if(keyStates[38] && !keyStates[40]){ // ArrowUp without ArrowDown
+  fullKeyStates = keyStates.slice();
+  for(k of freshKeys){
+    fullKeyStates[k] = true;
+  }
+  freshKeys = [];
+
+  if(fullKeyStates[38] && !fullKeyStates[40]){ // ArrowUp without ArrowDown
     player.cursorUp();
   }
-  if(keyStates[40] && !keyStates[38]){ // ArrowDown without ArrowUp
+  if(fullKeyStates[40] && !fullKeyStates[38]){ // ArrowDown without ArrowUp
     player.cursorDown();
   }
-  if(keyStates[37] && !keyStates[39]){ // ArrowLeft without ArrowRight
+  if(fullKeyStates[37] && !fullKeyStates[39]){ // ArrowLeft without ArrowRight
     player.cursorLeft();
   }
-  if(keyStates[39] && !keyStates[37]){ // ArrowRight without ArrowLeft
+  if(fullKeyStates[39] && !fullKeyStates[37]){ // ArrowRight without ArrowLeft
     player.cursorRight();
   }
-  if(keyStates[87] && !keyStates[83]){ // w without s
+  if(fullKeyStates[87] && !fullKeyStates[83]){ // w without s
     playerActions.action('u', {});
   }
-  if(keyStates[65] && !keyStates[68]){ // a without d
+  if(fullKeyStates[65] && !fullKeyStates[68]){ // a without d
     playerActions.action('l', {});
   }
-  if(keyStates[83] && !keyStates[87]){ // s without w
+  if(fullKeyStates[83] && !fullKeyStates[87]){ // s without w
     playerActions.action('d', {});
   }
-  if(keyStates[68] && !keyStates[65]){ // d without a
+  if(fullKeyStates[68] && !fullKeyStates[65]){ // d without a
     playerActions.action('r', {});
   }
-  if(keyStates[8]){ // Backspace
+  if(fullKeyStates[8]){ // Backspace
     playerActions.action('D', {
       x: player.cursorx,
       y: player.cursory,
       r: true,
     });
   }
-  if(keyStates[32]){ // Space
+  if(fullKeyStates[32]){ // Space
     playerActions.action('P', {
       x: player.cursorx,
       y: player.cursory,
@@ -411,6 +418,7 @@ function onKeydown(e) {
 
   	if (!keyStates[e.keyCode]) {
   		keyStates[e.keyCode] = true;
+      freshKeys.push(e.keyCode);
       console.log(e.keyCode);
       switch(e.key){
         case 'Enter': case 'Return':
