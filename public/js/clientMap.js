@@ -44,10 +44,10 @@ class Map {
     }
     let chunk = this.chunks[chunky][chunkx];
     chunk.terrain[subchunky][subchunkx] = block;
-    console.log('-------');
-    console.log(block);
-    console.log(chunk);
-    console.log(chunk.terrain[subchunky][subchunkx]);
+    // console.log('-------');
+    // console.log(block);
+    // console.log(chunk);
+    // console.log(chunk.terrain[subchunky][subchunkx]);
   }
 
   loadChunk(chunkx, chunky, data){

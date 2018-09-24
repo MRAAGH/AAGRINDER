@@ -22,7 +22,6 @@ class PlayerActions {
     this.subscribe = subscribe;
     this.spawn = spawn;
     this.actionFunctions = sharedActionFunctions;
-    console.log(this.actionFunctions);
   }
 
   login(player) {
@@ -43,7 +42,8 @@ class PlayerActions {
 
     this.syncher.playerChangeBlock(player, player.x, player.y, player.playerBlock());
 
-    this.subscribe.resubscribe(player);
+    this.subscribe.unsubscribeAll(player);
+    this.subscribe.resubscribe(player, true);
 
     // send player state to the client, becaue this is missing in terrain updates
     player.socket.emit('p', {

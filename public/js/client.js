@@ -122,6 +122,8 @@ function onSocketDisconnect(data){
 }
 
 function onSocketLoginSuccess(data){
+  console.log('login');
+  console.log(data);
   bigterminal.println('login successful');
   if(state === STATES.loginwait){
     cli.promptCommand('> ');
@@ -140,6 +142,8 @@ function onSocketLoginError(data){
 }
 
 function onSocketTerrainUpdate(data){
+  console.log('update');
+  console.log(data);
   syncher.applyTerrainUpdate(data);
 }
 
@@ -152,6 +156,8 @@ function onSocketHacker(data){
 }
 
 function onSocketPlayerUpdate(data){
+  console.log('playerupd');
+  console.log(data);
   player.applyPlayerUpdate(data);
 }
 

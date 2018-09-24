@@ -41,9 +41,9 @@ class Subscribe{
     }
   }
 
-  resubscribe(player){
+  resubscribe(player, force = false){
     const distance = Math.abs(player.resubscribePosition.x - player.x) + Math.abs(player.resubscribePosition.y - player.y);
-    if(distance < 128){
+    if(distance < 128 && !force){
       return;
     }
     player.resubscribePosition.x = player.x;
