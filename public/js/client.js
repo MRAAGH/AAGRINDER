@@ -150,15 +150,17 @@ function onSocketTerrainUpdate(data){
 function onSocketHacker(data){
   console.log("-----------HACKER-----------");
   console.log(data);
-  bigterminal.println('kicked for hacks.');
-  cli.prompt('login: ');
-  state = STATES.loginscreen;
+  bigterminal.println('HACKS');
+  // fix all the mistakes
+  syncher.rollback(data.b, data.i);
+  // tell the server it's been fixed
+  playerActions.action('p', {});
 }
 
 function onSocketPlayerUpdate(data){
   console.log('playerupd');
   console.log(data);
-  player.applyPlayerUpdate(data);
+  syncher.applyPlayerUpdate(data);
 }
 
 function onSocketChat(data){
@@ -214,7 +216,7 @@ function gameTick(){
   if(fullKeyStates[68] && !fullKeyStates[65]){ // d without a
     playerActions.action('r', {});
   }
-  if(fullKeyStates[8]){ // Backspace
+  if(fullKeyStates[8] || fullKeyStates[16]){ // Backspace or Shift
     playerActions.action('D', {
       x: player.cursorx,
       y: player.cursory,

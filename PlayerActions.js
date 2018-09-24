@@ -28,7 +28,10 @@ class PlayerActions {
 
     const spawnSpot = this.spawn.choosePlayerSpawnSpot(player);
 
+    console.log('spawnSpot');
     console.log(spawnSpot);
+    console.log('player');
+    console.log(player);
 
     // we assume this is a good spot and no checks need to be performed.
 

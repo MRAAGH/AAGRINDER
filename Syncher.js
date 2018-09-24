@@ -71,7 +71,11 @@ class Syncher{
 
   sendUpdatesToClients(){
     for(let i = 0; i < this.playerData.onlinePlayers.length; i++){
-      let player = this.playerData.onlinePlayers[i];
+      const player = this.playerData.onlinePlayers[i];
+      if(player.hacker){
+        console.log('skipping player ' + player.name)
+        continue;
+      }
       this.sendUpdatesToClient(player);
     }
   }

@@ -33,29 +33,44 @@ class Syncher {
   action(name, data, changes){ // player action (movement, placement, diggment, interaction)
     let actionId = this.actions.length;
     for(let b of changes.b){
-      b.p = this.map.getBlock(b.x, b.y);
-      this.map.setBlock(b.x, b.y, b.b);
+      const x = b.x + this.player.x;
+      const y = b.y + this.player.y;
+      b.p = this.map.getBlock(x, y);
+      this.map.setBlock(x, y, b.b);
     }
     this.player.x += changes.px;
     this.player.y += changes.py;
+    changes.r = true;
 
     this.actions.push(changes);
 
-    let action = {
+    let emittedAction = {
       a: name,
       i: actionId,
+      b: this.branch,
       d: data,
     };
-    this.socket.emit('a', action);
+    this.socket.emit('a', emittedAction);
   }
 
   applyTerrainUpdate(data){ // this is the core
 
-
     // apply block updates
     if(data.b){
+      const action = {
+        b: [],
+        px: 0,
+        py: 0,
+        r: false,
+      };
       for(const y of Object.getOwnPropertyNames(data.b)){
         for(const x of Object.getOwnPropertyNames(data.b[y])){
+          action.b.push({
+            x: x,
+            y: y,
+            b: data.b[y][x],
+            p: this.map.getBlock(x, y),
+          });
           this.map.setBlock(x, y, data.b[y][x]);
         }
       }
@@ -67,6 +82,46 @@ class Syncher {
         this.map.loadChunk(data.c[i].x, data.c[i].y, data.c[i].t);
       }
     }
+  }
+
+  applyPlayerUpdate(data){
+    this.actions.push({
+      px: data.x - this.player.x,
+      py: data.y - this.player.y,
+      b: [],
+      r: false,
+    });
+    this.player.x = data.x;
+    this.player.y = data.y;
+    this.player.reach = data.reach;
+  }
+
+
+  rollback(branch, index){
+    this.branch = branch;
+    for(let i = this.actions.length-1; i >= index; i--){
+      const acti = this.actions[i];
+      console.log('undo ', acti);
+      for(const blockChange of acti.b){
+        const x = acti.r ? this.player.x + blockChange.x : blockChange.x;
+        const y = acti.r ? this.player.y + blockChange.y : blockChange.y;
+        this.map.setBlock(x, y, blockChange.p);
+      }
+      this.player.x -= acti.px;
+      this.player.y -= acti.py;
+    }
+    for(let i = index+1; i < this.actions.length; i++){
+      const acti = this.actions[i];
+      console.log('redo ', acti);
+      for(const blockChange of acti.b){
+        const x = acti.r ? this.player.x + blockChange.x : blockChange.x;
+        const y = acti.r ? this.player.y + blockChange.y : blockChange.y;
+        this.map.setBlock(x, y, blockChange.r);
+      }
+      this.player.x -= acti.px;
+      this.player.y -= acti.py;
+    }
+
   }
 }
 
@@ -82,7 +137,7 @@ class View{
     this.queue.push({x:x,y:y,b:b});
   }
   getBlock(x, y){
-    return this.syncher.map.getBlock(x,y);
+    return this.syncher.map.getBlock(x+this.player.x,y+this.player.y);
   }
   movePlayerX(dist){
     this.playerMovement.x += dist;

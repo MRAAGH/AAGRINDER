@@ -36,6 +36,7 @@ class Spawn {
   }
 
   choosePlayerSpawnSpot(player){
+    return {x:0,y:0};
     // does the player have a position?
     if(player.x !== null && player.y !== null){
       // yes. Attempt to spawn there or up to 63 blocks above / below.

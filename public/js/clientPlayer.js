@@ -14,12 +14,6 @@ class Player {
     return 'P'+this.color;
   }
 
-  applyPlayerUpdate(data){
-    this.x = data.x;
-    this.y = data.y;
-    this.reach = data.reach;
-  }
-
   cursorUp(){
     if(this.cursory < this.reach){
       this.cursory++;
