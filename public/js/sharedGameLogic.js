@@ -57,4 +57,30 @@ sharedActionFunctions = {
     view.setBlock(x, y, ' ');
     // TODO: should probably add it to the inventory ;)
   },
+  'P':(view, data)=>{
+    let x, y;
+    if(data.r){
+      x = view.player.x + data.x;
+      y = view.player.y + data.y;
+    }
+    else{
+      x = data.x;
+      y = data.y;
+    }
+    if(Math.abs(view.player.x - x) > view.player.reach
+    || Math.abs(view.player.y - y) > view.player.reach){
+      // should not be able to reach!
+      view.reject();
+      return;
+    }
+    // must be an empty space
+    const space = view.getBlock(x, y);
+    if(space !== ' '){
+      view.reject();
+      return;
+    }
+    // ok place here
+    view.setBlock(x, y, 'B');
+    // TODO: should probably add it to the inventory ;)
+  },
 };

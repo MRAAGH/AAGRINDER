@@ -168,28 +168,28 @@ function focusGui(){
 }
 
 function gameTick(){
-  if(keyStates[38]){ // ArrowUp
+  if(keyStates[38] && !keyStates[40]){ // ArrowUp without ArrowDown
     player.cursorUp();
   }
-  if(keyStates[40]){ // ArrowDown
+  if(keyStates[40] && !keyStates[38]){ // ArrowDown without ArrowUp
     player.cursorDown();
   }
-  if(keyStates[37]){ // ArrowLeft
+  if(keyStates[37] && !keyStates[39]){ // ArrowLeft without ArrowRight
     player.cursorLeft();
   }
-  if(keyStates[39]){ // ArrowRight
+  if(keyStates[39] && !keyStates[37]){ // ArrowRight without ArrowLeft
     player.cursorRight();
   }
-  if(keyStates[87]){ // w
+  if(keyStates[87] && !keyStates[83]){ // w without s
     playerActions.action('u', {});
   }
-  if(keyStates[65]){ // a
+  if(keyStates[65] && !keyStates[68]){ // a without d
     playerActions.action('l', {});
   }
-  if(keyStates[83]){ // s
+  if(keyStates[83] && !keyStates[87]){ // s without w
     playerActions.action('d', {});
   }
-  if(keyStates[68]){ // d
+  if(keyStates[68] && !keyStates[65]){ // d without a
     playerActions.action('r', {});
   }
   if(keyStates[8]){ // Backspace
