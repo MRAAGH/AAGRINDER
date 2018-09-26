@@ -13,6 +13,8 @@ class Player {
     this.chunkUpdates = []; // the chunks which will be sent to this client as a whole
     this.changeObj = {}; // the terrain updates that the client actually needs
     this.lastEventId = '0';
+    this.changedx = false;
+    this.changedy = false;
   }
 
   playerBlock(){

@@ -48,12 +48,8 @@ class PlayerActions {
     this.subscribe.unsubscribeAll(player);
     this.subscribe.resubscribe(player, true);
 
-    // send player state to the client, becaue this is missing in terrain updates
-    player.socket.emit('p', {
-      x: player.x,
-      y: player.y,
-      reach: player.reach,
-    });
+    player.changedx = true;
+    player.changedy = true;
   }
 
   logout(player){

@@ -20,6 +20,8 @@ We expect the client to do the same as soon as it finds out what
 really happened.
 */
 
+require('./public/js/base64.js');
+
 class Syncher{
   constructor(map, playerData){
     this.map = map;
@@ -29,6 +31,11 @@ class Syncher{
 
   createView(player){
     return new View(this, player);
+  }
+
+  newId(){
+    let actionId = Base64.fromNumber(Date.now())+'|'+Base64.fromNumber(Math.floor(Math.random()*4096));
+    return actionId;
   }
 
   serverChangeBlocks(changeList){
@@ -81,12 +88,14 @@ class Syncher{
     this.lastEventId = id;
   }
 
-  sendUpdatesToClient(player, updateId){
+  sendUpdatesToClient(player, eventId){
     let message = {};
+    // block updates (if there are any)
     if (Object.keys(player.changeObj).length){
       message.b = player.changeObj;
     }
 
+    // collect chunk updates
     let chunkUpdates = [];
     for(let i = 0; i < player.chunkUpdates.length; i++){
       console.log('chunk update!')
@@ -100,13 +109,28 @@ class Syncher{
       });
     }
 
+    // chunk updates (if there are any)
     if(chunkUpdates.length > 0){
       message.c = chunkUpdates;
     }
+
+    // player position updates (if there are changes)
+    if(player.changedx){
+      message.px = player.x;
+    }
+    if(player.changedy){
+      message.py = player.y;
+    }
+
+    // clear the lists of things to be sent
     player.changeObj = {};
     player.chunkUpdates = [];
+    player.changedx = false;
+    player.changedy = false;
 
-    if(Object.keys(message).length){
+
+    // send message (if there is anything in the message)
+    if(Object.keys(message).length > 0){
       message.i = eventId;
       message.l = player.lastEventId;
       player.lastEventId = eventId;
@@ -126,16 +150,13 @@ class View{
     this.syncher = syncher;
     this.player = player;
     this.queue = [];
-    // this.touched = [];
     this.playerMovement = {x:0,y:0};
     this.rejected = false;
   }
   setBlock(x, y, b){
     this.queue.push({x:x,y:y,block:b});
-    // this.touched.push({x:x,y:y});
   }
   getBlock(x, y){
-    // this.touched.push({x:x,y:y});
     return this.syncher.map.getBlock(x,y);
   }
   movePlayerX(dist){
@@ -148,12 +169,6 @@ class View{
     if(this.rejected){
       return false;
     }
-    // for(const t of this.touched){
-      // if(this.player.changeObj[t.y] && this.player.changeObj[t.y][t.x]){
-        // collision! abort abort abort
-        // return false;
-      // }
-    // }
     this.player.x += this.playerMovement.x;
     this.player.y += this.playerMovement.y;
     this.syncher.playerChangeBlocks(this.player, this.queue);

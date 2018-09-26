@@ -19,10 +19,9 @@ class Syncher {
   constructor(map, player, socket){
     this.map = map;
     this.player = player;
-    this.eventStack = []; // a list of actions which have yet to be confirmed by server
+    this.eventStack = []; // a list of events which may need to get undone
     this.branch = 0;
     this.socket = socket;
-    this.lastServerEventId = '0';
   }
 
   createView(){
@@ -38,8 +37,6 @@ class Syncher {
       b.p = this.map.getBlock(x, y);
       this.map.setBlock(x, y, b.b);
     }
-    this.player.x += changes.px;
-    this.player.y += changes.py;
 
     const event = {
       i: actionId,
@@ -49,10 +46,13 @@ class Syncher {
       },
       u: {
         b: changes.b,
-        px: changes.px,
-        py: changes.py,
+        px: this.player.x,
+        py: this.player.y,
       },
     }
+
+    this.player.x += changes.px;
+    this.player.y += changes.py;
 
     this.eventStack.push(event);
 
@@ -75,12 +75,6 @@ class Syncher {
     if(data.b){
       for(const y of Object.getOwnPropertyNames(data.b)){
         for(const x of Object.getOwnPropertyNames(data.b[y])){
-          action.b.push({
-            x: x,
-            y: y,
-            b: data.b[y][x],
-            p: this.map.getBlock(x, y),
-          });
           this.map.setBlock(x, y, data.b[y][x]);
         }
       }
@@ -93,18 +87,13 @@ class Syncher {
       }
     }
 
+    // apply player movement
     if("px" in data){
-      this.player.x == data.px;
+      this.player.x = data.px;
     }
     if("py" in data){
-      this.player.y == data.py;
+      this.player.y = data.py;
     }
-  }
-
-  applyPlayerUpdate(data){
-    this.player.x = data.x;
-    this.player.y = data.y;
-    this.player.reach = data.reach;
   }
 
   addPlayerActionsRef(playerActions){
@@ -112,15 +101,15 @@ class Syncher {
   }
 
   serverEvent(event){
-    const list = this.rollback(event.p);
+    console.log('server event ', event);
+    const actionList = this.rollback(event.p);
     this.serverAction(event);
-    this.lastServerEventId = event.l;
     this.eventStack = [];
-    this.fastforward(list, this.playerActions);
+    this.fastforward(actionList, this.playerActions);
   }
 
   rollback(index){
-    const undoneActions = [];
+    const actionList = [];
     for(let i = this.eventStack.length-1; i >= 0; i--){
       const event = this.eventStack[i];
       if(event.i === index){
@@ -129,7 +118,7 @@ class Syncher {
       }
       console.log('undo ', event);
       // put it in the list so it's possible to redo it later
-      undoneActions.push(event.a);
+      actionList.push(event.a);
       // undo every block change
       for(const blockChange of event.u.b){
         const x = this.player.x + blockChange.x;
@@ -139,10 +128,11 @@ class Syncher {
       this.player.x -= event.u.px;
       this.player.y -= event.u.py;
     }
+    return actionList;
   }
 
   fastforward(actionList, playerActions){
-    for(action of actionList){
+    for(const action of actionList){
       console.log('redo', action);
       playerActions.action(action.a, action.d, true);
     }

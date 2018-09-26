@@ -226,7 +226,7 @@ function onLogin(data) {
 
         playerActions.login(result);
 
-        syncher.sendUpdatesToClients();
+        syncher.sendUpdatesToClients(syncher.newId());
       },
       err => {
         this.emit('loginerror', {message: err});
@@ -240,6 +240,7 @@ function onClientDisconnect() {
   let player = playerData.logout(this);
   if(player !== null){
     playerActions.logout(player);
+    syncher.sendUpdatesToClients(syncher.newId());
   }
 }
 
@@ -263,7 +264,6 @@ function onAction(data) {
   let player = playerData.onlinePlayerBySocket(this);
   if (!playerActions.action(player, data.a, data.d)){
     console.log("HACKS! ("+player.name+") at "+data.i)
-    player.socket.emit('h', {'i': data.i});
   }
 }
 

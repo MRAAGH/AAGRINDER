@@ -100,8 +100,6 @@ let setEventHandlers = function () {
   socket.on('loginsuccess', onSocketLoginSuccess);
   socket.on('loginerror', onSocketLoginError);
   socket.on('t', onSocketTerrainUpdate);
-  socket.on('p', onSocketPlayerUpdate);
-  socket.on('h', onSocketHacker);
   socket.on('chat', onSocketChat);
 };
 
@@ -148,25 +146,6 @@ function onSocketTerrainUpdate(data){
   console.log('update');
   console.log(data);
   syncher.serverEvent(data);
-}
-
-function onSocketHacker(data){
-  console.log("-----------HACKER-----------");
-  console.log(data);
-  bigterminal.println('HACKS');
-  // fix the mistake
-  syncher.rollback(data.b, data.i);
-}
-
-function onSocketPlayerUpdate(data){
-  console.log('playerupd');
-  console.log(data);
-  syncher.applyPlayerUpdate({
-    i: data.i,
-    l: data.l,
-    px: data.x,
-    py: data.y,
-  });
 }
 
 function onSocketChat(data){
