@@ -19,7 +19,7 @@ class Syncher {
   constructor(map, player, socket){
     this.map = map;
     this.player = player;
-    this.actions = []; // a list of actions which have yet to be confirmed by server
+    this.eventStack = []; // a list of actions which have yet to be confirmed by server
     this.branch = 0;
     this.socket = socket;
     this.lastServerEventId = '0';
@@ -30,8 +30,8 @@ class Syncher {
   }
 
 
-  action(name, data, changes){ // player action (movement, placement, diggment, interaction)
-    let actionId = this.actions.length;
+  action(name, data, changes, silent=false){ // player action (movement, placement, diggment, interaction)
+    let actionId = Base64.fromNumber(Date.now())+'|'+Base64.fromNumber(Math.floor(Math.random()*4096));
     for(let b of changes.b){
       const x = b.x + this.player.x;
       const y = b.y + this.player.y;
@@ -40,9 +40,26 @@ class Syncher {
     }
     this.player.x += changes.px;
     this.player.y += changes.py;
-    changes.r = true;
 
-    this.actions.push(changes);
+    const event = {
+      i: actionId,
+      a: {
+        a: name,
+        d: data,
+      },
+      u: {
+        b: changes.b,
+        px: changes.px,
+        py: changes.py,
+      },
+    }
+
+    this.eventStack.push(event);
+
+    if(silent){
+      // not notifying the server
+      return;
+    }
 
     let emittedAction = {
       a: name,
@@ -52,15 +69,10 @@ class Syncher {
     this.socket.emit('a', emittedAction);
   }
 
-  applyTerrainUpdate(data){ // this is the core
+  serverAction(data){
 
     // apply block updates
     if(data.b){
-      const action = {
-        b: [],
-        px: 0,
-        py: 0,
-      };
       for(const y of Object.getOwnPropertyNames(data.b)){
         for(const x of Object.getOwnPropertyNames(data.b[y])){
           action.b.push({
@@ -80,48 +92,63 @@ class Syncher {
         this.map.loadChunk(data.c[i].x, data.c[i].y, data.c[i].t);
       }
     }
+
+    if("px" in data){
+      this.player.x == data.px;
+    }
+    if("py" in data){
+      this.player.y == data.py;
+    }
   }
 
   applyPlayerUpdate(data){
-    this.actions.push({
-      px: data.x - this.player.x,
-      py: data.y - this.player.y,
-      b: [],
-      r: false,
-    });
     this.player.x = data.x;
     this.player.y = data.y;
     this.player.reach = data.reach;
   }
 
+  addPlayerActionsRef(playerActions){
+    this.playerActions = playerActions;
+  }
 
-  rollback(branch, index){
-    this.branch = branch;
-    for(let i = this.actions.length-1; i >= index; i--){
-      const acti = this.actions[i];
-      console.log('undo ', acti);
-      for(const blockChange of acti.b){
-        const x = acti.r ? this.player.x + blockChange.x : blockChange.x;
-        const y = acti.r ? this.player.y + blockChange.y : blockChange.y;
+  serverEvent(event){
+    const list = this.rollback(event.p);
+    this.serverAction(event);
+    this.lastServerEventId = event.l;
+    this.eventStack = [];
+    this.fastforward(list, this.playerActions);
+  }
+
+  rollback(index){
+    const undoneActions = [];
+    for(let i = this.eventStack.length-1; i >= 0; i--){
+      const event = this.eventStack[i];
+      if(event.i === index){
+        // stop undoing because specified index was found
+        break;
+      }
+      console.log('undo ', event);
+      // put it in the list so it's possible to redo it later
+      undoneActions.push(event.a);
+      // undo every block change
+      for(const blockChange of event.u.b){
+        const x = this.player.x + blockChange.x;
+        const y = this.player.y + blockChange.y;
         this.map.setBlock(x, y, blockChange.p);
       }
-      this.player.x -= acti.px;
-      this.player.y -= acti.py;
+      this.player.x -= event.u.px;
+      this.player.y -= event.u.py;
     }
-    for(let i = index+1; i < this.actions.length; i++){
-      const acti = this.actions[i];
-      console.log('redo ', acti);
-      for(const blockChange of acti.b){
-        const x = acti.r ? this.player.x + blockChange.x : blockChange.x;
-        const y = acti.r ? this.player.y + blockChange.y : blockChange.y;
-        this.map.setBlock(x, y, blockChange.r);
-      }
-      this.player.x -= acti.px;
-      this.player.y -= acti.py;
-    }
+  }
 
+  fastforward(actionList, playerActions){
+    for(action of actionList){
+      console.log('redo', action);
+      playerActions.action(action.a, action.d, true);
+    }
   }
 }
+
 
 class View{
   constructor(syncher, player){
@@ -143,7 +170,7 @@ class View{
   movePlayerY(dist){
     this.playerMovement.y += dist;
   }
-  apply(name, data){
+  apply(name, data, silent){
     if(this.rejected){
       return false;
     }
@@ -151,7 +178,7 @@ class View{
       px : this.playerMovement.x,
       py : this.playerMovement.y,
     };
-    this.syncher.action(name, data, changes);
+    this.syncher.action(name, data, changes, silent);
     return true;
   }
   reject(){

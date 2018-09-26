@@ -28,11 +28,11 @@ class PlayerActions{
     this.actionFunctions = sharedActionFunctions;
   }
 
-  action(actionName, data){
+  action(actionName, data, silent){
     if(this.actionFunctions[actionName]){
       const view = this.syncher.createView()
       this.actionFunctions[actionName](view, data);
-      return view.apply(actionName, data);
+      return view.apply(actionName, data, silent);
     }
     return false;
   }

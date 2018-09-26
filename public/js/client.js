@@ -1,3 +1,6 @@
+if (!Date.now) {
+    Date.now = function() { return new Date().getTime(); }
+}
 
 const BLOCKED_KEYS = [8, 9, 33, 34, 35, 36, 37, 38, 39, 40, 191, 111];
 const CLI_SIZE = 0.3;
@@ -144,7 +147,7 @@ function onSocketLoginError(data){
 function onSocketTerrainUpdate(data){
   console.log('update');
   console.log(data);
-  syncher.applyTerrainUpdate(data);
+  syncher.serverEvent(data);
 }
 
 function onSocketHacker(data){
@@ -158,7 +161,12 @@ function onSocketHacker(data){
 function onSocketPlayerUpdate(data){
   console.log('playerupd');
   console.log(data);
-  syncher.applyPlayerUpdate(data);
+  syncher.applyPlayerUpdate({
+    i: data.i,
+    l: data.l,
+    px: data.x,
+    py: data.y,
+  });
 }
 
 function onSocketChat(data){
