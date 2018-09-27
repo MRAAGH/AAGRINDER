@@ -184,6 +184,9 @@ class Cli {
 
       case 'Enter':
         let result = this.commit();
+        if(this.pending){
+          this.pending(result)
+        }
         return result;
       default:
         console.log('ignored key: ' + key);
@@ -278,6 +281,13 @@ class Cli {
     }
     this.editPos = this.editable.length;
     this.display();
+  }
+
+  getLine(){
+    return new Promise(resolve=>{
+      new Promise(res=>this.pending = res)
+      .then(result=>resolve(result));
+    });
   }
 
 }

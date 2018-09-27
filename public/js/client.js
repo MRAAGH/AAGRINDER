@@ -55,6 +55,7 @@ $('document').ready(function () {
 
   bigterminal.println('connecting...');
 
+
   setInterval(()=>cli.blink(), 500);
   setInterval(()=>{
     if(state === STATES.ingame){
@@ -113,6 +114,7 @@ function onSocketConnect(data){
   // bigterminal.println('try /register');
   bigterminal.println('');
   cli.prompt('login: ');
+  cli.getLine().then(line=>console.log('i got this line:', line));
   state = STATES.loginscreen;
 }
 
