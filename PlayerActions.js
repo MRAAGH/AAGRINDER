@@ -51,12 +51,16 @@ class PlayerActions {
     player.changedx = true;
     player.changedy = true;
     player.changedReach = true;
+
+    this.syncher.sendUpdatesToClients();
   }
 
   logout(player){
     this.syncher.playerChangeBlock(player, player.x, player.y, ' ');
 
     this.subscribe.unsubscribeAll(player);
+
+    this.syncher.sendUpdatesToClients();
   }
 
   teleport(playerName, x, y){

@@ -224,8 +224,6 @@ function onLogin(data) {
         this.emit('loginsuccess', message);
 
         playerActions.login(result);
-
-        syncher.sendUpdatesToClients('0');
       },
       err => {
         this.emit('loginerror', {message: err});
@@ -239,7 +237,6 @@ function onClientDisconnect() {
   let player = playerData.logout(this);
   if(player !== null){
     playerActions.logout(player);
-    syncher.sendUpdatesToClients('0');
   }
 }
 
