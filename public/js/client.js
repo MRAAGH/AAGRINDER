@@ -157,6 +157,7 @@ function startGame(playerColor){
   map = new Map();
   syncher = new Syncher(map, player, socket);
   playerActions = new PlayerActions(player, map, syncher);
+  syncher.addPlayerActionsRef(playerActions);
   gui = new Gui(guiterminal, map, player);
   focusGui();
 }

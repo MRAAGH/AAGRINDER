@@ -15,6 +15,7 @@ class Player {
     this.lastEventId = '0';
     this.changedx = false;
     this.changedy = false;
+    this.changedReach = true;
   }
 
   playerBlock(){

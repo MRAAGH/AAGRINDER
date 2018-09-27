@@ -20,22 +20,14 @@ We expect the client to do the same as soon as it finds out what
 really happened.
 */
 
-require('./public/js/base64.js');
-
 class Syncher{
   constructor(map, playerData){
     this.map = map;
     this.playerData = playerData;
-    this.lastEventId = '0';
   }
 
   createView(player){
     return new View(this, player);
-  }
-
-  newId(){
-    let actionId = Base64.fromNumber(Date.now())+'|'+Base64.fromNumber(Math.floor(Math.random()*4096));
-    return actionId;
   }
 
   serverChangeBlocks(changeList){
@@ -76,24 +68,24 @@ class Syncher{
         chunk.subscribers[j].changeObj[y] = {};
       }
       chunk.subscribers[j].changeObj[y][x] = block;
-      // chunk.subscribers[j].changeList.push({x: changeList[i].x, y:changeList[i].y});
     }
   }
 
-  sendUpdatesToClients(id){
+  sendUpdatesToClients(){
     for(let i = 0; i < this.playerData.onlinePlayers.length; i++){
       const player = this.playerData.onlinePlayers[i];
-      this.sendUpdatesToClient(player, id);
+      this.sendUpdatesToClient(player);
     }
-    this.lastEventId = id;
   }
 
-  sendUpdatesToClient(player, eventId){
+  sendUpdatesToClient(player){
     let message = {};
     // block updates (if there are any)
     if (Object.keys(player.changeObj).length){
       message.b = player.changeObj;
     }
+
+    console.log('mess ', message);
 
     // collect chunk updates
     let chunkUpdates = [];
@@ -122,18 +114,24 @@ class Syncher{
       message.py = player.y;
     }
 
+    // player reach update (if applicable)
+    if(player.changedReach){
+      message.reach = player.reach;
+    }
+
     // clear the lists of things to be sent
     player.changeObj = {};
     player.chunkUpdates = [];
     player.changedx = false;
     player.changedy = false;
+    player.changedReach = false;
 
 
     // send message (if there is anything in the message)
     if(Object.keys(message).length > 0){
-      message.i = eventId;
       message.l = player.lastEventId;
-      player.lastEventId = eventId;
+      player.lastEventId = undefined; // undefined means it was a server action
+      console.log('meees',message)
       player.socket.emit('t', message);
     }
   }
@@ -154,7 +152,11 @@ class View{
     this.rejected = false;
   }
   setBlock(x, y, b){
-    this.queue.push({x:x,y:y,block:b});
+    this.queue.push({
+      x:x+this.player.x+this.playerMovement.x,
+      y:y+this.player.y+this.playerMovement.y,
+      block:b,
+    });
   }
   getBlock(x, y){
     return this.syncher.map.getBlock(x,y);
@@ -165,7 +167,7 @@ class View{
   movePlayerY(dist){
     this.playerMovement.y += dist;
   }
-  apply(){
+  apply(eventId){
     if(this.rejected){
       return false;
     }

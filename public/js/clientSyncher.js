@@ -22,12 +22,16 @@ class Syncher {
     this.eventStack = []; // a list of events which may need to get undone
     this.branch = 0;
     this.socket = socket;
+    this.playerActions = undefined; // this line does not do anything. Just looks nice
   }
 
   createView(){
     return new View(this, this.player);
   }
 
+  addPlayerActionsRef(playerActions){
+    this.playerActions = playerActions;
+  }
 
   action(name, data, changes, silent=false){ // player action (movement, placement, diggment, interaction)
     let actionId = Base64.fromNumber(Date.now())+'|'+Base64.fromNumber(Math.floor(Math.random()*4096));
@@ -94,24 +98,27 @@ class Syncher {
     if("py" in data){
       this.player.y = data.py;
     }
-  }
 
-  addPlayerActionsRef(playerActions){
-    this.playerActions = playerActions;
+    // apply player reach
+    if("reach" in data){
+      this.player.reach = data.reach;
+    }
   }
 
   serverEvent(event){
     console.log('server event ', event);
-    const actionList = this.rollback(event.p);
+    const actionList = this.rollback(event.l);
     this.serverAction(event);
     this.eventStack = [];
-    this.fastforward(actionList, this.playerActions);
+    this.fastforward(actionList);
   }
 
   rollback(index){
+    console.log(index)
     const actionList = [];
     for(let i = this.eventStack.length-1; i >= 0; i--){
       const event = this.eventStack[i];
+      console.log('ch ', event.i)
       if(event.i === index){
         // stop undoing because specified index was found
         break;
@@ -121,20 +128,21 @@ class Syncher {
       actionList.push(event.a);
       // undo every block change
       for(const blockChange of event.u.b){
-        const x = this.player.x + blockChange.x;
-        const y = this.player.y + blockChange.y;
+        const x = blockChange.x;
+        const y = blockChange.y;
         this.map.setBlock(x, y, blockChange.p);
       }
-      this.player.x -= event.u.px;
-      this.player.y -= event.u.py;
+      this.player.x = event.u.px;
+      this.player.y = event.u.py;
+      console.log(this.player);
     }
     return actionList;
   }
 
-  fastforward(actionList, playerActions){
+  fastforward(actionList){
     for(const action of actionList){
       console.log('redo', action);
-      playerActions.action(action.a, action.d, true);
+      this.playerActions.action(action.a, action.d, true);
     }
   }
 }

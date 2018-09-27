@@ -24,7 +24,6 @@ app.use('/api/users', require('./routes/User'));
 
 
 const Player = require('./Player').Player;
-// const Chunk = require("./Chunk").Chunk;
 const Map = require('./Map').Map;
 const PlayerData = require('./PlayerData').PlayerData;
 const Spawn = require('./Spawn').Spawn;
@@ -226,7 +225,7 @@ function onLogin(data) {
 
         playerActions.login(result);
 
-        syncher.sendUpdatesToClients(syncher.newId());
+        syncher.sendUpdatesToClients('0');
       },
       err => {
         this.emit('loginerror', {message: err});
@@ -240,11 +239,14 @@ function onClientDisconnect() {
   let player = playerData.logout(this);
   if(player !== null){
     playerActions.logout(player);
-    syncher.sendUpdatesToClients(syncher.newId());
+    syncher.sendUpdatesToClients('0');
   }
 }
 
 function onChat(data) {
+  // Chat is completely independent from the rest of the game.
+  // You just need to be logged in.
+
   // who speaks?
   let player = playerData.onlinePlayerBySocket(this);
   if(player){
@@ -262,7 +264,7 @@ function onChat(data) {
 function onAction(data) {
   console.log(data.a);
   let player = playerData.onlinePlayerBySocket(this);
-  if (!playerActions.action(player, data.a, data.d)){
+  if (!playerActions.action(player, data.a, data.d, data.i)){
     console.log("HACKS! ("+player.name+") at "+data.i)
   }
 }

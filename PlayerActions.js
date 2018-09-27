@@ -50,6 +50,7 @@ class PlayerActions {
 
     player.changedx = true;
     player.changedy = true;
+    player.changedReach = true;
   }
 
   logout(player){
@@ -65,12 +66,13 @@ class PlayerActions {
     subscribe.resubscribe(player);
   }
 
-  action(player, actionName, data){
+  action(player, actionName, data, eventId){
     if(this.actionFunctions[actionName]){
       const view = this.syncher.createView(player)
       this.actionFunctions[actionName](view, data);
       const success = view.apply();
       this.subscribe.resubscribe(player);
+      player.lastEventId = eventId;
       return success;
     }
     return false;
