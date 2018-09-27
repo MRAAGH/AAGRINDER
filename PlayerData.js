@@ -14,9 +14,10 @@ const bcrypt = require('bcryptjs');
 
 
 class PlayerData {
-  constructor(){
+  constructor(connection){
     this.onlinePlayers = [];
     this.knownPlayers = [];
+    this.connection = connection;
   }
 
   login(name, password, socket){
@@ -30,7 +31,7 @@ class PlayerData {
     // verify password
 
     return new Promise((resolve, reject) => {
-      connection.query('SELECT name, password, color FROM users WHERE name="' + name + '";', (err, foundUsers, fields) => {
+      this.connection.query('SELECT name, password, color FROM users WHERE name="' + name + '";', (err, foundUsers, fields) => {
         if(err){
           return reject('Server error');
         }
