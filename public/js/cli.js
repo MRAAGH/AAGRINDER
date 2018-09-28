@@ -18,6 +18,7 @@ class Cli {
     this.historyPos = 0;
     this.editPos = 0;
     this.cursorOn = false;
+    this.pendingGetlineCallback = undefined;
   }
 
   focus(){
@@ -187,8 +188,8 @@ class Cli {
 
       case 'Enter':
         let result = this.commit();
-        if(this.pending){
-          this.pending(result)
+        if(this.pendingGetlineCallback){
+          this.pendingGetlineCallback(result);
         }
         return result;
       default:
@@ -288,8 +289,10 @@ class Cli {
 
   getLine(){
     return new Promise(resolve=>{
-      new Promise(res=>this.pending = res)
-      .then(result=>resolve(result));
+      // prepare the callback:
+      this.pendingGetlineCallback = line=>{
+        return resolve(line);
+      };
     });
   }
 
