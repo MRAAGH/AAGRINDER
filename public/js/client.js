@@ -228,17 +228,6 @@ function onMouseMove(e){
   }
 }
 
-async function login(){
-  const loginName = await cli.prompt('login: ');
-  if(loginName === '/r' || loginName === '/register'){
-
-  }
-  const loginPassword = await cli.promptPassword('password for '+loginName+': ');
-
-
-
-
-}
 
 function onKeydown(e) {
   if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
