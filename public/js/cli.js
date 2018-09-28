@@ -47,7 +47,7 @@ class Cli {
   }
 
   // prompt, aka enable
-  prompt(content){ // prompt the user to input something (and display static content)
+  async prompt(content){ // prompt the user to input something (and display static content)
     this.static = content;
     this.editable = '';
     this.enabled = true;
@@ -55,9 +55,10 @@ class Cli {
     this.asterisks = false;
     this.editPos = 0;
     this.display();
+    return await this.getNonemptyLine();
   }
 
-  promptCommand(content, silent){ // gets added to command history
+  async promptCommand(content, silent){ // gets added to command history
     this.static = content;
     this.editable = '';
     this.enabled = true;
@@ -65,9 +66,10 @@ class Cli {
     this.asterisks = false;
     this.editPos = 0;
     if(!silent) this.display();
+    return await this.getNonemptyLine();
   }
 
-  promptPassword(content){ // not visible on screen
+  async promptPassword(content){ // not visible on screen
     this.static = content;
     this.editable = '';
     this.enabled = true;
@@ -75,6 +77,7 @@ class Cli {
     this.asterisks = true;
     this.editPos = 0;
     this.display();
+    return await this.getNonemptyLine();
   }
 
   toAsterisks(line){
@@ -288,6 +291,14 @@ class Cli {
       new Promise(res=>this.pending = res)
       .then(result=>resolve(result));
     });
+  }
+
+  async getNonemptyLine(){
+    var line;
+    do{
+      line = await this.getLine();
+    }while(line.length === 0);
+    return line;
   }
 
 }

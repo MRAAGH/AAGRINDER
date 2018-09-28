@@ -113,9 +113,11 @@ function onSocketConnect(data){
   // bigterminal.println('');
   // bigterminal.println('try /register');
   bigterminal.println('');
-  cli.prompt('login: ');
-  cli.getLine().then(line=>console.log('i got this line:', line));
-  state = STATES.loginscreen;
+  login();
+  // cli.prompt('login: ');
+  // login();
+  // cli.getLine().then(line=>console.log('i got this line:', line));
+  // state = STATES.loginscreen;
 }
 
 function onSocketDisconnect(data){
@@ -224,6 +226,18 @@ function onMouseMove(e){
   if(state === STATES.ingame){
     gui.handleMouse(e);
   }
+}
+
+async function login(){
+  const loginName = await cli.prompt('login: ');
+  if(loginName === '/r' || loginName === '/register'){
+
+  }
+  const loginPassword = await cli.promptPassword('password for '+loginName+': ');
+
+
+
+
 }
 
 function onKeydown(e) {
