@@ -40,6 +40,9 @@ class Game{
         // is chat
         this.socket.emit('chat', {message: typed});
       }
+      // stop focusing the cli
+      this.inChatbox = false;
+      this.cli.blur();
     }
   }
 
@@ -62,7 +65,7 @@ class Game{
   focus(){
     // window focused
     if(this.inChatbox){
-      this.chatbox.focus();
+      this.cli.focus();
     }
     else{
       this.gui.focus();
@@ -72,22 +75,36 @@ class Game{
   blur(){
     // window unfocused
     this.gui.blur();
-    this.chatbox.blur();
+    this.cli.blur();
   }
 
   gameTick(){
-    // TODO: enter enters the chatbox, and slash too
-
-    if(!this.active){
-      return;
-    }
-    if(this.inChatbox){
-      return;
-    }
+    // TODO: slash also enters the chatbox and types a slash
 
     const fullKeyStates = this.keys.getFullKeyStates();
     this.keys.clearFresh();
 
+    if(!this.active){
+      return;
+    }
+
+
+
+    if(this.inChatbox){
+      if(fullKeyStates[27]){ // escape
+        this.inChatbox = false;
+        this.cli.blur();
+        this.cli.pause();
+      }
+      return;
+    }
+
+
+    if(fullKeyStates[13]){ // Enter
+      this.inChatbox = true;
+      this.cli.focus();
+      this.cli.unpause();
+    }
     if(fullKeyStates[38] && !fullKeyStates[40]){ // ArrowUp without ArrowDown
       this.player.cursorUp();
     }

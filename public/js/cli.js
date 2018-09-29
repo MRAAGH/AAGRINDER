@@ -76,7 +76,7 @@ class Cli {
     this.asterisks = false;
     this.editPos = 0;
     if(!silent) this.display();
-    return await this.getNonemptyLine();
+    return await this.getNonemptyLine(false);
   }
 
   async promptPassword(content){ // not visible on screen
@@ -310,10 +310,10 @@ class Cli {
     });
   }
 
-  async getNonemptyLine(){
+  async getNonemptyLine(enable = true){
     var line;
     do{
-      this.enabled = true;
+      this.enabled = enable;
       line = await this.getLine();
     }while(line.length === 0);
     return line;
@@ -323,6 +323,14 @@ class Cli {
     if(this.pendingGetlineCallback){
       this.pendingGetlineCallback(false, '');
     }
+    this.enabled = false;
+  }
+
+  unpause(){
+    this.enabled = true;
+  }
+
+  pause(){
     this.enabled = false;
   }
 }
