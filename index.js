@@ -54,7 +54,7 @@ let hrstart_server_load = process.hrtime();
 loadServerProperties((props) => {
   // now we have database authentication things
   // the connection is a global variable atm
-  const connection = mysql.createConnection({
+  connection = mysql.createConnection({
     host     : props.database_host,
     user     : props.database_username,
     password : props.database_password,

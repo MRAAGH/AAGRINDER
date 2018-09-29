@@ -18,7 +18,7 @@ function parseColor(input){
   let withoutBannedChars = lowInput.replace(/[^a-z0-9 ]/g, ' ');
   let words = withoutBannedChars.split(' ');
   for(let i = 0; i < words.length; i++){
-    if(/^[0-9abcdef]{6}$/.test(words[i])){
+    if(/^[0-9a-f]{6}$/.test(words[i])){
       return words[i]; // there was a hex string
     }
     let found = KNOWN_COLORS[words[i]];

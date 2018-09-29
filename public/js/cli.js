@@ -21,6 +21,10 @@ class Cli {
     this.pendingGetlineCallback = undefined;
   }
 
+  println(line){
+    this.bigterminal.println(line);
+  }
+
   focus(){
     this.focused = true;
     this.cursorOn = false;
@@ -48,7 +52,7 @@ class Cli {
   }
 
   // prompt, aka enable
-  async prompt(content){ // prompt the user to input something (and display static content)
+  async prompt(content, allowEmpty = false){ // prompt the user to input something (and display static content)
     this.static = content;
     this.editable = '';
     this.enabled = true;
@@ -56,7 +60,12 @@ class Cli {
     this.asterisks = false;
     this.editPos = 0;
     this.display();
-    return await this.getNonemptyLine();
+    if(allowEmpty){
+      return await this.getLine();
+    }
+    else{
+      return await this.getNonemptyLine();
+    }
   }
 
   async promptCommand(content, silent){ // gets added to command history
@@ -189,7 +198,7 @@ class Cli {
       case 'Enter':
         let result = this.commit();
         if(this.pendingGetlineCallback){
-          this.pendingGetlineCallback(result);
+          this.pendingGetlineCallback(true, result);
         }
         return result;
       default:
@@ -288,10 +297,15 @@ class Cli {
   }
 
   getLine(){
-    return new Promise(resolve=>{
+    return new Promise((resolve,reject)=>{
       // prepare the callback:
-      this.pendingGetlineCallback = line=>{
-        return resolve(line);
+      this.pendingGetlineCallback = (ok, line)=>{
+        if(ok){
+          return resolve(line);
+        }
+        else{
+          return reject();
+        }
       };
     });
   }
@@ -299,9 +313,16 @@ class Cli {
   async getNonemptyLine(){
     var line;
     do{
+      this.enabled = true;
       line = await this.getLine();
     }while(line.length === 0);
     return line;
   }
 
+  abort(){
+    if(this.pendingGetlineCallback){
+      this.pendingGetlineCallback(false, '');
+    }
+    this.enabled = false;
+  }
 }

@@ -39,7 +39,7 @@ class PlayerActions {
     player.y = spawnSpot.y;
 
     // verify that player color is ok ... if it is not, this'll break everything
-    if(!/^[0-9abcdef]{6}$/.test(player.color)){
+    if(!/^[0-9a-f]{6}$/.test(player.color)){
       player.color = 'ffffff';
     }
 

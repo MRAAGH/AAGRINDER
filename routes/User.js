@@ -5,6 +5,30 @@ const router = express.Router();
 
 const SALT_WORK_FACTOR = 10;
 
+router.post('/checkname', (req, res)=>{
+  if(typeof(req.body.name) !== 'string'){
+    res.json({ message: 'Missing form data', success: false});
+    return;
+  }
+  if(!/^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$/.test(req.body.name)){
+    res.json({ message: 'Username invalid ^[A-Za-z]([A-Za-z0-9 ]{0,10}[A-Za-z0-9])?$', success: false });
+    return;
+  }
+  connection.query('SELECT name FROM users WHERE name="' + req.body.name + '";', (err, existingUser, fields) => {
+    if (err) {
+      res.json({ message: 'Server error', success: false });
+      return;
+    }
+    if (existingUser.length > 0) {
+      res.json({ message: 'Username taken', success: false });
+      return;
+    }
+    else {
+      res.json({ message: 'OK', success: true });
+    }
+  });
+});
+
 router.post('/register', (req, res) => {
   if(
     typeof(req.body.name) !== 'string'
@@ -31,9 +55,9 @@ router.post('/register', (req, res) => {
   }
 
   if(
-    !/^[0-9abcdef]{6}$/.test(req.body.color)
+    !/^[0-9a-f]{6}$/.test(req.body.color)
   ){
-    res.json({ message: 'Color invalid ^[0-9abcdef]{6}$', success: false });
+    res.json({ message: 'Color invalid ^[0-9a-f]{6}$', success: false });
     return;
   }
 

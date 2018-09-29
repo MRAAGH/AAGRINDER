@@ -5,50 +5,24 @@ if (!Date.now) {
 const BLOCKED_KEYS = [8, 9, 33, 34, 35, 36, 37, 38, 39, 40, 191, 111];
 const CLI_SIZE = 0.3;
 const MIN_CANVAS_WIDTH = 200;
-const STATES = Object.freeze({ // enum
-  loginscreen: 0,
-  loginpassword: 1,
-  loginwait: 2,
-  registerscreen: 3,
-  registerpassword: 4,
-  registerpassword2: 5,
-  registerwait: 6,
-  ingame: 7,
-  connecting: 8,
-  registercolor: 9
-});
-
-let keyStates = [];
-let freshKeys = [];
-
-let socket;
 
 let mycanvas;
 let cliterminal;
 let guiterminal;
 let bigterminal;
-let cli;
-let gui;
-let state = STATES.connecting;
-let player;
-let playerActions;
-let syncher;
-let map;
-
-
-let name = '';
-let registration = {};
+let game;
+let login;
+let keys = new Keys();
 
 $('document').ready(function () {
-
-
-
+  socket = io();
   mycanvas = document.getElementById('terminal');
-
   cliterminal = new Terminal(mycanvas,10,10,0);
   guiterminal = new Terminal(mycanvas,10,10,10);
   bigterminal = new BigTerminal(cliterminal);
-  cli = new Cli(bigterminal);
+  const cli = new Cli(bigterminal);
+  game = new Game(cli, guiterminal, socket);
+  login = new Login(cli, game, socket);
 
   //Align everything for the first time:
   onResize(undefined);
@@ -57,425 +31,65 @@ $('document').ready(function () {
 
 
   setInterval(()=>cli.blink(), 500);
-  setInterval(()=>{
-    if(state === STATES.ingame){
+  setInterval(()=>game.gameTick(), 100);
 
-      //game tick goes here
-      gameTick();
 
-      gui.display();
-
-    }
-  }, 100);
-
-  //Request socket connection from server:
-  socket = io();
-
-  // Start listening for events
-  setEventHandlers();
-});
-
-let setEventHandlers = function () {
   // Keyboard
   // window.addEventListener("keypress", onKeypress, false);
   window.addEventListener('keydown', onKeydown, false);
   window.addEventListener('keyup', onKeyup, false);
 
-  window.addEventListener('focus', event=>{
-    if(state === STATES.ingame){
-      focusGui();
-    }
-    else{
-      focusCli();
-    }
-  }, false);
-  window.addEventListener('blur', event=>{cli.blur();}, false);
+  window.addEventListener('focus', event=>login.focus(), false};
+  window.addEventListener('blur', event=>login.blur(), false);
 
   window.addEventListener('mousemove', onMouseMove, false);
 
   // Window resize
   window.addEventListener('resize', onResize, false);
+});
 
-  socket.on('connect', onSocketConnect);
-  socket.on('disconnect', onSocketDisconnect);
-  socket.on('loginsuccess', onSocketLoginSuccess);
-  socket.on('loginerror', onSocketLoginError);
-  socket.on('t', onSocketTerrainUpdate);
-  socket.on('chat', onSocketChat);
-};
-
-function onSocketConnect(data){
-  bigterminal.println('');
-  bigterminal.println('');
-  bigterminal.println('AAGRINDER');
-  bigterminal.println('Welcome!');
-  bigterminal.println('try /register');
-  // bigterminal.println('');
-  // bigterminal.println('try /register');
-  bigterminal.println('');
-  login();
-  // cli.prompt('login: ');
-  // login();
-  // cli.getLine().then(line=>console.log('i got this line:', line));
-  // state = STATES.loginscreen;
-}
-
-function onSocketDisconnect(data){
-  bigterminal.println('disconnected.');
-  cli.prompt('login: ');
-  state = STATES.loginscreen;
-}
-
-function onSocketLoginSuccess(data){
-  console.log('login');
-  console.log(data);
-  bigterminal.println('login successful');
-  if(state === STATES.loginwait){
-    cli.promptCommand('> ');
-    state = STATES.ingame;
-    console.log(data)
-    startGame(data.color);
-  }
-}
-
-function onSocketLoginError(data){
-  bigterminal.println(data.message);
-  if(state === STATES.loginwait){
-    cli.prompt('login: ');
-    state = STATES.loginscreen;
-  }
-}
-
-function onSocketTerrainUpdate(data){
-  console.log('update');
-  console.log(data);
-  syncher.serverEvent(data);
-}
-
-function onSocketChat(data){
-  bigterminal.println(data.message);
-}
-
-function startGame(playerColor){
-  player = new Player(playerColor);
-  map = new Map();
-  syncher = new Syncher(map, player, socket);
-  playerActions = new PlayerActions(player, map, syncher);
-  syncher.addPlayerActionsRef(playerActions);
-  gui = new Gui(guiterminal, map, player);
-  focusGui();
-}
-
-function focusCli(){
-  cli.focus();
-  bigterminal.scrollToEnd();
-}
-
-function focusGui(){
-  cli.blur();
-}
-
-function gameTick(){
-  fullKeyStates = keyStates.slice();
-  for(k of freshKeys){
-    fullKeyStates[k] = true;
-  }
-  freshKeys = [];
-
-  if(fullKeyStates[38] && !fullKeyStates[40]){ // ArrowUp without ArrowDown
-    player.cursorUp();
-  }
-  if(fullKeyStates[40] && !fullKeyStates[38]){ // ArrowDown without ArrowUp
-    player.cursorDown();
-  }
-  if(fullKeyStates[37] && !fullKeyStates[39]){ // ArrowLeft without ArrowRight
-    player.cursorLeft();
-  }
-  if(fullKeyStates[39] && !fullKeyStates[37]){ // ArrowRight without ArrowLeft
-    player.cursorRight();
-  }
-  if(fullKeyStates[87] && !fullKeyStates[83]){ // w without s
-    playerActions.action('u', {});
-  }
-  if(fullKeyStates[65] && !fullKeyStates[68]){ // a without d
-    playerActions.action('l', {});
-  }
-  if(fullKeyStates[83] && !fullKeyStates[87]){ // s without w
-    playerActions.action('d', {});
-  }
-  if(fullKeyStates[68] && !fullKeyStates[65]){ // d without a
-    playerActions.action('r', {});
-  }
-  if(fullKeyStates[8] || fullKeyStates[16]){ // Backspace or Shift
-    playerActions.action('D', {
-      x: player.cursorx,
-      y: player.cursory,
-      r: true,
-    });
-  }
-  if(fullKeyStates[32]){ // Space
-    playerActions.action('P', {
-      x: player.cursorx,
-      y: player.cursory,
-      r: true,
-    });
-  }
-}
+// function focusCli(){
+//   cli.focus();
+//   bigterminal.scrollToEnd();
+// }
+//
+// function focusGui(){
+//   cli.blur();
+// }
 
 function onMouseMove(e){
-  if(state === STATES.ingame){
-    gui.handleMouse(e);
-  }
+  //TODO: should be in game.js
+  // IMPORTANT gui.handleMouse(e);
 }
-
 
 function onKeydown(e) {
   if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
     e.preventDefault(); //Prevent some of the browser's key bindings
   }
-  if(cli.focused){
-    if(state === STATES.ingame && e.key === 'Escape'){
-      focusGui();
-      return;
-    }
-
-    let result = cli.handleKey(e.key);
-    if(result !== false) {
-      // we got back what the user typed
-
-      switch(state){
-
-      case STATES.connecting:
-        // nothing
-        break;
-
-      case STATES.loginscreen:
-        if(result.length === 0){
-          // nothing was typed ... redisplay form
-          cli.prompt('login: ');
-        }
-        else{
-          // is it /register?
-          if(result === '/register' || result === '/r'){
-            // straight to registration
-            cli.prompt('name: ');
-            state = STATES.registerscreen;
-          }
-          else{
-            // alright got username
-            name = result;
-            // prompt for password
-            cli.promptPassword('password for ' + name + ': ');
-            state = STATES.loginpassword;
-          }
-        }
-        break;
-
-      case STATES.loginpassword:
-        if(result.length === 0){
-          // nothing was typed ... redisplay form
-          cli.promptPassword('password for ' + name + ': ');
-        }
-        else{
-          // alright got username and password
-          let password = result;
-          // try to login
-          socket.emit('login', {
-            username: name,
-            password: password
-          });
-          // and now we wait
-          state = STATES.loginwait;
-        }
-        break;
-
-      case STATES.loginwait:
-        // nothing
-        break;
-
-      case STATES.registerscreen:
-        if(result.length === 0){
-          // nothing was typed ... redisplay form
-          cli.prompt('name: ');
-        }
-        else{
-          // alright got username
-          registration.name = result;
-          // prompt for password
-          cli.promptPassword('choose password: ');
-          state = STATES.registerpassword;
-        }
-        break;
-
-      case STATES.registerpassword:
-        if(result.length === 0){
-          // nothing was typed ... redisplay form
-          cli.promptPassword('choose password: ');
-        }
-        else{
-          // alright got username
-          registration.password = result;
-          // prompt for password
-          cli.promptPassword('repeat password: ');
-          state = STATES.registerpassword2;
-        }
-        break;
-
-      case STATES.registerpassword2:
-
-        if(result.length === 0){
-          // nothing was typed ... redisplay form
-          cli.promptPassword('repeat password: ');
-        }
-        else{
-          // alright got username and password
-          let password2 = result;
-
-          if(registration.password !== password2){
-            bigterminal.println('passwords do not match');
-            cli.prompt('login: ');
-            state = STATES.loginscreen;
-            registration = {};
-          }
-          else {
-            // prompt for color
-            cli.prompt('what is your favorite color? ');
-            state = STATES.registercolor;
-          }
-        }
-        break;
-
-      case STATES.registercolor:
-
-        if(result.length === 0){
-          // nothing was typed ... redisplay form
-          cli.prompt('what is your favorite color? ');
-        }
-        else{
-          // alright got username and password
-          registration.color = parseColor(result);
-          bigterminal.println('recognized as #' + registration.color);
-
-          // try to register
-          bigterminal.println('requesting registration ...');
-
-          let data = 'name=' + encodeURIComponent(registration.name)
-          + '&password=' + encodeURIComponent(registration.password)
-          + '&color=' + encodeURIComponent(registration.color);
-          registration = {};
-
-          state = STATES.registerwait;
-
-          $.ajax({
-            type: 'POST',
-            url: '/api/users/register',
-            data: data,
-            processData: false,
-            success: function(msg) {
-              bigterminal.println(msg.message);
-              cli.prompt('login: ');
-              state = STATES.loginscreen;
-            }
-          });
-        }
-        break;
-
-      case STATES.registerwait:
-        // nothing
-        break;
-
-      case STATES.ingame:
-        // either chat or an in-game command
-
-        if(result.length > 0){
-          if(/^ *\//.test(result)){
-            // command
-
-
-          }
-          else{
-            // chat
-
-            socket.emit('chat', {message: result});
-          }
-          cli.promptCommand('> ');
-        }
-        else{
-          cli.promptCommand('> ', true); // silent, which means no autoscroll
-        }
-
-
-        focusGui();
-
-        break;
-
-      }
-    }
-  }
-  else{
-    // gui is focused currently
-
-  	if (!keyStates[e.keyCode]) {
-  		keyStates[e.keyCode] = true;
-      freshKeys.push(e.keyCode);
-      console.log(e.keyCode);
-      switch(e.key){
-        case 'Enter': case 'Return':
-          focusCli();
-          break;
-      }
-  	}
-  }
+  cli.handleKey(e.key);
+  keys.handleKeyDown(e);
 }
 
-// Keyboard key up
 function onKeyup(e) {
-  e.keyCode = e.keyCode;
   if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
     e.preventDefault(); //Prevent some of the browser's key bindings
   }
-  if (keyStates[e.keyCode]) {
-    keyStates[e.keyCode] = false;
-    //Do key action.
-    /*
-		switch (key_code) {
-		case 37: // Left
-		break;
-	};
-	*/
-  }
+  keys.handleKeyUp(e);
 }
 
 // Browser window resize
 function onResize(e) {
-  let w = window.innerWidth;
-  let h = window.innerHeight;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
   if(w > MIN_CANVAS_WIDTH){ // only apply resize if the canvas is reasonably big
     mycanvas.width = w;
     mycanvas.height = h;
-    let charWidth = Math.floor((mycanvas.width - 2 * PADDING) / CHAR_WIDTH) - 1;
-    let charWidthLeft = Math.floor(charWidth * CLI_SIZE);
-    let charWidthRight = charWidth - charWidthLeft;
-    let charHeight = Math.floor((mycanvas.height - 2 * PADDING) / LINE_SPACING);
+    const charWidth = Math.floor((mycanvas.width - 2 * PADDING) / CHAR_WIDTH) - 1;
+    const charWidthLeft = Math.floor(charWidth * CLI_SIZE);
+    const charWidthRight = charWidth - charWidthLeft;
+    const charHeight = Math.floor((mycanvas.height - 2 * PADDING) / LINE_SPACING);
     cliterminal.resize(charWidthLeft - 2, charHeight, 0);
     guiterminal.resize(charWidthRight, charHeight, charWidthLeft);
     bigterminal.reformat();
   }
 }
-
-
-// function myKeyPress(e){
-// 	let keynum;
-//
-// 	if(window.event) { // IE
-// 		keynum = e.keyCode;
-// 	} else if(e.which){ // Netscape/Firefox/Opera
-// 		keynum = e.which;
-// 		//console.log(e.which);
-// 		//console.log(e)
-// 	}
-//
-// 	cli.handleKey(keynum);
-//
-// 	//console.log(String.fromCharCode(keynum));
-// }
