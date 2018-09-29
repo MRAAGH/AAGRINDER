@@ -13,6 +13,7 @@ class Keys{
   }
 
   handleKeyUp(keyCode){
+    console.log('up')
 		this.keyStates[keyCode] = false;
   }
 

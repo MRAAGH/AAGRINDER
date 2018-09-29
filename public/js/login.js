@@ -1,9 +1,9 @@
 class Login{
-  constructor(cli, game){
+  constructor(cli, game, socket){
     this.cli = cli;
     this.game = game;
     this.inGame = false;
-    this.socket = io();
+    this.socket = socket;
     this.socket.on('connect', data=>this.onSocketConnect(data, socket));
     this.socket.on('disconnect', data=>this.onSocketDisconnect(data, socket));
     this.socket.on('loginsuccess', data=>this.onSocketLoginSuccess(data, socket));

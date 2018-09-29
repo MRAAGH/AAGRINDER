@@ -137,7 +137,6 @@ class Syncher{
     if(Object.keys(message).length > 0){
       message.l = player.lastEventId;
       player.lastEventId = undefined; // undefined means it was a server action
-      console.log('meees',message)
       player.socket.emit('t', message);
     }
   }

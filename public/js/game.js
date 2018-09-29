@@ -11,8 +11,9 @@ class Game{
     this.focused = false;
     this.keys = keys;
 
-    this.socket.on('t', this.onSocketTerrainUpdate);
-    this.socket.on('chat', this.onSocketChat);
+    this.socket.on('t', data=>this.onSocketTerrainUpdate(data, socket));
+    this.socket.on('chat', data=>this.onSocketChat(data, socket));
+    console.log('ready!~')
   }
 
   onSocketTerrainUpdate(data){
@@ -50,6 +51,7 @@ class Game{
     // TODO: should check if gui is even focused
     // TODO: enter enters the chatbox
     const fullKeyStates = this.keys.getFullKeyStates();
+    this.keys.clearFresh();
 
     if(fullKeyStates[38] && !fullKeyStates[40]){ // ArrowUp without ArrowDown
       this.player.cursorUp();

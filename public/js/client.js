@@ -65,14 +65,14 @@ function onKeydown(e) {
     e.preventDefault(); //Prevent some of the browser's key bindings
   }
   cli.handleKey(e.key);
-  keys.handleKeyDown(e);
+  keys.handleKeyDown(e.keyCode);
 }
 
 function onKeyup(e) {
   if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
     e.preventDefault(); //Prevent some of the browser's key bindings
   }
-  keys.handleKeyUp(e);
+  keys.handleKeyUp(e.keyCode);
 }
 
 // Browser window resize
