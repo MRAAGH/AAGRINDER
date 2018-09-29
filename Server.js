@@ -11,8 +11,7 @@ const PlayerData = require('./PlayerData').PlayerData;
 const Spawn = require('./Spawn').Spawn;
 const Syncher = require('./Syncher').Syncher;
 const Subscribe = require('./Subscribe').Subscribe;
-const PlayerActions = require('./PlayerActions').PlayerActions;
-const ServerActions = require('./ServerActions').ServerActions;
+const Actions = require('./Actions').Actions;
 
 class Server{
 
@@ -24,7 +23,7 @@ class Server{
     this.spawn = new Spawn(this.map);
     this.syncher = new Syncher(this.map, this.playerData);
     this.subscribe = new Subscribe(this.map);
-    this.playerActions = new PlayerActions(
+    this.actions = new Actions(
       this.map,
       this.syncher,
       this.subscribe,
@@ -98,7 +97,7 @@ class Server{
     else {
       this.playerData.login(data.username, data.password, socket).then(
         result => {
-          this.playerActions.login(result);
+          this.actions.login(result);
           socket.emit('loginsuccess', {});
         },
         err => {
@@ -113,7 +112,7 @@ class Server{
     console.log('Client disconnected: ' + socket.id);
     const player = this.playerData.logout(socket);
     if(player !== null){
-      this.playerActions.logout(player);
+      this.actions.logout(player);
     }
   }
 
@@ -138,7 +137,7 @@ class Server{
   onAction(data, socket) {
     console.log(data.a);
     const player = this.playerData.onlinePlayerBySocket(socket);
-    if (!this.playerActions.action(player, data.a, data.d, data.i)){
+    if (!this.actions.action(player, data.a, data.d, data.i)){
       console.log("HACKS! ("+player.name+") at "+data.i)
     }
   }

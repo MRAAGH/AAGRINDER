@@ -14,7 +14,7 @@ Because we are not synching those between clients.
 
 require('./public/js/sharedGameLogic.js');
 
-class PlayerActions {
+class Actions {
 
   constructor(map, syncher, subscribe, spawn){
     this.map = map;
@@ -82,4 +82,4 @@ class PlayerActions {
   }
 }
 
-exports.PlayerActions = PlayerActions;
+exports.Actions = Actions;
