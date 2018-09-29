@@ -1,5 +1,5 @@
 class Game{
-  constructor(cli, guiterminal, socket, keys){
+  constructor(cli, guiterminal, socket, keys, chatbox){
     this.socket = socket;
     this.cli = cli;
     this.player = new Player();
@@ -10,20 +10,15 @@ class Game{
     this.gui = new Gui(guiterminal, this.map, this.player);
     this.focused = false;
     this.keys = keys;
+    this.chatbox = chatbox;
 
     this.socket.on('t', data=>this.onSocketTerrainUpdate(data, socket));
-    this.socket.on('chat', data=>this.onSocketChat(data, socket));
-    console.log('ready!~')
   }
 
   onSocketTerrainUpdate(data){
     console.log('update');
     console.log(data);
     this.syncher.serverEvent(data);
-  }
-
-  onSocketChat(data){
-    this.cli.println(data.message);
   }
 
   start(){
@@ -43,13 +38,16 @@ class Game{
   blur(){
     // window unfocused
     this.gui.blur();
-    // TODO: this should be uncommented
-    // this.chatbox.blur();
+    this.chatbox.blur();
   }
 
   gameTick(){
-    // TODO: should check if gui is even focused
-    // TODO: enter enters the chatbox
+    // TODO: enter enters the chatbox, and slash too
+
+    if(this.inChatbox){
+      return;
+    }
+
     const fullKeyStates = this.keys.getFullKeyStates();
     this.keys.clearFresh();
 

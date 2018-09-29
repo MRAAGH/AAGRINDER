@@ -87,7 +87,4 @@ sharedActionFunctions = {
     view.setBlock(x, y, 'B');
     // TODO: should probably add it to the inventory ;)
   },
-  'p':(view, data)=>{
-    // this one doesn't do anything
-  }
 };
