@@ -151,7 +151,7 @@ class Cli {
 
   handleKey(key){
     if(!this.enabled){
-      return false;
+      return;
     }
     if(key.length !== 1){
 
@@ -200,12 +200,12 @@ class Cli {
         if(this.pendingGetlineCallback){
           this.pendingGetlineCallback(true, result);
         }
-        return result;
+        return;
       default:
         console.log('ignored key: ' + key);
       }
       // whatever it was, it is not going to be typed.
-      return false;
+      return;
     }
     // type this:
     const left = this.editable.slice(0, this.editPos);
