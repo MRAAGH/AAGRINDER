@@ -12,37 +12,37 @@ This same file is used by both the server and the client.
 
 sharedActionFunctions = {
   'l':(view, data)=>{
-    view.setBlock(0, 0, ' ');
-    view.setBlock(0-1, 0, view.player.playerBlock());
+    view.setBlock(view.player.x, view.player.y, ' ');
+    view.setBlock(view.player.x-1, view.player.y, view.player.playerBlock());
     view.movePlayerX(-1);
   },
   'r':(view, data)=>{
-    view.setBlock(0, 0, ' ');
-    view.setBlock(0+1, 0, view.player.playerBlock());
+    view.setBlock(view.player.x, view.player.y, ' ');
+    view.setBlock(view.player.x+1, view.player.y, view.player.playerBlock());
     view.movePlayerX(1);
   },
   'd':(view, data)=>{
-    view.setBlock(0, 0, ' ');
-    view.setBlock(0, 0-1, view.player.playerBlock());
+    view.setBlock(view.player.x, view.player.y, ' ');
+    view.setBlock(view.player.x, view.player.y-1, view.player.playerBlock());
     view.movePlayerY(-1);
   },
   'u':(view, data)=>{
-    view.setBlock(0, 0, ' ');
-    view.setBlock(0, 0+1, view.player.playerBlock());
+    view.setBlock(view.player.x, view.player.y, ' ');
+    view.setBlock(view.player.x, view.player.y+1, view.player.playerBlock());
     view.movePlayerY(1);
   },
   'D':(view, data)=>{
     let x, y;
     if(data.r){
-      x = 0 + data.x;
-      y = 0 + data.y;
+      x = view.player.x + data.x;
+      y = view.player.y + data.y;
     }
     else{
       x = data.x;
       y = data.y;
     }
-    if(Math.abs(0 - x) > view.player.reach
-    || Math.abs(0 - y) > view.player.reach){
+    if(Math.abs(view.player.x - x) > view.player.reach
+    || Math.abs(view.player.y - y) > view.player.reach){
       // should not be able to reach!
       console.log('dlel')
       view.reject();
@@ -62,15 +62,15 @@ sharedActionFunctions = {
   'P':(view, data)=>{
     let x, y;
     if(data.r){
-      x = 0 + data.x;
-      y = 0 + data.y;
+      x = view.player.x + data.x;
+      y = view.player.y + data.y;
     }
     else{
       x = data.x;
       y = data.y;
     }
-    if(Math.abs(0 - x) > view.player.reach
-    || Math.abs(0 - y) > view.player.reach){
+    if(Math.abs(view.player.x - x) > view.player.reach
+    || Math.abs(view.player.y - y) > view.player.reach){
       console.log('plel')
       // should not be able to reach!
       view.reject();

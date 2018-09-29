@@ -136,6 +136,7 @@ class Server{
 
   onAction(data, socket) {
     console.log(data.a);
+    console.log(data);
     const player = this.playerData.onlinePlayerBySocket(socket);
     if (!this.actions.action(player, data.a, data.d, data.i)){
       console.log("HACKS! ("+player.name+") at "+data.i)

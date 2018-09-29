@@ -158,8 +158,8 @@ class View{
   }
   setBlock(x, y, b){
     this.queue.push({
-      x:x+this.player.x+this.playerMovement.x,
-      y:y+this.player.y+this.playerMovement.y,
+      x:x,
+      y:y,
       block:b,
     });
   }

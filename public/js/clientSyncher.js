@@ -36,8 +36,8 @@ class Syncher {
   action(name, data, changes, silent=false){ // player action (movement, placement, diggment, interaction)
     const actionId = Base64.fromNumber(Date.now())+'|'+Base64.fromNumber(Math.floor(Math.random()*4096));
     for(const b of changes.b){
-      const x = b.x + this.player.x;
-      const y = b.y + this.player.y;
+      const x = b.x;
+      const y = b.y;
       b.p = this.map.getBlock(x, y);
       this.map.setBlock(x, y, b.b);
     }
@@ -165,7 +165,7 @@ class View{
     this.queue.push({x:x,y:y,b:b});
   }
   getBlock(x, y){
-    return this.syncher.map.getBlock(x+this.player.x,y+this.player.y);
+    return this.syncher.map.getBlock(x,y);
   }
   movePlayerX(dist){
     this.playerMovement.x += dist;
@@ -175,8 +175,10 @@ class View{
   }
   apply(name, data, silent){
     if(this.rejected){
+      console.log('rejected')
       return false;
     }
+    console.log('sending ', name, data)
     const changes = {b : this.queue,
       px : this.playerMovement.x,
       py : this.playerMovement.y,
