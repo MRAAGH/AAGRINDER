@@ -2,40 +2,59 @@ class Login{
   constructor(cli, game){
     this.cli = cli;
     this.game = game;
+    this.inGame = false;
     this.socket = io();
-    this.socket.on('connect', this.onSocketConnect);
-    this.socket.on('disconnect', this.onSocketDisconnect);
-    this.socket.on('loginsuccess', this.onSocketLoginSuccess);
-    this.socket.on('loginerror', this.onSocketLoginError);
+    this.socket.on('connect', data=>this.onSocketConnect(data, socket));
+    this.socket.on('disconnect', data=>this.onSocketDisconnect(data, socket));
+    this.socket.on('loginsuccess', data=>this.onSocketLoginSuccess(data, socket));
+    this.socket.on('loginerror', data=>this.onSocketLoginError(data, socket));
   }
 
   onSocketConnect(data){
-    login();
+    this.welcome();
+    this.login();
   }
 
-  function onSocketDisconnect(data){
+  onSocketDisconnect(data){
     this.cli.abort();
     this.cli.println('disconnected.');
   }
 
-  function onSocketLoginSuccess(data){
-    // TODO: all of the following should be inside game.js/Game/start()
+  onSocketLoginSuccess(data){
+    // TODO: all of the following should be inside game.js/Game/start() (maybe)
     console.log('login');
     console.log(data);
     this.cli.println('login successful');
     this.cli.promptCommand('> ');
     console.log(data)
     this.game.player.color = data.color; // TODO: this should be in terrain updates anyway to begin with
+    this.inGame = true;
     this.game.start();
   }
 
-  function onSocketLoginError(data){
-    bigterminal.println(data.message);
+  onSocketLoginError(data){
+    this.cli.println(data.message);
+    this.login();
+  }
+
+  focus(){
+    // window focused
+    if(this.inGame){
+      this.game.focus();
+    }
+    else{
+      this.cli.focus();
+    }
+  }
+
+  blur(){
+    // window unfocused
+    this.cli.blur();
+    this.game.blur();
   }
 
   async login(){
-
-    welcome();
+    this.cli.abort(); // cancel existing prompt if one was open. This is more important.
     let nameChosen = false;
     let loginName;
     while(!nameChosen){
@@ -55,24 +74,19 @@ class Login{
     const loginPassword = await this.cli.promptPassword('password for '+loginName+': ');
 
     // try to login
-    socket.emit('login', {
+    this.socket.emit('login', {
       username: loginName,
       password: loginPassword,
     });
-
-
-
-
-
   }
 
   welcome(){
-    bigterminal.println('');
-    bigterminal.println('');
-    bigterminal.println('AAGRINDER');
-    bigterminal.println('Welcome!');
-    bigterminal.println('try /register');
-    bigterminal.println('');
+    this.cli.println('');
+    this.cli.println('');
+    this.cli.println('AAGRINDER');
+    this.cli.println('Welcome!');
+    this.cli.println('try /register');
+    this.cli.println('');
   }
 
   async register(){

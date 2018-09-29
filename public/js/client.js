@@ -12,6 +12,7 @@ let guiterminal;
 let bigterminal;
 let game;
 let login;
+let cli;
 let keys = new Keys();
 
 $('document').ready(function () {
@@ -20,8 +21,8 @@ $('document').ready(function () {
   cliterminal = new Terminal(mycanvas,10,10,0);
   guiterminal = new Terminal(mycanvas,10,10,10);
   bigterminal = new BigTerminal(cliterminal);
-  const cli = new Cli(bigterminal);
-  game = new Game(cli, guiterminal, socket);
+  cli = new Cli(bigterminal);
+  game = new Game(cli, guiterminal, socket, keys);
   login = new Login(cli, game, socket);
 
   //Align everything for the first time:
@@ -34,17 +35,14 @@ $('document').ready(function () {
   setInterval(()=>game.gameTick(), 100);
 
 
-  // Keyboard
-  // window.addEventListener("keypress", onKeypress, false);
   window.addEventListener('keydown', onKeydown, false);
   window.addEventListener('keyup', onKeyup, false);
 
-  window.addEventListener('focus', event=>login.focus(), false};
+  window.addEventListener('focus', event=>login.focus(), false);
   window.addEventListener('blur', event=>login.blur(), false);
 
   window.addEventListener('mousemove', onMouseMove, false);
 
-  // Window resize
   window.addEventListener('resize', onResize, false);
 });
 

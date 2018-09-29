@@ -64,8 +64,8 @@ class Gui {
 
       // render coordinate values
 
-      let x = player.x.toString();
-      let y = player.y.toString();
+      let x = this.player.x.toString();
+      let y = this.player.y.toString();
       for(let i = 0; i < 7; i++){
         if(i < x.length) buffer[1][i + 4] = {char: x[i], color: GUI_TEXT_COLOR};
         if(i < y.length) buffer[2][i + 4] = {char: y[i], color: GUI_TEXT_COLOR};

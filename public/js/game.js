@@ -11,69 +11,86 @@ class Game{
     this.focused = false;
     this.keys = keys;
 
-    socket.on('t', onSocketTerrainUpdate);
-    socket.on('chat', onSocketChat);
+    this.socket.on('t', this.onSocketTerrainUpdate);
+    this.socket.on('chat', this.onSocketChat);
   }
 
-  function onSocketTerrainUpdate(data){
+  onSocketTerrainUpdate(data){
     console.log('update');
     console.log(data);
     this.syncher.serverEvent(data);
   }
 
-  function onSocketChat(data){
+  onSocketChat(data){
     this.cli.println(data.message);
   }
 
   start(){
-    cli.blur();
+    this.cli.blur();
+  }
+
+  focus(){
+    // window focused
+    if(this.inChatbox){
+      this.chatbox.focus();
+    }
+    else{
+      this.gui.focus();
+    }
+  }
+
+  blur(){
+    // window unfocused
+    this.gui.blur();
+    // TODO: this should be uncommented
+    // this.chatbox.blur();
   }
 
   gameTick(){
     // TODO: should check if gui is even focused
-    const fullKeyStates = keys.getFullKeyStates();
+    // TODO: enter enters the chatbox
+    const fullKeyStates = this.keys.getFullKeyStates();
 
     if(fullKeyStates[38] && !fullKeyStates[40]){ // ArrowUp without ArrowDown
-      player.cursorUp();
+      this.player.cursorUp();
     }
     if(fullKeyStates[40] && !fullKeyStates[38]){ // ArrowDown without ArrowUp
-      player.cursorDown();
+      this.player.cursorDown();
     }
     if(fullKeyStates[37] && !fullKeyStates[39]){ // ArrowLeft without ArrowRight
-      player.cursorLeft();
+      this.player.cursorLeft();
     }
     if(fullKeyStates[39] && !fullKeyStates[37]){ // ArrowRight without ArrowLeft
-      player.cursorRight();
+      this.player.cursorRight();
     }
     if(fullKeyStates[87] && !fullKeyStates[83]){ // w without s
-      playerActions.action('u', {});
+      this.playerActions.action('u', {});
     }
     if(fullKeyStates[65] && !fullKeyStates[68]){ // a without d
-      playerActions.action('l', {});
+      this.playerActions.action('l', {});
     }
     if(fullKeyStates[83] && !fullKeyStates[87]){ // s without w
-      playerActions.action('d', {});
+      this.playerActions.action('d', {});
     }
     if(fullKeyStates[68] && !fullKeyStates[65]){ // d without a
-      playerActions.action('r', {});
+      this.playerActions.action('r', {});
     }
     if(fullKeyStates[8] || fullKeyStates[16]){ // Backspace or Shift
-      playerActions.action('D', {
-        x: player.cursorx,
-        y: player.cursory,
+      this.playerActions.action('D', {
+        x: this.player.cursorx,
+        y: this.player.cursory,
         r: true,
       });
     }
     if(fullKeyStates[32]){ // Space
-      playerActions.action('P', {
-        x: player.cursorx,
-        y: player.cursory,
+      this.playerActions.action('P', {
+        x: this.player.cursorx,
+        y: this.player.cursory,
         r: true,
       });
     }
+    this.gui.display();
   }
-
-  this.gui.redisplay();
 }
 
         // if(result.length > 0){
