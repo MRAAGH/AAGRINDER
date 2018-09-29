@@ -44,4 +44,16 @@ class Terminal {
       PADDING + (y + 1) * LINE_SPACING
     );
   }
+
+  pixelToChar(pixelX, pixelY){
+    let w = this.width;
+    let h = this.height;
+
+    let x = Math.floor((pixelX - PADDING) / CHAR_WIDTH) - this.xpos;
+    let y = Math.floor((pixelY - PADDING) / LINE_SPACING);
+
+    const charX = x - Math.floor(w / 2);
+    const charY = h - Math.floor(h / 2) - 1 - y;
+    return {x: charX, y: charY,};
+  }
 }

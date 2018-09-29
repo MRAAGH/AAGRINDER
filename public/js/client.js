@@ -41,8 +41,6 @@ $('document').ready(function () {
   window.addEventListener('focus', event=>login.focus(), false);
   window.addEventListener('blur', event=>login.blur(), false);
 
-  window.addEventListener('mousemove', onMouseMove, false);
-
   window.addEventListener('resize', onResize, false);
 });
 
@@ -55,10 +53,6 @@ $('document').ready(function () {
 //   cli.blur();
 // }
 
-function onMouseMove(e){
-  //TODO: should be in game.js
-  // IMPORTANT gui.handleMouse(e);
-}
 
 function onKeydown(e) {
   if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {

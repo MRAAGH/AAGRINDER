@@ -7,6 +7,7 @@ class Game{
     this.syncher = new Syncher(this.map, this.player, this.socket);
     this.playerActions = new PlayerActions(this.player, this.map, this.syncher);
     this.syncher.addPlayerActionsRef(this.playerActions);
+    this.guiterminal = guiterminal;
     this.gui = new Gui(guiterminal, this.map, this.player);
     this.focused = false;
     this.active = false;
@@ -14,8 +15,15 @@ class Game{
     this.justFinishedChatbox = false;
     this.keys = keys;
 
+    this.lmb = false;
+    this.rmb = false;
+
     this.socket.on('t', data=>this.onSocketTerrainUpdate(data, socket));
     this.socket.on('chat', data=>this.onSocketChat(data, socket));
+
+    window.addEventListener('mousemove', e=>this.handleMouse(e), false);
+    window.addEventListener('mousedown', e=>this.handleMouseDown(e), false);
+    window.addEventListener('mouseup', e=>this.handleMouseUp(e), false);
   }
 
   onSocketTerrainUpdate(data){
@@ -136,14 +144,14 @@ class Game{
     if(fullKeyStates[68] && !fullKeyStates[65]){ // d without a
       this.playerActions.action('r', {});
     }
-    if(fullKeyStates[8] || fullKeyStates[16]){ // Backspace or Shift
+    if(fullKeyStates[8] || fullKeyStates[16] || this.lmb){ // Backspace or Shift
       this.playerActions.action('D', {
         x: this.player.cursorx,
         y: this.player.cursory,
         r: true,
       });
     }
-    if(fullKeyStates[32]){ // Space
+    if(fullKeyStates[32] || this.rmb){ // Space
       this.playerActions.action('P', {
         x: this.player.cursorx,
         y: this.player.cursory,
@@ -151,5 +159,38 @@ class Game{
       });
     }
     this.gui.display();
+  }
+
+  handleMouse(e){
+    const xy = this.guiterminal.pixelToChar(e.clientX, e.clientY);
+    this.player.cursorSet(xy.x, xy.y);
+  }
+
+  handleMouseDown(e){
+    switch(e.buttons){
+      case 1:
+        this.lmb = true;
+        break;
+      case 2:
+        this.rmb = true;
+      case 3:
+        this.lmb = true;
+        this.rmb = true;
+    }
+  }
+
+  handleMouseUp(e){
+    this.lmb = false;
+    this.rmb = false;
+    switch(e.buttons){
+      case 1:
+        this.lmb = true;
+        break;
+      case 2:
+        this.rmb = true;
+      case 3:
+        this.lmb = true;
+        this.rmb = true;
+    }
   }
 }

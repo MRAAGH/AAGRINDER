@@ -92,17 +92,6 @@ class Gui {
     );
   }
 
-  handleMouse(e){
-    let w = this.terminal.width;
-    let h = this.terminal.height;
-
-    let x = Math.floor((e.clientX - PADDING) / CHAR_WIDTH) - this.terminal.xpos;
-    let y = Math.floor((e.clientY - PADDING) / LINE_SPACING);
-
-
-    this.player.cursorSet(x - Math.floor(w / 2), h - Math.floor(h / 2) - 1 - y)
-  }
-
   focus(){
     // nothing to do, the gui is just a display and does not require focus for anything
   }

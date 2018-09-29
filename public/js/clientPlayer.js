@@ -39,7 +39,7 @@ class Player {
   }
 
   cursorSet(x, y){
-    if(x < this.reach && x > -this.reach && y < this.reach && y > -this.reach){
+    if(x <= this.reach && x >= -this.reach && y <= this.reach && y >= -this.reach){
       this.cursorx = x;
       this.cursory = y;
     }
