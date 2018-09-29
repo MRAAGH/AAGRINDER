@@ -8,12 +8,11 @@ class Keys{
   	if (!this.keyStates[keyCode]) {
   		this.keyStates[keyCode] = true;
       this.freshKeys.push(keyCode);
-      console.log(keyCode);
+      // console.log(keyCode);
   	}
   }
 
   handleKeyUp(keyCode){
-    console.log('up')
 		this.keyStates[keyCode] = false;
   }
 
