@@ -14,7 +14,6 @@ let cli;
 let keys = new Keys();
 let game;
 let login;
-let chatbox;
 
 $('document').ready(function () {
   socket = io();
@@ -23,8 +22,7 @@ $('document').ready(function () {
   guiterminal = new Terminal(mycanvas,10,10,10);
   bigterminal = new BigTerminal(cliterminal);
   cli = new Cli(bigterminal);
-  chatbox = new Chatbox(cli, socket);
-  game = new Game(cli, guiterminal, socket, keys, chatbox);
+  game = new Game(cli, guiterminal, socket, keys);
   login = new Login(cli, game, socket);
 
   //Align everything for the first time:

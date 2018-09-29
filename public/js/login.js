@@ -18,13 +18,14 @@ class Login{
   onSocketDisconnect(data){
     this.cli.abort();
     this.cli.println('disconnected.');
+    this.inGame = false;
+    this.game.stop();
   }
 
   onSocketLoginSuccess(data){
     console.log('login');
     console.log(data);
     this.cli.println('login successful');
-    this.cli.promptCommand('> '); //TODO: should defenitely be in chatbox.js
     this.inGame = true;
     this.game.start();
   }
@@ -86,7 +87,22 @@ class Login{
     this.cli.println('');
   }
 
+  async cookies(){
+    const agree = await this.cli.prompt('This site uses cookies for user session. agree? (y/n) ');
+    if(agree[0] === 'y' || agree[0] === 'Y'){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
   async register(){
+    const cookiesAgree = await this.cookies();
+    if(!cookiesAgree){
+      this.cli.println('cancelled.');
+      return;
+    }
     const registerName = await this.cli.prompt('new name: ');
     const responseName = await this.ajaxVerifyUsername(registerName);
     console.log(responseName);

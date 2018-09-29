@@ -71,7 +71,7 @@ class Cli {
   async promptCommand(content, silent){ // gets added to command history
     this.static = content;
     this.editable = '';
-    this.enabled = true;
+    this.enabled = false; // command prompt does not automatically enable. TODO: there is probably a better solution for this rather than hardcoding it in here.
     this.isCommand = true;
     this.asterisks = false;
     this.editPos = 0;

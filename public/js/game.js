@@ -1,5 +1,5 @@
 class Game{
-  constructor(cli, guiterminal, socket, keys, chatbox){
+  constructor(cli, guiterminal, socket, keys){
     this.socket = socket;
     this.cli = cli;
     this.player = new Player();
@@ -9,10 +9,12 @@ class Game{
     this.syncher.addPlayerActionsRef(this.playerActions);
     this.gui = new Gui(guiterminal, this.map, this.player);
     this.focused = false;
+    this.active = false;
+    this.inChatbox = false;
     this.keys = keys;
-    this.chatbox = chatbox;
 
     this.socket.on('t', data=>this.onSocketTerrainUpdate(data, socket));
+    this.socket.on('chat', data=>this.onSocketChat(data, socket));
   }
 
   onSocketTerrainUpdate(data){
@@ -21,8 +23,40 @@ class Game{
     this.syncher.serverEvent(data);
   }
 
+  onSocketChat(data){
+    if(this.enabled){
+      this.cli.println(data.message);
+    }
+  }
+
+  async chatboxLoop(){
+    while(true){
+      const typed = await this.cli.promptCommand('> ');
+      if(/^ *\//.test(typed)){
+        // is a command
+        this.executeCommand(typed);
+      }
+      else{
+        // is chat
+        this.socket.emit('chat', {message: typed});
+      }
+    }
+  }
+
+  executeCommand(command){
+    //TODO: commands should probably do something ;)
+  }
+
   start(){
-    this.cli.blur();
+    this.active = true;
+    this.focused = true;
+    this.inChatbox = false;
+    this.chatboxLoop();
+  }
+
+  stop(){
+    this.active = false;
+    this.cli.abort();
   }
 
   focus(){
@@ -44,6 +78,9 @@ class Game{
   gameTick(){
     // TODO: enter enters the chatbox, and slash too
 
+    if(!this.active){
+      return;
+    }
     if(this.inChatbox){
       return;
     }
@@ -92,23 +129,3 @@ class Game{
     this.gui.display();
   }
 }
-
-        // if(result.length > 0){
-        //   if(/^ *\//.test(result)){
-        //     // command
-        //
-        //
-        //   }
-        //   else{
-        //     // chat
-        //
-        //     socket.emit('chat', {message: result});
-        //   }
-        //   cli.promptCommand('> ');
-        // }
-        // else{
-        //   cli.promptCommand('> ', true); // silent, which means no autoscroll
-        // }
-        //
-        //
-        // focusGui();
