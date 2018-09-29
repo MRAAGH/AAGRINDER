@@ -120,16 +120,24 @@ class Game{
     }
     this.justFinishedChatbox = false;
 
-    if(fullKeyStates[38] && !fullKeyStates[40]){ // ArrowUp without ArrowDown
+    if(fullKeyStates[38] && !fullKeyStates[40]
+    || fullKeyStates[75] && !fullKeyStates[74]){
+      // ArrowUp without ArrowDown or k without j
       this.player.cursorUp();
     }
-    if(fullKeyStates[40] && !fullKeyStates[38]){ // ArrowDown without ArrowUp
+    if(fullKeyStates[40] && !fullKeyStates[38]
+    || fullKeyStates[74] && !fullKeyStates[75]){
+      // ArrowDown without ArrowUp or j without k
       this.player.cursorDown();
     }
-    if(fullKeyStates[37] && !fullKeyStates[39]){ // ArrowLeft without ArrowRight
+    if(fullKeyStates[37] && !fullKeyStates[39]
+    || fullKeyStates[72] && !fullKeyStates[76]){
+      // ArrowLeft without ArrowRight or h without l
       this.player.cursorLeft();
     }
-    if(fullKeyStates[39] && !fullKeyStates[37]){ // ArrowRight without ArrowLeft
+    if(fullKeyStates[39] && !fullKeyStates[37]
+    || fullKeyStates[76] && !fullKeyStates[72]){ 
+      // ArrowRight without ArrowLeft or l without h
       this.player.cursorRight();
     }
     if(fullKeyStates[87] && !fullKeyStates[83]){ // w without s
