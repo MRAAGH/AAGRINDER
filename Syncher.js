@@ -85,7 +85,7 @@ class Syncher{
       message.b = player.changeObj;
     }
 
-    console.log('mess ', message);
+    // console.log('mess ', message);
 
     // collect chunk updates
     const chunkUpdates = [];

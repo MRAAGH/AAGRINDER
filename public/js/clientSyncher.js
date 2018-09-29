@@ -175,10 +175,9 @@ class View{
   }
   apply(name, data, silent){
     if(this.rejected){
-      console.log('rejected')
+      // console.log('rejected')
       return false;
     }
-    console.log('sending ', name, data)
     const changes = {b : this.queue,
       px : this.playerMovement.x,
       py : this.playerMovement.y,
