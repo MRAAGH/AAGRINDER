@@ -1,3 +1,9 @@
+![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%284%29.png "AAGRINDER")
+
+![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%282%29.png "AAGRINDER")
+
+![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%283%29.png "AAGRINDER")
+
 # AAGRINDER
 2D sanbox multiplayer game you can play in the browser
 
@@ -19,6 +25,7 @@ and then you won't need your own database.
 
 You need to install [node.js](https://nodejs.org/en/).
 
+Then run the following commands:
 ```
 $ git clone https://github.com/MRAAGH/aagrinder.git
 $ cd aagrinder
@@ -27,11 +34,10 @@ $ npm start
 ```
 
 A server.properties file will be created.
-You can open and modify it as you wish, then restart the server.
+You should open it and set the properties to what you want, then restart the server.
 
 You also need to configure ports and IP's if you want others to be able to connect.
-But this is advanced stuff.
-If you don't know what I am talking about, maybe you should find someone else to host the server ^.^
+If this confuses you, maybe you should find someone else to host the server ^.^
 
 # How finished is the game?
 Very unfinished at this point.
