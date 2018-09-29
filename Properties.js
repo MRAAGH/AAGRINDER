@@ -6,7 +6,7 @@ loadServerProperties = function(callback){
     fs.readFile('server.properties', function (err, loadedString) {
       if (err) console.log(err);
       else {
-        let loaded_properties = JSON.parse(loadedString);
+        const loaded_properties = JSON.parse(loadedString);
         let bad_file_format = false;
         if (loaded_properties.level_name == undefined) {
           loaded_properties.level_name = 'world';
@@ -33,7 +33,7 @@ loadServerProperties = function(callback){
           bad_file_format = true;
         }
         if (bad_file_format) {
-          let corrected_properties_string = JSON.stringify(loaded_properties);
+          const corrected_properties_string = JSON.stringify(loaded_properties);
           fs.writeFile('server.properties', corrected_properties_string, function (err) {
             if (err) console.log(err);
             else {
@@ -56,7 +56,7 @@ loadServerProperties = function(callback){
       database_password: '',
       database_name: 'aagrinder'
     };
-    let corrected_properties_string = JSON.stringify(loaded_properties);
+    const corrected_properties_string = JSON.stringify(loaded_properties);
     fs.writeFile('server.properties', corrected_properties_string, function (err) {
       if (err) console.log(err);
       else {

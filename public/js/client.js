@@ -11,7 +11,7 @@ let cliterminal;
 let guiterminal;
 let bigterminal;
 let cli;
-let keys = new Keys();
+const keys = new Keys();
 let game;
 let login;
 

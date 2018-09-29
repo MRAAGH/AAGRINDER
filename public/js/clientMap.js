@@ -15,10 +15,10 @@ class Map {
   }
 
   getBlock(x, y){
-    let chunkx = Math.floor(x / 256);
-    let chunky = Math.floor(y / 256);
-    let subchunkx = (x%256+256)%256;
-    let subchunky = (y%256+256)%256;
+    const chunkx = Math.floor(x / 256);
+    const chunky = Math.floor(y / 256);
+    const subchunkx = (x%256+256)%256;
+    const subchunky = (y%256+256)%256;
 
     if(!this.chunks[chunky]){
       return ' ';
@@ -26,23 +26,23 @@ class Map {
     if(!this.chunks[chunky][chunkx]){
       return ' ';
     }
-    let chunk = this.chunks[chunky][chunkx];
-    let block = chunk.terrain[subchunky][subchunkx];
+    const chunk = this.chunks[chunky][chunkx];
+    const block = chunk.terrain[subchunky][subchunkx];
     return block;
   }
 
   setBlock(x, y, block){
-    let chunkx = Math.floor(x / 256);
-    let chunky = Math.floor(y / 256);
-    let subchunkx = (x%256+256)%256;
-    let subchunky = (y%256+256)%256;
+    const chunkx = Math.floor(x / 256);
+    const chunky = Math.floor(y / 256);
+    const subchunkx = (x%256+256)%256;
+    const subchunky = (y%256+256)%256;
     if(!this.chunks[chunky]){
       return;
     }
     if(!this.chunks[chunky][chunkx]){
       return;
     }
-    let chunk = this.chunks[chunky][chunkx];
+    const chunk = this.chunks[chunky][chunkx];
     chunk.terrain[subchunky][subchunkx] = block;
     // console.log('-------');
     // console.log(block);

@@ -102,8 +102,8 @@ class Cli {
     let displayedEditable = this.asterisks ? this.toAsterisks(this.editable) : this.editable;
 
     if(this.cursorOn){
-      let left = displayedEditable.slice(0, this.editPos);
-      let right = displayedEditable.slice(this.editPos + 1, displayedEditable.length);
+      const left = displayedEditable.slice(0, this.editPos);
+      const right = displayedEditable.slice(this.editPos + 1, displayedEditable.length);
       displayedEditable = left + '█' + right;
     }
 
@@ -112,7 +112,7 @@ class Cli {
 
   // commit, aka apply and disable
   commit(){ // turn the currently typed text into a "command"
-    let wasCommited = this.editable;
+    const wasCommited = this.editable;
     if(this.asterisks){
       // hide them
       this.editable = '';
@@ -196,7 +196,7 @@ class Cli {
         break;
 
       case 'Enter':
-        let result = this.commit();
+        const result = this.commit();
         if(this.pendingGetlineCallback){
           this.pendingGetlineCallback(true, result);
         }
@@ -208,8 +208,8 @@ class Cli {
       return false;
     }
     // type this:
-    let left = this.editable.slice(0, this.editPos);
-    let right = this.editable.slice(this.editPos, this.editable.length);
+    const left = this.editable.slice(0, this.editPos);
+    const right = this.editable.slice(this.editPos, this.editable.length);
     this.editable = left + key + right;
     this.editPos++;
     this.cursorOn = true;
@@ -219,8 +219,8 @@ class Cli {
 
   backspace(){
     if(this.editPos > 0){
-      let left = this.editable.slice(0, this.editPos - 1);
-      let right = this.editable.slice(this.editPos, this.editable.length);
+      const left = this.editable.slice(0, this.editPos - 1);
+      const right = this.editable.slice(this.editPos, this.editable.length);
       this.editable = left + right;
       this.editPos--;
       this.cursorOn = true;

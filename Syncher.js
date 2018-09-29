@@ -37,9 +37,9 @@ class Syncher{
   }
   serverChangeBlock(x, y, block){
     this.map.setBlock(x, y, block);
-    let chunkx = Math.floor(x/256);
-    let chunky = Math.floor(y/256);
-    let chunk = this.map.getChunk(chunkx, chunky);
+    const chunkx = Math.floor(x/256);
+    const chunky = Math.floor(y/256);
+    const chunk = this.map.getChunk(chunkx, chunky);
     for(let j = 0; j < chunk.subscribers.length; j++){
       if(!chunk.subscribers[j].changeObj[y]){
         chunk.subscribers[j].changeObj[y] = {};
@@ -55,9 +55,9 @@ class Syncher{
   }
   playerChangeBlock(player, x, y, block){
     this.map.setBlock(x, y, block);
-    let chunkx = Math.floor(x/256);
-    let chunky = Math.floor(y/256);
-    let chunk = this.map.getChunk(chunkx, chunky);
+    const chunkx = Math.floor(x/256);
+    const chunky = Math.floor(y/256);
+    const chunk = this.map.getChunk(chunkx, chunky);
     for(let j = 0; j < chunk.subscribers.length; j++){
       if(player.name == chunk.subscribers[j].name){
         // skip the player who is doing this
@@ -79,7 +79,7 @@ class Syncher{
   }
 
   sendUpdatesToClient(player){
-    let message = {};
+    const message = {};
     // block updates (if there are any)
     if (Object.keys(player.changeObj).length){
       message.b = player.changeObj;
@@ -88,12 +88,12 @@ class Syncher{
     console.log('mess ', message);
 
     // collect chunk updates
-    let chunkUpdates = [];
+    const chunkUpdates = [];
     for(let i = 0; i < player.chunkUpdates.length; i++){
       console.log('chunk update!')
-      let chunkx = player.chunkUpdates[i].x;
-      let chunky = player.chunkUpdates[i].y;
-      let str = this.map.getChunk(chunkx, chunky).getCompressed();
+      const chunkx = player.chunkUpdates[i].x;
+      const chunky = player.chunkUpdates[i].y;
+      const str = this.map.getChunk(chunkx, chunky).getCompressed();
       chunkUpdates.push({
         x: chunkx,
         y: chunky,

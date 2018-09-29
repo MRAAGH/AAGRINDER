@@ -47,7 +47,7 @@ class Server{
   }
 
   saveToFile(callback) {
-    let savingString = this.map.saveToJSON();
+    const savingString = this.map.saveToJSON();
     fs.writeFile('saves/' + this.levelName + '.txt', savingString, function (err) {
       if (err) console.log(err);
       else {
@@ -111,7 +111,7 @@ class Server{
 
   onClientDisconnect(data, socket) {
     console.log('Client disconnected: ' + socket.id);
-    let player = this.playerData.logout(socket);
+    const player = this.playerData.logout(socket);
     if(player !== null){
       this.playerActions.logout(player);
     }
@@ -122,10 +122,10 @@ class Server{
     // You just need to be logged in.
 
     // who speaks?
-    let player = this.playerData.onlinePlayerBySocket(socket);
+    const player = this.playerData.onlinePlayerBySocket(socket);
     if(player){
       // prepend player name
-      let message = player.name + ': ' + data.message;
+      const message = player.name + ': ' + data.message;
 
       console.log(message);
 
@@ -137,7 +137,7 @@ class Server{
 
   onAction(data, socket) {
     console.log(data.a);
-    let player = this.playerData.onlinePlayerBySocket(socket);
+    const player = this.playerData.onlinePlayerBySocket(socket);
     if (!this.playerActions.action(player, data.a, data.d, data.i)){
       console.log("HACKS! ("+player.name+") at "+data.i)
     }

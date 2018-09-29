@@ -19,17 +19,17 @@ class Gui {
   display(){
     this.terminal.clearScreen();
 
-    let w = this.terminal.width;
-    let h = this.terminal.height;
-    let left = this.player.x - Math.floor(w / 2);
-    let top = this.player.y - Math.floor(h / 2);
-    let buffer = [];
+    const w = this.terminal.width;
+    const h = this.terminal.height;
+    const left = this.player.x - Math.floor(w / 2);
+    const top = this.player.y - Math.floor(h / 2);
+    const buffer = [];
 
     // render the terrain
     for(let y = 0; y < h; y++){
       buffer[h - y - 1] = [];
       for(let x = 0; x < w; x++){
-        let block = this.map.getBlock(left + x, top + y);
+        const block = this.map.getBlock(left + x, top + y);
 
         if(SPRITES[block]){ // fails for air and player
           buffer[h - y - 1][x] = SPRITES[block];
@@ -48,7 +48,7 @@ class Gui {
     // render coordinates
     if(w > 10 && h > 5){
       // render coordinates frame
-      let frame =
+      const frame =
       [
         '┌─   ─   ─┐',
         ' x:        ',
@@ -64,8 +64,8 @@ class Gui {
 
       // render coordinate values
 
-      let x = this.player.x.toString();
-      let y = this.player.y.toString();
+      const x = this.player.x.toString();
+      const y = this.player.y.toString();
       for(let i = 0; i < 7; i++){
         if(i < x.length) buffer[1][i + 4] = {char: x[i], color: GUI_TEXT_COLOR};
         if(i < y.length) buffer[2][i + 4] = {char: y[i], color: GUI_TEXT_COLOR};

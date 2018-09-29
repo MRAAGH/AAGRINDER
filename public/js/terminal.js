@@ -46,11 +46,11 @@ class Terminal {
   }
 
   pixelToChar(pixelX, pixelY){
-    let w = this.width;
-    let h = this.height;
+    const w = this.width;
+    const h = this.height;
 
-    let x = Math.floor((pixelX - PADDING) / CHAR_WIDTH) - this.xpos;
-    let y = Math.floor((pixelY - PADDING) / LINE_SPACING);
+    const x = Math.floor((pixelX - PADDING) / CHAR_WIDTH) - this.xpos;
+    const y = Math.floor((pixelY - PADDING) / LINE_SPACING);
 
     const charX = x - Math.floor(w / 2);
     const charY = h - Math.floor(h / 2) - 1 - y;

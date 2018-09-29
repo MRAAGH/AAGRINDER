@@ -34,7 +34,7 @@ const port = process.env.PORT || 8080;
 app.use(express.static(__dirname + '/public'));
 
 app.get('/aa', function (req, res) {
-  let u = '/aa has been accessed.';
+  const u = '/aa has been accessed.';
   console.log(JSON.stringify(u));
   res.json(u);
 });
@@ -50,7 +50,7 @@ saveToFile();
 });*/
 
 console.log('Starting aagrinder server version ' + SERVER_VERSION);
-let hrstart_server_load = process.hrtime();
+const hrstart_server_load = process.hrtime();
 loadServerProperties((props) => {
   // now we have database authentication things
   // the connection is a global variable atm
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS users (
         console.log('Preparing level "' + props.level_name + '"');
         server.loadfromFile(() => {
         server.listen(http, io, port, function () {
-          let hrend_server_load = process.hrtime(hrstart_server_load);
+          const hrend_server_load = process.hrtime(hrstart_server_load);
           console.log('Done (' + hrend_server_load[0] + '.' + Math.floor(hrend_server_load[1] / 1000000) + 's)!');
           console.log('AAGRINDER server listening on *:' + port);
         });

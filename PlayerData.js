@@ -54,7 +54,7 @@ class PlayerData {
           // okay password is ok
           // does this player exist in this world?
 
-          let knownPlayer = this.knownPlayerByName(name);
+          const knownPlayer = this.knownPlayerByName(name);
 
           if (knownPlayer){
             // player exists. Is this player already online?
@@ -73,7 +73,7 @@ class PlayerData {
           else{
             // player does not exist and needs to be added.
 
-            let newPlayer = new Player(null, null, name, socket, user.color);
+            const newPlayer = new Player(null, null, name, socket, user.color);
             this.knownPlayers.push(newPlayer);
             this.onlinePlayers.push(newPlayer);
             return resolve(newPlayer);
@@ -87,7 +87,7 @@ class PlayerData {
   logout (socket){
     for(let i = 0; i < this.onlinePlayers.length; i++){
       if(this.onlinePlayers[i].socket.id === socket.id){
-        let player = this.onlinePlayers[i];
+        const player = this.onlinePlayers[i];
         this.onlinePlayers.splice(i, 1);
         return player;
       }

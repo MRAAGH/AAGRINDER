@@ -34,8 +34,8 @@ class Syncher {
   }
 
   action(name, data, changes, silent=false){ // player action (movement, placement, diggment, interaction)
-    let actionId = Base64.fromNumber(Date.now())+'|'+Base64.fromNumber(Math.floor(Math.random()*4096));
-    for(let b of changes.b){
+    const actionId = Base64.fromNumber(Date.now())+'|'+Base64.fromNumber(Math.floor(Math.random()*4096));
+    for(const b of changes.b){
       const x = b.x + this.player.x;
       const y = b.y + this.player.y;
       b.p = this.map.getBlock(x, y);
@@ -65,7 +65,7 @@ class Syncher {
       return;
     }
 
-    let emittedAction = {
+    const emittedAction = {
       a: name,
       i: actionId,
       d: data,
@@ -177,7 +177,7 @@ class View{
     if(this.rejected){
       return false;
     }
-    let changes = {b : this.queue,
+    const changes = {b : this.queue,
       px : this.playerMovement.x,
       py : this.playerMovement.y,
     };

@@ -13,7 +13,7 @@ class BigTerminal {
   }
 
   println(content){
-    let wasScrolledToEnd = this.isScrolledToEnd();
+    const wasScrolledToEnd = this.isScrolledToEnd();
     this.lines.push(content);
     this.formatLine(content, this.formatted);
     if(wasScrolledToEnd){
@@ -40,7 +40,7 @@ class BigTerminal {
   }
 
   formatLine(line, buffer){
-    let w = this.terminal.width;
+    const w = this.terminal.width;
     while(line.length > w){
       buffer.push(line.substring(0, w));
       line = line.substring(w);
@@ -59,7 +59,7 @@ class BigTerminal {
   }
 
   display(){ // display current content
-    let visibleLines = [];
+    const visibleLines = [];
     for(let i = 0; i < this.terminal.height && i + this.scrollPos < this.formatted.length; i++){
       visibleLines.push(this.formatted[i + this.scrollPos]);
     }

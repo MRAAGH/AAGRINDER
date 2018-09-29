@@ -14,14 +14,14 @@ const KNOWN_COLORS = {
 }
 
 function parseColor(input){
-  let lowInput = input.toLowerCase();
-  let withoutBannedChars = lowInput.replace(/[^a-z0-9 ]/g, ' ');
-  let words = withoutBannedChars.split(' ');
+  const lowInput = input.toLowerCase();
+  const withoutBannedChars = lowInput.replace(/[^a-z0-9 ]/g, ' ');
+  const words = withoutBannedChars.split(' ');
   for(let i = 0; i < words.length; i++){
     if(/^[0-9a-f]{6}$/.test(words[i])){
       return words[i]; // there was a hex string
     }
-    let found = KNOWN_COLORS[words[i]];
+    const found = KNOWN_COLORS[words[i]];
     if(found){
       return found; // there was a color name
     }

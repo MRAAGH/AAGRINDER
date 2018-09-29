@@ -18,14 +18,14 @@ class Spawn {
   }
 
   prepareSpawnArea() {
-    let hrstart = process.hrtime();
+    const hrstart = process.hrtime();
     let i = 0;
     for (let y = -PREPARE_DIST; y <= PREPARE_DIST; y++) {
       for (let x = -PREPARE_DIST; x <= PREPARE_DIST; x++) {
-        let hrend = process.hrtime(hrstart);
+        const hrend = process.hrtime(hrstart);
         if (hrend[0] > 0) {
           //At least a second has passed. Time to give the admin an update.
-          let percent = Math.floor(100 * i / PREPARE_CHUNK_COUNT);
+          const percent = Math.floor(100 * i / PREPARE_CHUNK_COUNT);
           console.log('Preparing spawn area: ' + percent + '%');
           hrstart = process.hrtime();
         }
@@ -41,7 +41,7 @@ class Spawn {
     // does the player have a position?
     if(player.x !== null && player.y !== null){
       // yes. Attempt to spawn there or up to 63 blocks above / below.
-      let searchDirection = this.map.getBlock(player.x, player.y) === ' ' ? -1 : 1;
+      const searchDirection = this.map.getBlock(player.x, player.y) === ' ' ? -1 : 1;
       for(let i = 0; i < 64; i++){
         if(this.isValidSpawnSpot(player.x, player.y + i * searchDirection)){
           return({x: player.x, y: player.y + i * searchDirection});
@@ -51,7 +51,7 @@ class Spawn {
     else{
       // spawn the player somewhere around world spawn instead.
 
-      let spawnDistance = BASE_SPAWN_DISTANCE;
+      const spawnDistance = BASE_SPAWN_DISTANCE;
       let lel = 0;
       while(true){ // player spawning can not fail
         lel++;
@@ -60,8 +60,8 @@ class Spawn {
           return null;
         }
         for(let i = 0; i < SPAWN_ATTEMPTS; i++){
-          let x = Math.floor((Math.random() - 0.5) * spawnDistance);
-          let y = Math.floor((Math.random() - 0.5) * spawnDistance);
+          const x = Math.floor((Math.random() - 0.5) * spawnDistance);
+          const y = Math.floor((Math.random() - 0.5) * spawnDistance);
           if(this.isValidSpawnSpot(x, y)){
             return({x: x, y: y});
           }

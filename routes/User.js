@@ -63,9 +63,9 @@ router.post('/register', (req, res) => {
 
   {
     // check the color
-    let r = parseInt(req.body.color.substring(0, 3), 16);
-    let g = parseInt(req.body.color.substring(2, 5), 16);
-    let b = parseInt(req.body.color.substring(4, 7), 16);
+    const r = parseInt(req.body.color.substring(0, 3), 16);
+    const g = parseInt(req.body.color.substring(2, 5), 16);
+    const b = parseInt(req.body.color.substring(4, 7), 16);
 
     if(r + g + b < 150){
       res.json({ message: 'Color too dark', success: false });
@@ -85,7 +85,7 @@ router.post('/register', (req, res) => {
       return;
     }
     else {
-      let user = {
+      const user = {
         name: req.body.name,
         password: '',
         color: req.body.color

@@ -26,8 +26,8 @@ class Map {
     }
     if(!this.chunks[chunky][chunkx]){
       // Chunk does not exist. Generate it.
-      let reverseterrain = WorldGenerator(chunkx, chunky, this.WORLD_SEED, false);
-      let terrain = [];
+      const reverseterrain = WorldGenerator(chunkx, chunky, this.WORLD_SEED, false);
+      const terrain = [];
       for(let i = 0; i < 256; i++){
         terrain[i] = reverseterrain[255 - i];
       }
@@ -37,21 +37,21 @@ class Map {
   }
 
   getBlock(x, y){
-    let chunkx = Math.floor(x / 256);
-    let chunky = Math.floor(y / 256);
-    let subchunkx = (x%256+256)%256;
-    let subchunky = (y%256+256)%256;
-    let chunk = this.getChunk(chunkx, chunky);
-    let block = chunk.terrain[subchunky][subchunkx];
+    const chunkx = Math.floor(x / 256);
+    const chunky = Math.floor(y / 256);
+    const subchunkx = (x%256+256)%256;
+    const subchunky = (y%256+256)%256;
+    const chunk = this.getChunk(chunkx, chunky);
+    const block = chunk.terrain[subchunky][subchunkx];
     return block;
   }
 
   setBlock(x, y, block){
-    let chunkx = Math.floor(x / 256);
-    let chunky = Math.floor(y / 256);
-    let subchunkx = (x%256+256)%256;
-    let subchunky = (y%256+256)%256;
-    let chunk = this.getChunk(chunkx, chunky);
+    const chunkx = Math.floor(x / 256);
+    const chunky = Math.floor(y / 256);
+    const subchunkx = (x%256+256)%256;
+    const subchunky = (y%256+256)%256;
+    const chunk = this.getChunk(chunkx, chunky);
     chunk.terrain[subchunky][subchunkx] = block;
   }
 

@@ -21,7 +21,7 @@ class Subscribe{
     console.log('sub '+player.name+' '+chunkx+' '+chunky);
     player.subscriptions.push({x:chunkx, y:chunky});
     player.chunkUpdates.push({x:chunkx, y:chunky});
-    let chunk = this.map.getChunk(chunkx, chunky); // and generate if necessary
+    const chunk = this.map.getChunk(chunkx, chunky); // and generate if necessary
     chunk.subscribers.push(player);
   }
 
@@ -33,7 +33,7 @@ class Subscribe{
         break;
       }
     }
-    let chunk = this.map.getChunk(chunkx, chunky);
+    const chunk = this.map.getChunk(chunkx, chunky);
     for(let i = 0; i < chunk.subscribers.length; i++){
       if(chunk.subscribers[i].name == player.name){
         chunk.subscribers.splice(i, 1);
@@ -51,10 +51,10 @@ class Subscribe{
     player.resubscribePosition.y = player.y;
 
     // console.log('resub '+player.name);
-    let newSubscriptions = [];
+    const newSubscriptions = [];
     for(let p = 0; p < CHUNK_PROBES.length; p++){
-      let chunkx = Math.floor((player.x + CHUNK_PROBES[p].x)/256);
-      let chunky = Math.floor((player.y + CHUNK_PROBES[p].y)/256);
+      const chunkx = Math.floor((player.x + CHUNK_PROBES[p].x)/256);
+      const chunky = Math.floor((player.y + CHUNK_PROBES[p].y)/256);
       // check if we found a new one
       let yes = true;
       for(let i = 0; i < newSubscriptions.length; i++){
