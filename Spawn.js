@@ -51,7 +51,7 @@ class Spawn {
     else{
       // spawn the player somewhere around world spawn instead.
 
-      const spawnDistance = BASE_SPAWN_DISTANCE;
+      let spawnDistance = BASE_SPAWN_DISTANCE;
       let lel = 0;
       while(true){ // player spawning can not fail
         lel++;
