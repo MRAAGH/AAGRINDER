@@ -10,7 +10,7 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 
-require('./properties.js');
+require('./Properties.js');
 // const mongoose = require('bluebird').promisifyAll(require('mongoose'));
 // const mongoose = require('mongoose');
 // mongoose.Promise = require('bluebird');
