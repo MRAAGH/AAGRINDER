@@ -297,7 +297,7 @@ class Cli {
   }
 
   getLine(){
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject)=>{
       // prepare the callback:
       this.pendingGetlineCallback = (ok, line)=>{
         if(ok){

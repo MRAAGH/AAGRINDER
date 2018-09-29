@@ -11,6 +11,7 @@ class Game{
     this.focused = false;
     this.active = false;
     this.inChatbox = false;
+    this.justFinishedChatbox = false;
     this.keys = keys;
 
     this.socket.on('t', data=>this.onSocketTerrainUpdate(data, socket));
@@ -24,7 +25,7 @@ class Game{
   }
 
   onSocketChat(data){
-    if(this.enabled){
+    if(this.active){
       this.cli.println(data.message);
     }
   }
@@ -43,6 +44,8 @@ class Game{
       // stop focusing the cli
       this.inChatbox = false;
       this.cli.blur();
+      this.cli.pause();
+      this.justFinishedChatbox = true;
     }
   }
 
@@ -54,6 +57,7 @@ class Game{
     this.active = true;
     this.focused = true;
     this.inChatbox = false;
+    this.justFinishedChatbox = false;
     this.chatboxLoop();
   }
 
@@ -99,12 +103,15 @@ class Game{
       return;
     }
 
-
-    if(fullKeyStates[13]){ // Enter
-      this.inChatbox = true;
-      this.cli.focus();
-      this.cli.unpause();
+    if(!this.justFinishedChatbox){
+      if(fullKeyStates[13]){ // Enter
+        this.inChatbox = true;
+        this.cli.focus();
+        this.cli.unpause();
+      }
     }
+    this.justFinishedChatbox = false;
+
     if(fullKeyStates[38] && !fullKeyStates[40]){ // ArrowUp without ArrowDown
       this.player.cursorUp();
     }
