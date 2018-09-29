@@ -21,13 +21,10 @@ class Login{
   }
 
   onSocketLoginSuccess(data){
-    // TODO: all of the following should be inside game.js/Game/start() (maybe)
     console.log('login');
     console.log(data);
     this.cli.println('login successful');
-    this.cli.promptCommand('> ');
-    console.log(data)
-    this.game.player.color = data.color; // TODO: this should be in terrain updates anyway to begin with
+    this.cli.promptCommand('> '); //TODO: should defenitely be in chatbox.js
     this.inGame = true;
     this.game.start();
   }

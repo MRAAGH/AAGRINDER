@@ -102,4 +102,12 @@ class Gui {
 
     this.player.cursorSet(x - Math.floor(w / 2), h - Math.floor(h / 2) - 1 - y)
   }
+
+  focus(){
+    // nothing to do, the gui is just a display and does not require focus for anything
+  }
+
+  blur(){
+    // nothing to do, the gui is just a display and does not require focus for anything
+  }
 }

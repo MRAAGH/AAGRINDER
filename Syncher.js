@@ -119,12 +119,18 @@ class Syncher{
       message.reach = player.reach;
     }
 
+    // player color update (if applicable)
+    if(player.changedColor){
+      message.color = player.color;
+    }
+
     // clear the lists of things to be sent
     player.changeObj = {};
     player.chunkUpdates = [];
     player.changedx = false;
     player.changedy = false;
     player.changedReach = false;
+    player.changedColor = false;
 
 
     // send message (if there is anything in the message)

@@ -89,7 +89,6 @@ class Server{
 
   onLogin(data, socket) {
     //Username sent?
-    console.log('data', data)
     if (
       typeof(data.username) !== 'string'
       || typeof(data.password) !== 'string'
@@ -99,11 +98,8 @@ class Server{
     else {
       this.playerData.login(data.username, data.password, socket).then(
         result => {
-          const message = {color: result.color};
-          console.log(result.color);
-          socket.emit('loginsuccess', message);
-
           this.playerActions.login(result);
+          socket.emit('loginsuccess', {});
         },
         err => {
           console.log(err)

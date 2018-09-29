@@ -103,6 +103,11 @@ class Syncher {
     if("reach" in data){
       this.player.reach = data.reach;
     }
+
+    // apply player color
+    if("color" in data){
+      this.player.color = data.color;
+    }
   }
 
   serverEvent(event){

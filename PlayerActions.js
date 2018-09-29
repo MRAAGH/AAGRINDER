@@ -30,8 +30,6 @@ class PlayerActions {
 
     console.log('spawnSpot');
     console.log(spawnSpot);
-    console.log('player');
-    console.log(player);
 
     // we assume this is a good spot and no checks need to be performed.
 
@@ -51,6 +49,7 @@ class PlayerActions {
     player.changedx = true;
     player.changedy = true;
     player.changedReach = true;
+    player.changedColor = true;
 
     this.syncher.sendUpdatesToClients();
   }
