@@ -3,10 +3,11 @@ const SPRITES = {
 
   'B': {char: 'B', color: '#7f7f7f'},
   'A': {char: 'A', color: '#1a8239'}, // used to be 1f7f29
+  'T': {char: 'T', color: '#1a8239'},
   'H': {char: 'H', color: '#91702a'},
   '+': {char: '+', color: '#9e2929'},
   'O': {char: 'O', color: '#7f7f7f'},
-  'M': {char: 'M', color: '#bf2f2f'},
+  'M': {char: 'M', color: '#9e2929'},
   'G': {char: 'G', color: '#2faebf'},
   'D': {char: 'D', color: '#2faebf'},
   '-0': {char: '─', color: '#34962a'},

@@ -6,7 +6,7 @@
 // Plain CPU rendering. Nothing fancy.
 
 const GUI_FRAME_COLOR = '#aaaaaa';
-const GUI_TEXT_COLOR = '#ffffff';
+const GUI_TEXT_COLOR = '#aaaaaa';
 const CURSOR_COLOR = '#209090';
 
 class Gui {
@@ -22,7 +22,7 @@ class Gui {
     const w = this.terminal.width;
     const h = this.terminal.height;
     const left = this.player.x - Math.floor(w / 2);
-    const top = this.player.y - Math.floor(h / 2);
+    const top = this.player.y - Math.ceil(h / 2) + 1;
     const buffer = [];
 
     // render the terrain
@@ -46,7 +46,7 @@ class Gui {
     }
 
     // render coordinates
-    if(w > 10 && h > 5){
+    if(w > 10 && h > 8){
       // render coordinates frame
       const frame =
       [
@@ -73,6 +73,48 @@ class Gui {
 
     }
 
+    // render inventory
+    if(this.player.invShown && w > 14 && h > 6){
+      const invX = Math.floor(w/2) - 7;
+      const invY = Math.floor(h/2) - 3;
+      {
+        const frame =
+        [
+          '┌──────┬──────┐',
+          '│B     │+     │',
+          '│A     │-     │',
+          '│T     │O     │',
+          '│H     │M     │',
+          '│D     │G     │',
+          '└──────┴──────┘',
+        ]
+        for(const i in frame){
+          for(const j in frame[i]){
+            buffer[parseInt(i)+invY][parseInt(j)+invX] = {char: frame[i][j], color: GUI_FRAME_COLOR};
+          }
+        }
+      }
+
+      {
+        let i = 0;
+        for(let count of Object.values(this.player.inventory.state)){
+          if(count > 9999){
+            count = 9999;
+          }
+          const countStr = count.toString();
+          const col = Math.floor(i/5);
+          const row = i%5;
+          const x = invX + 3 + col * 7;
+          const y = invY + 1 + row;
+          for(const j in countStr){
+            buffer[y][x+parseInt(j)] = {char: countStr[j], color: GUI_FRAME_COLOR};
+          }
+          i++;
+        }
+      }
+
+    }
+
     // display all of this on screen
 
     for(let y = 0; y < h; y++){
@@ -84,12 +126,30 @@ class Gui {
     }
 
     // display cursor overlayed
-    this.terminal.displayCharacter(
-      Math.floor(w / 2) + this.player.cursorx,
-      h - Math.floor(h / 2) - 1 - this.player.cursory,
-      '░',
-      CURSOR_COLOR
-    );
+    if(!this.player.invShown){
+      this.terminal.displayCharacter(
+        Math.floor(w / 2) + this.player.cursorx,
+        h - Math.ceil(h / 2) - this.player.cursory,
+        '░',
+        CURSOR_COLOR
+      );
+    }
+    else{
+      const i = this.player.inventory.item_codes.indexOf(this.player.invSelected);
+      const col = Math.floor(i/5);
+      const row = i%5;
+      const invX = Math.floor(w/2) - 7;
+      const invY = Math.floor(h/2) - 3;
+      const x = invX + 1 + col * 7;
+      const y = invY + 1 + row;
+      this.terminal.displayCharacter(
+        x,
+        y,
+        '░',
+        CURSOR_COLOR
+      );
+
+    }
   }
 
   focus(){

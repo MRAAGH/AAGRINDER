@@ -60,6 +60,7 @@ function onKeydown(e) {
   }
   cli.handleKey(e.key);
   keys.handleKeyDown(e.keyCode);
+  game.handleKeyDown(e.keyCode);
 }
 
 function onKeyup(e) {

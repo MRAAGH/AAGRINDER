@@ -12,7 +12,6 @@ class Game{
     this.focused = false;
     this.active = false;
     this.inChatbox = false;
-    this.justFinishedChatbox = false;
     this.keys = keys;
 
     this.lmb = false;
@@ -53,7 +52,6 @@ class Game{
       this.inChatbox = false;
       this.cli.blur();
       this.cli.pause();
-      this.justFinishedChatbox = true;
     }
   }
 
@@ -65,7 +63,6 @@ class Game{
     this.active = true;
     this.focused = true;
     this.inChatbox = false;
-    this.justFinishedChatbox = false;
     this.chatboxLoop();
   }
 
@@ -90,20 +87,13 @@ class Game{
     this.cli.blur();
   }
 
-  gameTick(){
-    // TODO: slash also enters the chatbox and types a slash
-
-    const fullKeyStates = this.keys.getFullKeyStates();
-    this.keys.clearFresh();
-
+  handleKeyDown(keycode){
     if(!this.active){
       return;
     }
 
-
-
     if(this.inChatbox){
-      if(fullKeyStates[27]){ // escape
+      if(keycode === 27){ // escape
         this.inChatbox = false;
         this.cli.blur();
         this.cli.pause();
@@ -111,34 +101,75 @@ class Game{
       return;
     }
 
-    if(!this.justFinishedChatbox){
-      if(fullKeyStates[13]){ // Enter
-        this.inChatbox = true;
-        this.cli.focus();
-        this.cli.unpause();
+    // from here on things only work if game is focused
+
+    if(keycode === 13){ // Enter
+      this.inChatbox = true;
+      this.cli.focus();
+      this.cli.unpause();
+    }
+
+    if(keycode === 69){ // e
+      this.player.invShown = !this.player.invShown;
+    }
+
+    if(this.player.invShown){
+      if(keycode === 27){ // Escape
+        this.player.invShown = false;
+      }
+      if(keycode === 38 || keycode === 75){
+        // ArrowUp or k
+        this.player.selectUp();
+      }
+      if(keycode === 40 || keycode === 74){
+        // ArrowDown or j
+        this.player.selectDown();
+      }
+      if(keycode === 37 || keycode === 72){
+        // ArrowLeft or h
+        this.player.selectLeft();
+      }
+      if(keycode === 39 || keycode === 76){
+        // ArrowRight or l
+        this.player.selectRight();
       }
     }
-    this.justFinishedChatbox = false;
+  }
 
-    if(fullKeyStates[38] && !fullKeyStates[40]
-    || fullKeyStates[75] && !fullKeyStates[74]){
-      // ArrowUp without ArrowDown or k without j
-      this.player.cursorUp();
+  gameTick(){
+    // TODO: slash also enters the chatbox and types a slash
+
+    const fullKeyStates = this.keys.getFullKeyStates();
+
+    if(!this.active){
+      return;
     }
-    if(fullKeyStates[40] && !fullKeyStates[38]
-    || fullKeyStates[74] && !fullKeyStates[75]){
-      // ArrowDown without ArrowUp or j without k
-      this.player.cursorDown();
+
+    if(this.inChatbox){
+      return;
     }
-    if(fullKeyStates[37] && !fullKeyStates[39]
-    || fullKeyStates[72] && !fullKeyStates[76]){
-      // ArrowLeft without ArrowRight or h without l
-      this.player.cursorLeft();
-    }
-    if(fullKeyStates[39] && !fullKeyStates[37]
-    || fullKeyStates[76] && !fullKeyStates[72]){ 
-      // ArrowRight without ArrowLeft or l without h
-      this.player.cursorRight();
+
+    if(!this.player.invShown){
+      if(fullKeyStates[38] && !fullKeyStates[40]
+      || fullKeyStates[75] && !fullKeyStates[74]){
+        // ArrowUp without ArrowDown or k without j
+        this.player.cursorUp();
+      }
+      if(fullKeyStates[40] && !fullKeyStates[38]
+      || fullKeyStates[74] && !fullKeyStates[75]){
+        // ArrowDown without ArrowUp or j without k
+        this.player.cursorDown();
+      }
+      if(fullKeyStates[37] && !fullKeyStates[39]
+      || fullKeyStates[72] && !fullKeyStates[76]){
+        // ArrowLeft without ArrowRight or h without l
+        this.player.cursorLeft();
+      }
+      if(fullKeyStates[39] && !fullKeyStates[37]
+      || fullKeyStates[76] && !fullKeyStates[72]){
+        // ArrowRight without ArrowLeft or l without h
+        this.player.cursorRight();
+      }
     }
     if(fullKeyStates[87] && !fullKeyStates[83]){ // w without s
       this.playerActions.action('u', {});
@@ -166,6 +197,7 @@ class Game{
         r: true,
       });
     }
+    this.keys.clearFresh();
     this.gui.display();
   }
 

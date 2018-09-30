@@ -8,6 +8,8 @@ class Player {
     this.reach = 0;
     this.color = color;
     this.inventory = new Inventory();
+    this.invShown = false;
+    this.invSelected = 'A';
   }
 
   playerBlock(){
@@ -43,5 +45,46 @@ class Player {
       this.cursorx = x;
       this.cursory = y;
     }
+  }
+
+  selectUp(){
+    console.log('up')
+    const selected = this.selectGet();
+    console.log(selected)
+    if(selected%5 > 0){
+      console.log('yu')
+      this.selectSet(selected - 1);
+    }
+  }
+
+  selectDown(){
+    const selected = this.selectGet();
+    if(selected%5 < 4){
+      this.selectSet(selected + 1);
+    }
+  }
+
+  selectRight(){
+    const selected = this.selectGet();
+    if(selected < 5){
+      this.selectSet(selected + 5);
+    }
+  }
+
+  selectLeft(){
+    const selected = this.selectGet();
+    if(selected >= 5){
+      this.selectSet(selected - 5);
+    }
+  }
+
+  selectGet(){
+    return this.inventory.item_codes.indexOf(this.invSelected);
+  }
+
+  selectSet(i){
+    console.log('set to', i)
+    this.invSelected = this.inventory.item_codes[i];
+    console.log(this.invSelected)
   }
 }

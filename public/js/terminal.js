@@ -53,7 +53,7 @@ class Terminal {
     const y = Math.floor((pixelY - PADDING) / LINE_SPACING);
 
     const charX = x - Math.floor(w / 2);
-    const charY = h - Math.floor(h / 2) - 1 - y;
+    const charY = h - Math.ceil(h / 2) - y;
     return {x: charX, y: charY,};
   }
 }
