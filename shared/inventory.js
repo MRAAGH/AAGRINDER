@@ -4,7 +4,7 @@ class Inventory{
   constructor(){
 
     this.item_codes = ['B', 'A', 'T', 'H', 'D', '+', '-', 'O', 'M', 'G'];
-    this.raw_recipes = {
+    this.recipes = {
       'T': [{ block: 'A', amount: 5 }],
       'O': [{ block: 'B', amount: 1 }],
       'M': [{ block: '+', amount: 20 }],

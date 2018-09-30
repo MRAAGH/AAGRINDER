@@ -105,4 +105,23 @@ sharedActionFunctions = {
     view.gainItem(item, -1);
   },
 
+  'c':(view, data)=>{
+    if(typeof data.i !== 'string'){
+      console.log('bad craft item');
+      view.reject();
+      return;
+    }
+    const item = data.i;
+    const recipe = view.player.inventory.recipes[item];
+    if(typeof recipe === 'undefined'){
+      console.log('uncraftable');
+      view.reject();
+      return;
+    }
+    for(const r of recipe){
+      view.gainItem(r.block, -r.amount);
+    }
+    view.gainItem(item);
+  },
+
 };

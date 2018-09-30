@@ -133,6 +133,9 @@ class Game{
         // ArrowRight or l
         this.player.selectRight();
       }
+      if(keycode === 67){ // c
+        this.playerActions.action('c', {i: this.player.invSelected});
+      }
     }
   }
 
