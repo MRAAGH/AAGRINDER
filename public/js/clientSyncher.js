@@ -52,6 +52,7 @@ class Syncher {
         b: changes.b,
         px: this.player.x,
         py: this.player.y,
+        inv: this.player.inventory.state,
       },
     }
 
@@ -139,7 +140,7 @@ class Syncher {
       }
       this.player.x = event.u.px;
       this.player.y = event.u.py;
-      console.log(this.player);
+      this.player.inventory.state = event.u.inv;
     }
     return actionList;
   }
@@ -158,6 +159,7 @@ class View{
     this.syncher = syncher;
     this.player = player;
     this.queue = [];
+    this.itemQueue = [];
     this.playerMovement = {x:0,y:0};
     this.rejected = false;
   }
@@ -173,14 +175,34 @@ class View{
   movePlayerY(dist){
     this.playerMovement.y += dist;
   }
+  spendItem(item, count = 1){
+    if(this.player.inventory.itemCodeExists(item)){
+      this.itemQueue.push({item, count});
+    }
+    else{
+      console.log('bad item: ' + item);
+      this.reject();
+    }
+  }
   apply(name, data, silent){
+    for(const spentItem of this.itemQueue){
+      // TODO: add support for spending the same item type several times within the same action
+      if(player.inventory.state[spentItem.item] < spentItem.count){
+        this.reject();
+      }
+    }
     if(this.rejected){
       // console.log('rejected')
       return false;
     }
-    const changes = {b : this.queue,
+    for(const spentItem of this.itemQueue){
+      player.inventory.state[spentItem.item] -= spentItem.count;
+    }
+    const changes = {
+      b : this.queue,
       px : this.playerMovement.x,
       py : this.playerMovement.y,
+      inv : this.itemQueue,
     };
     this.syncher.action(name, data, changes, silent);
     return true;

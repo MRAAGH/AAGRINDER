@@ -9,6 +9,7 @@ const SPRITES = {
   'M': {char: 'M', color: '#bf2f2f'},
   'G': {char: 'G', color: '#2faebf'},
   'D': {char: 'D', color: '#2faebf'},
+  '-0': {char: '─', color: '#34962a'},
   '-1': {char: '╶', color: '#34962a'},
   '-2': {char: '╵', color: '#34962a'},
   '-3': {char: '╰', color: '#34962a'},

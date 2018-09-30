@@ -7,7 +7,7 @@ class Player {
     this.cursory = 0;
     this.reach = 0;
     this.color = color;
-    this.inventory = 'nyi';
+    this.inventory = new Inventory();
   }
 
   playerBlock(){
