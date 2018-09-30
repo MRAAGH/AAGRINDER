@@ -36,7 +36,7 @@ class PlayerData {
           return reject('Server error');
         }
         if(foundUsers.length < 1){
-          return reject('User does not exist. Try /register');
+          return reject('User does not exist. Try /register or /r');
         }
 
         const user = foundUsers[0];
