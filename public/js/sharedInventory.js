@@ -22,14 +22,14 @@ class Inventory{
     return block.substr(0,1) === '-';
   };
 
-  item2block(item, relativeCheck) {
+  item2block(item_code, relativeCheck) {
     if (item_code == '-') {
       let type_code = 0;
       let power_of_2 = 1;
       for (let y = -1; y < 2; y++) {
         for (let x = -1; x < 2; x++) {
           let block_here = relativeCheck(x, y);
-          if (block_here != false && isGrassBlock(block_here)) type_code += power_of_2;
+          if (block_here != false && this.isGrassBlock(block_here)) type_code += power_of_2;
           power_of_2 *= 2;
         }
       }

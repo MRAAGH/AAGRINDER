@@ -195,6 +195,7 @@ class Game{
         x: this.player.cursorx,
         y: this.player.cursory,
         r: true,
+        i: this.player.invSelected,
       });
     }
     this.keys.clearFresh();

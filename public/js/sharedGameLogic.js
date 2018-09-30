@@ -11,26 +11,31 @@ This same file is used by both the server and the client.
 */
 
 sharedActionFunctions = {
+
   'l':(view, data)=>{
     view.setBlock(view.player.x, view.player.y, ' ');
     view.setBlock(view.player.x-1, view.player.y, view.player.playerBlock());
     view.movePlayerX(-1);
   },
+
   'r':(view, data)=>{
     view.setBlock(view.player.x, view.player.y, ' ');
     view.setBlock(view.player.x+1, view.player.y, view.player.playerBlock());
     view.movePlayerX(1);
   },
+
   'd':(view, data)=>{
     view.setBlock(view.player.x, view.player.y, ' ');
     view.setBlock(view.player.x, view.player.y-1, view.player.playerBlock());
     view.movePlayerY(-1);
   },
+
   'u':(view, data)=>{
     view.setBlock(view.player.x, view.player.y, ' ');
     view.setBlock(view.player.x, view.player.y+1, view.player.playerBlock());
     view.movePlayerY(1);
   },
+
   'D':(view, data)=>{
     let x, y;
     if(data.r){
@@ -59,6 +64,7 @@ sharedActionFunctions = {
     view.setBlock(x, y, ' ');
     view.gainItem(view.player.inventory.block2item(dug));
   },
+
   'P':(view, data)=>{
     let x, y;
     if(data.r){
@@ -83,8 +89,20 @@ sharedActionFunctions = {
       view.reject();
       return;
     }
+    // what to place?
+    if(typeof data.i !== 'string'){
+      console.log('bad item')
+      view.reject();
+      return;
+    }
+    const item = data.i;
+    const relativeCheck = (x,y)=>{
+      return view.getBlock(view.player.x+x, view.player.y+y);
+    }
+    const block = view.player.inventory.item2block(item, relativeCheck);
     // ok place here
-    view.setBlock(x, y, 'B');
-    // TODO: should probably add it to the inventory ;)
+    view.setBlock(x, y, block);
+    view.gainItem(item, -1);
   },
+
 };
