@@ -12,7 +12,7 @@ Because we are not synching those between clients.
 
 */
 
-require('./public/js/sharedGameLogic.js');
+require('./shared/gameLogic.js');
 
 class Actions {
 

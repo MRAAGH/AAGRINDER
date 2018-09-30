@@ -1,6 +1,6 @@
 const PLAYER_REACH = 7;
 
-const Inventory = require('./public/js/sharedInventory.js').Inventory;
+const Inventory = require('./shared/inventory.js').Inventory;
 
 class Player {
   constructor(x, y, name, socket, color){
