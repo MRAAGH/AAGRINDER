@@ -57,7 +57,7 @@ sharedActionFunctions = {
     }
     // ok dig it
     view.setBlock(x, y, ' ');
-    // TODO: should probably add it to the inventory ;)
+    view.gainItem(view.player.inventory.block2item(dug));
   },
   'P':(view, data)=>{
     let x, y;

@@ -1,5 +1,7 @@
 const PLAYER_REACH = 7;
 
+const Inventory = require('./public/js/sharedInventory.js').Inventory;
+
 class Player {
   constructor(x, y, name, socket, color){
     this.x = x; // world pos
@@ -17,6 +19,7 @@ class Player {
     this.changedy = false;
     this.changedReach = false;
     this.changedColor = false;
+    this.inventory = new Inventory();
   }
 
   playerBlock(){

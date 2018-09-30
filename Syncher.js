@@ -149,13 +149,16 @@ and applied at the correct moment.
 */
 
 class View{
+
   constructor(syncher, player){
     this.syncher = syncher;
     this.player = player;
     this.queue = [];
+    this.itemQueue = [];
     this.playerMovement = {x:0,y:0};
     this.rejected = false;
   }
+
   setBlock(x, y, b){
     this.queue.push({
       x:x,
@@ -163,18 +166,40 @@ class View{
       block:b,
     });
   }
+
   getBlock(x, y){
     return this.syncher.map.getBlock(x,y);
   }
+
   movePlayerX(dist){
     this.playerMovement.x += dist;
   }
+
   movePlayerY(dist){
     this.playerMovement.y += dist;
   }
+
+  gainItem(item, count = 1){
+    if(this.player.inventory.itemCodeExists(item)){
+      this.itemQueue.push({item, count});
+    }
+    else{
+      console.log('bad item: ' + item);
+      this.reject();
+    }
+  }
+
   apply(eventId){
     if(this.rejected){
       return false;
+    }
+    for(const gainedItem of this.itemQueue){
+      if(this.player.inventory.state[gainedItem.item] < -gainedItem.count){
+        return false;
+      }
+    }
+    for(const gainedItem of this.itemQueue){
+      this.player.inventory.state[gainedItem.item] += gainedItem.count;
     }
     this.player.x += this.playerMovement.x;
     this.player.y += this.playerMovement.y;
@@ -182,9 +207,11 @@ class View{
     this.syncher.sendUpdatesToClients();
     return true;
   }
+
   reject(){
     this.rejected = true;
   }
+
 }
 
 exports.Syncher = Syncher;

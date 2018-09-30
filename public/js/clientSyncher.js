@@ -155,6 +155,7 @@ class Syncher {
 
 
 class View{
+
   constructor(syncher, player){
     this.syncher = syncher;
     this.player = player;
@@ -163,19 +164,24 @@ class View{
     this.playerMovement = {x:0,y:0};
     this.rejected = false;
   }
+
   setBlock(x, y, b){
     this.queue.push({x:x,y:y,b:b});
   }
+
   getBlock(x, y){
     return this.syncher.map.getBlock(x,y);
   }
+
   movePlayerX(dist){
     this.playerMovement.x += dist;
   }
+
   movePlayerY(dist){
     this.playerMovement.y += dist;
   }
-  spendItem(item, count = 1){
+
+  gainItem(item, count = 1){
     if(this.player.inventory.itemCodeExists(item)){
       this.itemQueue.push({item, count});
     }
@@ -184,19 +190,20 @@ class View{
       this.reject();
     }
   }
+
   apply(name, data, silent){
-    for(const spentItem of this.itemQueue){
-      // TODO: add support for spending the same item type several times within the same action
-      if(player.inventory.state[spentItem.item] < spentItem.count){
-        this.reject();
-      }
-    }
     if(this.rejected){
       // console.log('rejected')
       return false;
     }
-    for(const spentItem of this.itemQueue){
-      player.inventory.state[spentItem.item] -= spentItem.count;
+    for(const gainedItem of this.itemQueue){
+      // TODO: add support for spending the same item type several times within the same action
+      if(this.player.inventory.state[gainedItem.item] < -gainedItem.count){
+        return;
+      }
+    }
+    for(const gainedItem of this.itemQueue){
+      this.player.inventory.state[gainedItem.item] += gainedItem.count;
     }
     const changes = {
       b : this.queue,
@@ -207,7 +214,9 @@ class View{
     this.syncher.action(name, data, changes, silent);
     return true;
   }
+
   reject(){
     this.rejected = true;
   }
+
 }

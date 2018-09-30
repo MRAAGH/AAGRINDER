@@ -39,7 +39,7 @@ class Inventory{
     return item_code;
   };
 
-  block2blockCode(block) {
+  block2item(block) {
     return block.substr(0,1);
   };
 
@@ -53,3 +53,5 @@ class Inventory{
     return how_many > 0;
   };
 }
+
+if(typeof exports !== 'undefined') exports.Inventory = Inventory;
