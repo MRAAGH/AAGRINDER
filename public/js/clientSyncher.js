@@ -109,6 +109,11 @@ class Syncher {
     if("color" in data){
       this.player.color = data.color;
     }
+
+    // apply inventory
+    if("inv" in data){
+      this.player.inventory.state = data.inv;
+    }
   }
 
   serverEvent(event){

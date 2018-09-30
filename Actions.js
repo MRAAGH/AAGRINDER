@@ -50,6 +50,7 @@ class Actions {
     player.changedy = true;
     player.changedReach = true;
     player.changedColor = true;
+    player.changedInventory = true;
 
     this.syncher.sendUpdatesToClients();
   }

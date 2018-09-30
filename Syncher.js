@@ -124,6 +124,11 @@ class Syncher{
       message.color = player.color;
     }
 
+    // inventory update (if applicable)
+    if(player.changedInventory){
+      message.inv = player.inventory.state;
+    }
+
     // clear the lists of things to be sent
     player.changeObj = {};
     player.chunkUpdates = [];
@@ -131,6 +136,7 @@ class Syncher{
     player.changedy = false;
     player.changedReach = false;
     player.changedColor = false;
+    player.changedInventory = false;
 
 
     // send message (if there is anything in the message)

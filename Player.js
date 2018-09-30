@@ -19,6 +19,7 @@ class Player {
     this.changedy = false;
     this.changedReach = false;
     this.changedColor = false;
+    this.changedInventory = false;
     this.inventory = new Inventory();
   }
 
