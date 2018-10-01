@@ -96,8 +96,8 @@ sharedActionFunctions = {
       return;
     }
     const item = data.i;
-    const relativeCheck = (x,y)=>{
-      return view.getBlock(view.player.x+x, view.player.y+y);
+    const relativeCheck = (rx,ry)=>{
+      return view.getBlock(x+rx, y+ry);
     }
     const block = view.player.inventory.item2block(item, relativeCheck);
     // ok place here
