@@ -1,11 +1,11 @@
+# AAGRINDER
+2D sanbox multiplayer game you can play in the browser
+
 ![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%284%29.png "AAGRINDER")
 
 ![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%282%29.png "AAGRINDER")
 
 ![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%283%29.png "AAGRINDER")
-
-# AAGRINDER
-2D sanbox multiplayer game you can play in the browser
 
 # How can I play?
 You need to know a link to an aagrinder server.
@@ -40,10 +40,8 @@ You also need to configure ports and IP's if you want others to be able to conne
 If this confuses you, maybe you should find someone else to host the server ^.^
 
 # How finished is the game?
-Very unfinished at this point.
+Kind of unfinished and slightly unstable.
 
-At the time of writing this, you can't even move properly
-and there is no inventory.
+There is an inventory and crafting, but you can't move properly.
 
-But at least you can register, log in, chat,
-break stuff and see how other players are also breaking stuff, yay
+The server randomly crashes at times and when it does, the world is lost since you can't save it yet.
