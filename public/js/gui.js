@@ -77,7 +77,43 @@ class Gui {
     if(this.player.invShown && w > 14 && h > 6){
       const invX = Math.floor(w/2) - 7;
       const invY = Math.floor(h/2) - 3;
-      {
+
+      const item = this.player.invSelected;
+      const recipe = this.player.inventory.recipes[item];
+      if(typeof recipe !== 'undefined' && h > 12){
+        // also display crafting instructions:
+        const frame =
+        [
+          '┌──────┬──────┐',
+          '│B     │+     │',
+          '│A     │-     │',
+          '│T     │O     │',
+          '│H     │M     │',
+          '│D     │G     │',
+          '├──────┴──────┤',
+          '│             │',
+          '│ C to craft  │',
+          '└─────────────┘',
+        ]
+        for(const i in frame){
+          for(const j in frame[i]){
+            buffer[parseInt(i)+invY][parseInt(j)+invX] = {char: frame[i][j], color: GUI_FRAME_COLOR};
+          }
+        }
+
+        // recipe:
+        let str = '';
+        for(const r of recipe){
+          str += ' ' + r.amount + r.block;
+        }
+        str = str.substr(1);
+        for(const j in str){
+          buffer[invY+7][invX+2+parseInt(j)] = {char: str[j], color: GUI_FRAME_COLOR};
+        }
+      }
+
+      else{
+        // without crafting instructions
         const frame =
         [
           '┌──────┬──────┐',
