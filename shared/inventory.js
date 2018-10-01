@@ -30,11 +30,11 @@ class Inventory{
         for (let x = -1; x < 2; x++) {
           // the "-" is there because the logic is back from when the world coordinates were mirrored
           const block_here = relativeCheck(x, -y);
-          if (block_here != false && this.isGrassBlock(block_here)) type_code += power_of_2;
+          if (this.isGrassBlock(block_here)) type_code += power_of_2;
           power_of_2 *= 2;
         }
       }
-      let grass_block = '-' + this.grassProjection[type_code];
+      const grass_block = '-' + this.grassProjection[type_code];
       return grass_block;
     }
     return item_code;

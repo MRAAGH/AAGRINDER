@@ -217,6 +217,7 @@ class Game{
         break;
       case 2:
         this.rmb = true;
+        break;
       case 3:
         this.lmb = true;
         this.rmb = true;
@@ -232,6 +233,7 @@ class Game{
         break;
       case 2:
         this.rmb = true;
+        break;
       case 3:
         this.lmb = true;
         this.rmb = true;
