@@ -1,7 +1,8 @@
 class Login{
-  constructor(cli, game, socket){
+  constructor(cli, guiterminal, socket, keys){
     this.cli = cli;
-    this.game = game;
+    this.guiterminal = guiterminal;
+    this.keys = keys;
     this.inGame = false;
     this.socket = socket;
     this.socket.on('connect', data=>this.onSocketConnect(data, socket));
@@ -19,7 +20,7 @@ class Login{
     this.cli.abort();
     this.cli.println('disconnected.');
     this.inGame = false;
-    this.game.stop();
+    this.gameStop();
   }
 
   onSocketLoginSuccess(data){
@@ -27,7 +28,25 @@ class Login{
     console.log(data);
     this.cli.println('login successful');
     this.inGame = true;
-    this.game.start();
+    this.gameStart();
+  }
+
+  gameStart(){
+    this.game = new Game(this.cli, this.guiterminal, this.socket, this.keys);
+    this.gameTickInterval = setInterval(()=>this.game.gameTick(), 100);
+  }
+
+  gameStop(){
+
+    if(this.gameTickInterval){
+      clearInterval(this.gameTickInterval);
+    }
+  }
+
+  handleKeyDown(keyCode){
+    if(this.game){
+      this.game.handleKeyDown(keyCode);
+    }
   }
 
   onSocketLoginError(data){
@@ -48,7 +67,9 @@ class Login{
   blur(){
     // window unfocused
     this.cli.blur();
-    this.game.blur();
+    if(this.game){
+      this.game.blur();
+    }
   }
 
   async login(){
