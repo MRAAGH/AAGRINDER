@@ -52,7 +52,6 @@ class Actions {
     player.changedColor = true;
     player.changedInventory = true;
 
-    this.syncher.sendUpdatesToClients();
   }
 
   logout(player){
