@@ -1,5 +1,5 @@
 # AAGRINDER
-2D sanbox multiplayer game you can play in the browser
+2D sanbox multiplayer game you can play in the browser ... and it looks like this:
 
 ![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%284%29.png "AAGRINDER")
 
@@ -8,15 +8,14 @@
 ![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%283%29.png "AAGRINDER")
 
 # How can I play?
-You need to know a link to an aagrinder server.
+First wait for the game to be playable (check back in a month).
+
+Then you need to know a link to an aagrinder server.
+I plan to set up a public server at some point,
+and you'll be able to find the link right here, in this paragraph.
 
 You just enter this link into your browser and start playing!
 It is that simple! :D
-
-# How to find a server?
-I don't have a public server, and I don't know of any other servers.
-I will probably set one up in the future.
-Right now, I suggest waiting. Check back in a few months to see if this readme has changed.
 
 # How to run a server?
 You need a mysql database running, for storing account data.
