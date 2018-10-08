@@ -12,7 +12,6 @@ let guiterminal;
 let bigterminal;
 let cli;
 const keys = new Keys();
-let game;
 let login;
 
 $('document').ready(function () {
@@ -22,8 +21,7 @@ $('document').ready(function () {
   guiterminal = new Terminal(mycanvas,10,10,10);
   bigterminal = new BigTerminal(cliterminal);
   cli = new Cli(bigterminal);
-  game = new Game(cli, guiterminal, socket, keys);
-  login = new Login(cli, game, socket);
+  login = new Login(cli, guiterminal, socket, keys);
 
   //Align everything for the first time:
   onResize(undefined);
@@ -32,7 +30,6 @@ $('document').ready(function () {
 
 
   setInterval(()=>cli.blink(), 500);
-  setInterval(()=>game.gameTick(), 100);
 
 
   window.addEventListener('keydown', onKeydown, false);
@@ -44,23 +41,13 @@ $('document').ready(function () {
   window.addEventListener('resize', onResize, false);
 });
 
-// function focusCli(){
-//   cli.focus();
-//   bigterminal.scrollToEnd();
-// }
-//
-// function focusGui(){
-//   cli.blur();
-// }
-
-
 function onKeydown(e) {
   if (BLOCKED_KEYS.indexOf(e.keyCode) > -1) {
     e.preventDefault(); //Prevent some of the browser's key bindings
   }
   cli.handleKey(e.key);
   keys.handleKeyDown(e.keyCode);
-  game.handleKeyDown(e.keyCode);
+  login.handleKeyDown(e.keyCode);
 }
 
 function onKeyup(e) {

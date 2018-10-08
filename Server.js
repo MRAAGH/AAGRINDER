@@ -99,6 +99,7 @@ class Server{
         result => {
           this.actions.login(result);
           socket.emit('loginsuccess', {});
+          this.syncher.sendUpdatesToClients();
         },
         err => {
           console.log(err)
