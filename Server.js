@@ -1,7 +1,9 @@
 /*
-This used to all be merged with index.js but now it's here.
-Just turned the server into a class.
-*/
+ * This used to all be merged with index.js but now it's here.
+ * Just turned the server into a class.
+ * It is a collection of all the server components,
+ * and also links them to sockets.
+ */
 
 const SERVER_VERSION = '0.0.1';
 

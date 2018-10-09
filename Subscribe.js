@@ -1,18 +1,17 @@
 
 /*
-Makes sure that the clients are getting updates for exactly those chunks they can see.
-TODO: chunk probes are probably a bad idea and should be substituted by different logic. And the area needs to be bigger. And, oh, may I mention that this doesn't even work? Sometimes I find unloaded chunks.
-*/
+ * Makes sure that the clients are getting updates for exactly those chunks they are supposed to.
+ * 
+ * The logic is simple, really.
+ * Keep the 3 by 3 area of chunks around the player loaded,
+ * and unload chunks if they go beyond the 5 by 5 area.
+ *
+ * And we only check each time when a player has moved over 128 blocks.
+ * Checking at every movement would be overkill.
+ */
 
 const LOAD_DISTANCE = 1; // chunks of at most this distance away from the player's chunk are loaded.
 const UNLOAD_DISTANCE = 2; // chunks further than this distance away from the player's chunk are unloaded.
-
-// const CHUNK_PROBES = [
-//   {x: +64, y: +96},
-//   {x: -64, y: +96},
-//   {x: +64, y: -96},
-//   {x: -64, y: -96}
-// ];
 
 class Subscribe{
   constructor(map){

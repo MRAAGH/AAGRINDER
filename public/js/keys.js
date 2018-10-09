@@ -1,3 +1,11 @@
+/*
+ * Remembers the states of keys
+ * so they can be polled at every game tick.
+ * 
+ * This gets around the issue of the browser sandbox
+ * not allowing direct polling of keys.
+ */
+
 class Keys{
   constructor(){
     this.keyStates = [];

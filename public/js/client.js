@@ -1,3 +1,8 @@
+/*
+ * Main client script file.
+ * I try to put code elsewhere.
+ */
+
 if (!Date.now) {
     Date.now = function() { return new Date().getTime(); }
 }

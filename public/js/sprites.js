@@ -1,3 +1,10 @@
+/*
+ * Sprites are pairs of Unicode characters and color codes,
+ * with block code strings as identifiers.
+ *
+ * This should be the only place in the whole codebase
+ * fancy characters appear.
+ */
 
 const SPRITES = {
 

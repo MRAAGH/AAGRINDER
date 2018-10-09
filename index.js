@@ -1,3 +1,8 @@
+/*
+ * Main server file.
+ * I try to put code somewhere else.
+ */
+
 const SERVER_VERSION = '0.0.1';
 
 const express = require('express');

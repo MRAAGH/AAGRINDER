@@ -1,3 +1,7 @@
+/*
+ * Some very ugly code for loading data from server.properties
+ */
+
 const fs = require('fs');
 
 loadServerProperties = function(callback){

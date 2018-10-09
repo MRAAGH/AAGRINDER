@@ -1,3 +1,11 @@
+/*
+ * The login screen.
+ * When the player logs in, a Game object is created.
+ * When the player logs out, the Game object is disabled.
+ *
+ * This class also contains the logic for the registration "program".
+ */
+
 class Login{
   constructor(cli, guiterminal, socket, keys){
     this.cli = cli;
@@ -196,6 +204,5 @@ class Login{
     return response;
 
   }
-
 
 }

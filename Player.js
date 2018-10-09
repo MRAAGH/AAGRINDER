@@ -1,3 +1,8 @@
+/*
+ * Just a collection of data to keep about a known player
+ * (a known player is a player who has logged in to this world at least once)
+ */
+
 const PLAYER_REACH = 7;
 
 const Inventory = require('./shared/inventory.js').Inventory;

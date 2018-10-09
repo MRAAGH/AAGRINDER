@@ -1,24 +1,24 @@
 
 /*
-Synching clients and server.
-All terrain-changing, player position changing and inventory changing things
-must go through here.
-
-Synching on the server side is quite trivial: just keep track of indices.
-Events happen in a determined order on the server.
-Each event has an id, which was set by the creator of the event.
-Clients are notified of each event visible to them (except for the one
-client who triggered the event, as that one already knows about it).
-
-Along with each event notification, we send its id and the id of the
-previous event (ignoring those events irrelevant to the client).
-We expect the client to correct the event order on its end
-in case of desynchronization by undoing and redoing its own events.
-If the client sends an invalid action (because its world was not
-properly updated when the action was taken), we ignore the action.
-We expect the client to do the same as soon as it finds out what
-really happened.
-*/
+ * Synching clients and server.
+ * All terrain-changing, player position changing and inventory changing things
+ * must go through here.
+ * 
+ * Synching on the server side is quite trivial: just keep track of indices.
+ * Events happen in a determined order on the server.
+ * Each event has an id, which was set by the creator of the event.
+ * Clients are notified of each event visible to them (except for the one
+ * client who triggered the event, as that one already knows about it).
+ * 
+ * Along with each event notification, we send its id and the id of the
+ * previous event (ignoring those events irrelevant to the client).
+ * We expect the client to correct the event order on its end
+ * in case of desynchronization by undoing and redoing its own events.
+ * If the client sends an invalid action (because its world was not
+ * properly updated when the action was taken), we ignore the action.
+ * We expect the client to do the same as soon as it finds out what
+ * really happened.
+ */
 
 class Syncher{
   constructor(map, playerData){

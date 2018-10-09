@@ -1,9 +1,12 @@
 /*
-A class to handle the spawn area logic
-and the logic for actually spawning players
-when they log in for the first time
-or when they log in but their position is obstructed.
-*/
+ * A class to handle the spawn area logic
+ * and the logic for actually spawning players
+ * when they log in for the first time
+ * or when they log in but their position is obstructed.
+ *
+ * The current logic breaks sometimes.
+ * TODO: change it to something more simple and robust.
+ */
 
 const PREPARE_DIST = 2;
 const PREPARE_CHUNK_COUNT = (2 * PREPARE_DIST + 1) * (2 * PREPARE_DIST + 1);

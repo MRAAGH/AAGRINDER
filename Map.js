@@ -1,13 +1,15 @@
 
 /*
-Map is the class holding everything about the world that needs to get saved to disk
-and loaded from disk.
-
-It also acts as an abstraction over chunks,
-so that other classes do not need to worry about whether chunks exist or don't exist.
-Calling the getChunk method always works.
-If the chunk does not exist it is automatically generated on the fly.
-*/
+ * Map is the class holding everything about the world that needs to get saved to disk
+ * and loaded from disk.
+ * 
+ * It also acts as an abstraction over chunks,
+ * so that other classes do not need to worry about whether chunks exist or don't exist.
+ * Calling the getChunk method always works.
+ * If the chunk does not exist it is automatically generated on the fly.
+ * 
+ * A similar abstraction exists over players and can be found in PlayerData.js.
+ */
 
 const Chunk = require('./Chunk').Chunk;
 const WorldGenerator = require('./generators/WorldGenerator').WorldGenerator;

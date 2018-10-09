@@ -1,4 +1,10 @@
-
+/*
+ * Old logic for electricity and flying machines.
+ * It used to work with the old setup, but was very glitchy
+ * if several players stood on the same flying machine.
+ * And I didn't like that system anyway.
+ * I will pretty much rewrite this whole file before I use it.
+ */
 
 let Flying = function (
   _centralizedBlockAt,

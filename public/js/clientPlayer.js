@@ -1,3 +1,7 @@
+/*
+ * A class for holding data about the player who is logged in,
+ * along with a few client-side actions the user can trigger.
+ */
 
 class Player {
   constructor(color){

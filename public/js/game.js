@@ -1,3 +1,11 @@
+/*
+ * Where all the in-game components fit together.
+ * The in-game components include the world, the player,
+ * the controls and the chatbox among other things.
+ * The login screen does not belong here.
+ * The Game object is created on login.
+ */
+
 class Game{
   constructor(cli, guiterminal, socket, keys){
     this.socket = socket;

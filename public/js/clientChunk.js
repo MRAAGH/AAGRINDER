@@ -1,3 +1,8 @@
+/*
+ * Class for holding raw data about terrain.
+ * Each block is a string of one or more characters.
+ * Data arrives in serialized form and needs to be parsed.
+ */
 
 class Chunk {
   constructor(terrain){

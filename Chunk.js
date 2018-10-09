@@ -1,3 +1,9 @@
+/*
+ * Data holder class for terrain chunks.
+ * Each block is a string of one or more characters.
+ * The "compressed" format is nothing more than a serialized
+ * representation of the contained strings.
+ */
 
 class Chunk {
   constructor(terrain){

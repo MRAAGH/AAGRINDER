@@ -1,13 +1,15 @@
 
 /*
-Map is the class holding the world content.
-This content is synchronized with the state on the server.
-
-It also acts as an abstraction over chunks,
-so that other classes do not need to worry about whether chunks exist or don't exist.
-If other classes try to acces terrain that does not exist,
-they will get air blocks (' ').
-*/
+ * Map is the class holding the world content.
+ * This content is synchronized with the state on the server.
+ * 
+ * It also acts as an abstraction over chunks,
+ * so that other classes do not need to worry about whether chunks exist or don't exist.
+ * If other classes try to acces terrain that does not exist,
+ * they will get air blocks (' ').
+ * Note that the behavior is different than on the server,
+ * as on the server the missing chunk would immediately get generated.
+ */
 
 class Map {
   constructor() {
@@ -44,10 +46,6 @@ class Map {
     }
     const chunk = this.chunks[chunky][chunkx];
     chunk.terrain[subchunky][subchunkx] = block;
-    // console.log('-------');
-    // console.log(block);
-    // console.log(chunk);
-    // console.log(chunk.terrain[subchunky][subchunkx]);
   }
 
   loadChunk(chunkx, chunky, data){

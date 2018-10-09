@@ -1,16 +1,18 @@
 /*
-Player actions.
-
-If a player moved, resubscribe must be called.
-If a player changed a set of blocks, syncher.playerChangeBlocks must be called.
-// If a player inventory changed, syncher.changeInventory must be called.
-If the server changed a set of blocks, syncher.serverChangeBlocks must be called.
-
-Do not modify chunks directly! It must go through the Syncher!
-May modify player inventory and position directly.
-Because we are not synching those between clients.
-
-*/
+ * Player actions and server actions.
+ *
+ * this is the game logic, determines how things move and interact.
+ *
+ * with the abstractions provided by the Syncher class, there is no need
+ * to worry about client-server synchronization, order of events,
+ * missing pieces of terrain etc.
+ * In this class we work on a high level.
+ *
+ * Notice "sharedActionFunctions". That's code that comes from a shared file
+ * and it determines those parts of the game logic that the client also uses.
+ * This way, I literally use the same code on the server and the client.
+ * It is more maintainable this way.
+ */
 
 require('./shared/gameLogic.js');
 

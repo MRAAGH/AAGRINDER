@@ -1,18 +1,22 @@
 
 /*
-Synching client with server.
-All terrain-changing things must go through here.
-Sends local events to the server, together with an id.
-Receives from the server events caused by other players and the
-server itself.
-
-Keeps local events in a stack.
-Corrects order when server events are received by
-undoing local events and then redoing them.
-
-Local events can become invalid when attempting to reapply them.
-If that happens, we ignore those events. The server does the same.
-*/
+ * Synching client with server.
+ * All terrain-changing things must go through here.
+ * Sends local events to the server, together with an id.
+ * Receives from the server events caused by other players and the
+ * server itself.
+ * 
+ * Keeps local events in a stack.
+ * When server events are received, it corrects order of events like this:
+ * > search the event stack for the event id specified by the server
+ * > undo actions from the event stack up to that point
+ * > apply server event
+ * > redo the actions that have been undone,
+ *   while taking in account the changes caused by the server event
+ * 
+ * Local events can become invalid when attempting to reapply them.
+ * If that happens, we ignore those events. The server does the same.
+ */
 
 "use strict";
 class Syncher {
