@@ -4,3 +4,4 @@ server.properties
 nodemon.json
 *~
 *\.swp
+*\.swo
