@@ -33,6 +33,7 @@ class Login{
 
   gameStart(){
     this.game = new Game(this.cli, this.guiterminal, this.socket, this.keys);
+    this.game.active = true;
     this.gameTickInterval = setInterval(()=>this.game.gameTick(), 100);
   }
 
@@ -40,6 +41,9 @@ class Login{
 
     if(this.gameTickInterval){
       clearInterval(this.gameTickInterval);
+    }
+    if(this.game){
+      this.game.active = false;
     }
   }
 
