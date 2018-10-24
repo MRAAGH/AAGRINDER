@@ -42,5 +42,3 @@ If this confuses you, maybe you should find someone else to host the server ^.^
 Kind of unfinished and slightly unstable.
 
 There is an inventory and crafting, but you can't move properly.
-
-The server randomly crashes at times. And when it does, the world is lost (since you can't save it yet).
