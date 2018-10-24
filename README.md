@@ -43,4 +43,4 @@ Kind of unfinished and slightly unstable.
 
 There is an inventory and crafting, but you can't move properly.
 
-The server randomly crashes at times and when it does, the world is lost since you can't save it yet.
+The server randomly crashes at times. And when it does, the world is lost (since you can't save it yet).
