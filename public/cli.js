@@ -76,7 +76,7 @@ class Cli {
     this.asterisks = false;
     this.editPos = 0;
     if(!silent) this.display();
-    return await this.getNonemptyLine(false);
+    return await this.getLine(false);
   }
 
   async promptPassword(content){ // not visible on screen

@@ -107,9 +107,11 @@ class Actions {
 
         if(xrel){
           x = x.substring(1);
+          x = x === '' ? '0' : x;
         }
         if(yrel){
           y = y.substring(1);
+          y = y === '' ? '0' : y;
         }
 
         if(isNaN(x) || isNaN(y) || !tpPlayer){
