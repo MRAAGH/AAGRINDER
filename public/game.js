@@ -31,6 +31,8 @@ class Game{
     window.addEventListener('mousemove', e=>this.handleMouse(e), false);
     window.addEventListener('mousedown', e=>this.handleMouseDown(e), false);
     window.addEventListener('mouseup', e=>this.handleMouseUp(e), false);
+
+    this.chatboxLoop().then(()=>console.log('chatbox loop ended'));
   }
 
   onSocketTerrainUpdate(data){
@@ -65,18 +67,6 @@ class Game{
 
   executeCommand(command){
     //TODO: commands should probably do something ;)
-  }
-
-  start(){
-    this.active = true;
-    this.focused = true;
-    this.inChatbox = false;
-    this.chatboxLoop();
-  }
-
-  stop(){
-    this.active = false;
-    this.cli.abort();
   }
 
   focus(){

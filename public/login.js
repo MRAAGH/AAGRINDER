@@ -52,6 +52,7 @@ class Login{
     }
     if(this.game){
       this.game.active = false;
+      this.cli.abort();
     }
   }
 
