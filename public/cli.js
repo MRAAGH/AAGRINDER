@@ -301,9 +301,11 @@ class Cli {
       // prepare the callback:
       this.pendingGetlineCallback = (ok, line)=>{
         if(ok){
+          this.pendingGetlineCallback = undefined;
           return resolve(line);
         }
         else{
+          this.pendingGetlineCallback = undefined;
           return reject();
         }
       };
@@ -322,6 +324,7 @@ class Cli {
   abort(){
     if(this.pendingGetlineCallback){
       this.pendingGetlineCallback(false, '');
+      this.pendingGetlineCallback = undefined;
     }
     this.enabled = false;
   }
