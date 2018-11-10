@@ -18,12 +18,13 @@ require('./shared/gameLogic.js');
 
 class Actions {
 
-  constructor(map, syncher, subscribe, spawn){
+  constructor(map, syncher, subscribe, spawn, playerData){
     this.map = map;
     this.syncher = syncher;
     this.subscribe = subscribe;
     this.spawn = spawn;
     this.actionFunctions = sharedActionFunctions;
+    this.playerData = playerData;
   }
 
   login(player) {
@@ -86,31 +87,54 @@ class Actions {
   executeCommand(player, typed){
     // only one for now
     
-    const split = typed.split(/ +/);
-    this.giveCommand(player, 'D', 300);
+    const args = typed.split(/ +/);
 
+    switch(args[0]){
+      case '/tp':
+        break;
+      case '/give':
+        const recvPlayerName = args.length < 4 ? player.name : args[3];
+        const amount = args.length < 3 ? '1' : args[2];
+        const item = args.length < 2 ? 'noop' : args[1];
 
-  }
+        console.log(item, amount, recvPlayerName);
 
-  teleportCommand(player, x, y){
-  }
+        const recvPlayer = this.playerData.onlinePlayerByName(recvPlayerName);
 
-  giveCommand(player, item, amount){
-    if(player.inventory.itemCodeExists(item)){
-      if(player.inventory.state[item] + amount < 0){
-        console.log('bad amount: ' + amount);
-      }
-      else{
-        // actually give item
-        player.inventory.state[item] += amount;
-        player.changedInventory = true;
-        this.syncher.sendUpdatesToClient(player);
-      }
+        if(isNaN(amount) || !player.inventory.itemCodeExists(item) || !recvPlayer){
+          player.socket.emit('chat', {message: 'usage: /give <item> [amount] [player]'});
+        }
+        else{
+          const intAmount = parseInt(amount);
+          if(recvPlayer.inventory.state[item] + intAmount < 0){
+            recvPlayer.inventory.state[item] = 0;
+          }
+          else{
+            recvPlayer.inventory.state[item] += intAmount;
+          }
+          recvPlayer.changedInventory = true;
+          this.syncher.sendUpdatesToClient(recvPlayer);
+        }
+        break;
+
+      case '/w': case '/whisper':
+        break;
+      case '/help': case '/?':
+        player.socket.emit('chat', {message: 
+'/tp /give /w /whisper /help /?'
+        });
+        break;
+      default:
+        console.log('invalid command: ', args[0]);
+        player.socket.emit('chat', {message: 'unknown command: '+args[0]+'. Try /help'});
     }
-    else{
-      console.log('bad item: ' + item);
-    }
+
+
+
+
+
   }
+
 }
 
 exports.Actions = Actions;

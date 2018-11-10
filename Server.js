@@ -30,6 +30,7 @@ class Server{
       this.syncher,
       this.subscribe,
       this.spawn,
+      this.playerData,
     );
 
   }
