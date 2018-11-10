@@ -108,7 +108,7 @@ class Game{
       this.cli.unpause();
     }
 
-    if(keycode === 69){ // e
+    if(keycode === 69 || keycode === 73){ // e or i
       this.player.invShown = !this.player.invShown;
     }
 
