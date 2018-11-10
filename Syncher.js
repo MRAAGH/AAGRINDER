@@ -30,9 +30,13 @@ class Syncher{
     return new View(this, player);
   }
 
+  getBlock(x, y){
+    return this.map.getBlock(x,y);
+  }
+
   serverChangeBlocks(changeList){
     for(let i = 0; i < changeList.length; i++){
-      serverChangeBlock(player, changeList[i].x, changeList[i].y, changeList[i].block);
+      serverChangeBlock(changeList[i].x, changeList[i].y, changeList[i].block);
     }
   }
   serverChangeBlock(x, y, block){

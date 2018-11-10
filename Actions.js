@@ -85,43 +85,104 @@ class Actions {
   }
 
   executeCommand(player, typed){
-    // only one for now
     
     const args = typed.split(/ +/);
 
     switch(args[0]){
       case '/tp':
+
+        if(args.length < 3 || args.length > 4){
+          player.socket.emit('chat', {message: 'usage: /tp [player] <x> <y>'});
+          break;
+        }
+
+        const tpPlayerName = args.length === 4 ? args[1] : player.name;
+        const tpPlayer = this.playerData.onlinePlayerByName(tpPlayerName);
+
+        let x = args.length === 4 ? args[2] : args[1];
+        let y = args.length === 4 ? args[3] : args[2];
+
+        const xrel = x[0] === '~';
+        const yrel = y[0] === '~';
+
+        if(xrel){
+          x = x.substring(1);
+        }
+        if(yrel){
+          y = y.substring(1);
+        }
+
+        if(isNaN(x) || isNaN(y) || !tpPlayer){
+          player.socket.emit('chat', {message: 'usage: /tp [player] <x> <y>'});
+          break;
+        }
+
+        let intx = xrel ? parseInt(x) + player.x : parseInt(x);
+        let inty = yrel ? parseInt(y) + player.y : parseInt(y);
+
+        const blockThere = this.syncher.getBlock(intx, inty);
+        if(blockThere !== ' '){
+          player.socket.emit('chat', {message: 'target position obstructed'});
+          break;
+        }
+
+        const oldx = tpPlayer.x;
+        const oldy = tpPlayer.y;
+
+        tpPlayer.x = intx;
+        tpPlayer.y = inty;
+
+        tpPlayer.changedx = true;
+        tpPlayer.changedy = true;
+        
+        this.subscribe.resubscribe(tpPlayer, true);
+
+        this.syncher.serverChangeBlock(intx, inty, tpPlayer.playerBlock());
+        this.syncher.serverChangeBlock(oldx, oldy, ' ');
+
+        this.syncher.sendUpdatesToClients();
+
         break;
+
       case '/give':
         const recvPlayerName = args.length < 4 ? player.name : args[3];
         const amount = args.length < 3 ? '1' : args[2];
         const item = args.length < 2 ? 'noop' : args[1];
 
-        console.log(item, amount, recvPlayerName);
-
+        // find target player
         const recvPlayer = this.playerData.onlinePlayerByName(recvPlayerName);
 
+        // all fail cases
         if(isNaN(amount) || !player.inventory.itemCodeExists(item) || !recvPlayer){
           player.socket.emit('chat', {message: 'usage: /give <item> [amount] [player]'});
         }
+
         else{
+          // nope didn't fail
+          player.socket.emit('chat', {message: 'giving '+amount+' of '+item+' to '+recvPlayerName});
           const intAmount = parseInt(amount);
           if(recvPlayer.inventory.state[item] + intAmount < 0){
+            // can't go negative
             recvPlayer.inventory.state[item] = 0;
           }
           else{
             recvPlayer.inventory.state[item] += intAmount;
           }
+          //update properly
           recvPlayer.changedInventory = true;
           this.syncher.sendUpdatesToClient(recvPlayer);
         }
+
+        break;
+
+      case '/gamemode': case '/mode': case '/g': case '/m':
         break;
 
       case '/w': case '/whisper':
         break;
       case '/help': case '/?':
         player.socket.emit('chat', {message: 
-'/tp /give /w /whisper /help /?'
+'server commands: /tp /give /g /gamemode /m /mode /w /whisper /help /?'
         });
         break;
       default:
