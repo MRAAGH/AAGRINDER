@@ -152,6 +152,7 @@ class Game{
     }
 
     if(!this.player.invShown){
+      
       if(fullKeyStates[38] && !fullKeyStates[40]
       || fullKeyStates[75] && !fullKeyStates[74]){
         // ArrowUp without ArrowDown or k without j
@@ -172,34 +173,37 @@ class Game{
         // ArrowRight without ArrowLeft or l without h
         this.player.cursorRight();
       }
+
+      if(fullKeyStates[87] && !fullKeyStates[83]){ // w without s
+        this.playerActions.action('u', {});
+      }
+      if(fullKeyStates[65] && !fullKeyStates[68]){ // a without d
+        this.playerActions.action('l', {});
+      }
+      if(fullKeyStates[83] && !fullKeyStates[87]){ // s without w
+        this.playerActions.action('d', {});
+      }
+      if(fullKeyStates[68] && !fullKeyStates[65]){ // d without a
+        this.playerActions.action('r', {});
+      }
+      if(fullKeyStates[8] || fullKeyStates[16] || this.lmb){ // Backspace or Shift or lmb
+        this.playerActions.action('D', {
+          x: this.player.cursorx,
+          y: this.player.cursory,
+          r: true,
+        });
+      }
+      if(fullKeyStates[32] || this.rmb){ // Space or rmb
+        this.playerActions.action('P', {
+          x: this.player.cursorx,
+          y: this.player.cursory,
+          r: true,
+          i: this.player.invSelected,
+        });
+      }
+
     }
-    if(fullKeyStates[87] && !fullKeyStates[83]){ // w without s
-      this.playerActions.action('u', {});
-    }
-    if(fullKeyStates[65] && !fullKeyStates[68]){ // a without d
-      this.playerActions.action('l', {});
-    }
-    if(fullKeyStates[83] && !fullKeyStates[87]){ // s without w
-      this.playerActions.action('d', {});
-    }
-    if(fullKeyStates[68] && !fullKeyStates[65]){ // d without a
-      this.playerActions.action('r', {});
-    }
-    if(fullKeyStates[8] || fullKeyStates[16] || this.lmb){ // Backspace or Shift
-      this.playerActions.action('D', {
-        x: this.player.cursorx,
-        y: this.player.cursory,
-        r: true,
-      });
-    }
-    if(fullKeyStates[32] || this.rmb){ // Space
-      this.playerActions.action('P', {
-        x: this.player.cursorx,
-        y: this.player.cursory,
-        r: true,
-        i: this.player.invSelected,
-      });
-    }
+
     this.keys.clearFresh();
     this.gui.display();
   }
