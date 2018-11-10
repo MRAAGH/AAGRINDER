@@ -50,8 +50,8 @@ class Game{
   async chatboxLoop(){
     while(true){
       const typed = await this.cli.promptCommand('> ');
-      if(/^ *\//.test(typed)){
-        // is a command
+      if(/^!/.test(typed)){
+        // is a client side command
         this.executeCommand(typed);
       }
       else{

@@ -200,7 +200,7 @@ class View{
       return false;
     }
     for(const gainedItem of this.itemQueue){
-      if(this.player.inventory.state[gainedItem.item] < -gainedItem.count){
+      if(this.player.inventory.state[gainedItem.item] + gainedItem.count < 0){
         return false;
       }
     }

@@ -126,13 +126,23 @@ class Server{
     // who speaks?
     const player = this.playerData.onlinePlayerBySocket(socket);
     if(player){
-      // prepend player name
-      const message = player.name + ': ' + data.message;
+      const typed = data.message;
+      const iscommand = /^\//.test(typed);
+      if(!iscommand){
+        // prepend player name
+        const message = player.name + ': ' + typed;
 
-      console.log(message);
+        console.log(message);
 
-      for(let i = 0; i < this.playerData.onlinePlayers.length; i++){
-        this.playerData.onlinePlayers[i].socket.emit('chat', {message: message});
+        for(let i = 0; i < this.playerData.onlinePlayers.length; i++){
+          this.playerData.onlinePlayers[i].socket.emit('chat', {message: message});
+        }
+      }
+      else{
+        // is in fact a server-side command
+        // this is where chat does affect the game
+        
+        this.actions.executeCommand(player, typed);
       }
     }
   }

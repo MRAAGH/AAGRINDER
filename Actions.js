@@ -82,6 +82,35 @@ class Actions {
     }
     return false;
   }
+
+  executeCommand(player, typed){
+    // only one for now
+    
+    const split = typed.split(/ +/);
+    this.giveCommand(player, 'D', 300);
+
+
+  }
+
+  teleportCommand(player, x, y){
+  }
+
+  giveCommand(player, item, amount){
+    if(player.inventory.itemCodeExists(item)){
+      if(player.inventory.state[item] + amount < 0){
+        console.log('bad amount: ' + amount);
+      }
+      else{
+        // actually give item
+        player.inventory.state[item] += amount;
+        player.changedInventory = true;
+        this.syncher.sendUpdatesToClient(player);
+      }
+    }
+    else{
+      console.log('bad item: ' + item);
+    }
+  }
 }
 
 exports.Actions = Actions;
