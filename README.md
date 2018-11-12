@@ -1,5 +1,5 @@
 # IMPORTANT:
-The project is no longer being updated on github. You can find a newer version at ![https://gitlab.com/MRAAGH/aagrinder](https://gitlab.com/MRAAGH/aagrinder)
+The project is no longer being updated on github. You can find a newer version at [gitlab](https://gitlab.com/MRAAGH/aagrinder)
 
 # AAGRINDER
 2D sanbox multiplayer game you can play in the browser ... and it looks like this:
@@ -11,7 +11,7 @@ The project is no longer being updated on github. You can find a newer version a
 ![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%283%29.png "AAGRINDER")
 
 # IMPORTANT:
-The project is no longer being updated on github. You can find a newer version at ![https://gitlab.com/MRAAGH/aagrinder](https://gitlab.com/MRAAGH/aagrinder)
+The project is no longer being updated on github. You can find a newer version at [gitlab](https://gitlab.com/MRAAGH/aagrinder)
 
 # How can I play?
 First wait for the game to be playable (check back in a month).
@@ -50,4 +50,4 @@ Kind of unfinished and slightly unstable.
 There is an inventory and crafting, but you can't move properly.
 
 # IMPORTANT:
-The project is no longer being updated on github. You can find a newer version at ![https://gitlab.com/MRAAGH/aagrinder](https://gitlab.com/MRAAGH/aagrinder)
+The project is no longer being updated on github. You can find a newer version at [gitlab](https://gitlab.com/MRAAGH/aagrinder)
