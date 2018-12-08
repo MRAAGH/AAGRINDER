@@ -1,5 +1,5 @@
 # IMPORTANT:
-## THIS IS VERY OLD! YOU CAN FIND A NEWER VERSION AT GITLAB
+## THIS IS VERY OLD! YOU CAN FIND A NEWER VERSION [AT GITLAB](https://gitlab.com/MRAAGH/aagrinder)
 [https://gitlab.com/MRAAGH/aagrinder](https://gitlab.com/MRAAGH/aagrinder)
 
 # AAGRINDER
@@ -12,7 +12,7 @@
 ![aagrinder](https://img.ourl.ca/Screenshot_2018-09-30%20AAGRINDER%283%29.png "AAGRINDER")
 
 # IMPORTANT:
-## THIS IS VERY OLD! YOU CAN FIND A NEWER VERSION AT GITLAB
+## THIS IS VERY OLD! YOU CAN FIND A NEWER VERSION [AT GITLAB](https://gitlab.com/MRAAGH/aagrinder)
 [https://gitlab.com/MRAAGH/aagrinder](https://gitlab.com/MRAAGH/aagrinder)
 
 # How can I play?
@@ -52,5 +52,5 @@ Kind of unfinished and slightly unstable.
 There is an inventory and crafting, but you can't move properly.
 
 # IMPORTANT:
-## THIS IS VERY OLD! YOU CAN FIND A NEWER VERSION AT GITLAB
+## THIS IS VERY OLD! YOU CAN FIND A NEWER VERSION [AT GITLAB](https://gitlab.com/MRAAGH/aagrinder)
 [https://gitlab.com/MRAAGH/aagrinder](https://gitlab.com/MRAAGH/aagrinder)

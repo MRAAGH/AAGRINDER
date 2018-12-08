@@ -20,7 +20,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "author": "Robi",
+  "author": "Maze",
   "license": "ISC",
   "repository": {
     "type": "git",
