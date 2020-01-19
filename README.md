@@ -1,3 +1,1 @@
-## PROJECT WAS MOVED TO GITLAB: [https://gitlab.com/MRAAGH/aagrinder](https://gitlab.com/MRAAGH/aagrinder#-httpsaagrinderxyz-)
-
-The version on GitHub is VERY OLD! Don't look at it too much.
+## PROJECT WAS MOVED TO: [https://gitlab.com/MRAAGH/aagrinder](https://gitlab.com/MRAAGH/aagrinder#-httpsaagrinderxyz-)

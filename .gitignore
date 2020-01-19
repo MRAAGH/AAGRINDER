@@ -1,7 +1,0 @@
-saves/
-node_modules/
-server.properties
-nodemon.json
-*~
-*\.swp
-*\.swo
